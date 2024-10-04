@@ -1,6 +1,8 @@
 package com.example.polaris
 
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -17,16 +19,13 @@ import com.example.polaris.ui.theme.PolarisTheme
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.polaris.databinding.ActivityMainBinding
+import com.example.polaris.ui.HapticTouchListener
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
-
-
-
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -34,7 +33,9 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigationView.selectedItemId = R.id.home
         binding.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
-                R.id.home -> replaceFragment(Home())
+                R.id.home -> {
+                    replaceFragment(Home())
+                }
                 R.id.settings -> replaceFragment(Settings())
                 R.id.history -> replaceFragment(History())
                 else -> {
@@ -68,5 +69,3 @@ fun GreetingPreview() {
         Greeting("Android")
     }
 }
-
-fun runInference(){}

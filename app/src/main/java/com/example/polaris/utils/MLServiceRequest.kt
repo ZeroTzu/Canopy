@@ -1,4 +1,4 @@
-package com.example.polaris
+package com.example.polaris.utils
 
 import android.util.Log
 import org.chromium.net.CronetException

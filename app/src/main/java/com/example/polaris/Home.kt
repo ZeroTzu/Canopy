@@ -1,6 +1,5 @@
 package com.example.polaris
 
-import android.net.http.UrlRequest
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,12 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.polaris.databinding.FragmentHomeBinding
 import org.chromium.net.CronetEngine
-import org.chromium.net.UrlResponseInfo
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
-import com.example.polaris.MLServiceRequest.ResponseCallback
+import com.example.polaris.utils.MLServiceRequest.ResponseCallback
 import android.widget.Toast
 import android.util.Log
+import android.view.HapticFeedbackConstants
+import android.widget.Button
+import com.example.polaris.ui.HapticTouchListener
+import com.example.polaris.utils.MLServiceRequest
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -32,7 +34,7 @@ class Home : Fragment(),ResponseCallback {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var cronetEngine: CronetEngine
     private lateinit var executor: Executor
-
+    private lateinit var buttonsList: List<Button>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val myBuilder = CronetEngine.Builder(context)
@@ -48,27 +50,38 @@ class Home : Fragment(),ResponseCallback {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-        binding.startServiceButton.setOnClickListener {
-            val requestBuilder = cronetEngine.newUrlRequestBuilder(
-            "https://catfact.ninja/fact",
-            MLServiceRequest(this),
-            executor)
-        val request: org.chromium.net.UrlRequest = requestBuilder.build()
-            request.start()
+        val rootView = binding.root
 
+        binding.startServiceButton.setOnClickListener{ view ->
+            val requestBuilder = cronetEngine.newUrlRequestBuilder(
+                "https://catfact.ninja/fact",
+                MLServiceRequest(this),
+                executor
+            )
+            val request: org.chromium.net.UrlRequest = requestBuilder.build()
+            request.start()  // Start the request
+            performHaptic(view)
         }
         // Inflate the layout for this fragment
         return binding.root
     }
     override fun onResponseReceived(response: String) {
-        Log.i("MLServiceRequest", "onResponseReceived method called: "+ response)
+        Log.i("MLServiceRequest", "onResponseReceived method called: $response")
         activity?.runOnUiThread {
             Toast.makeText(context, response, Toast.LENGTH_LONG).show()
         }
+        binding.homeFragmentTopBarTextView.text=response
+        binding.homeFragmentTopBarTextView.requestLayout()
     }
-
+    fun performHaptic(view: View){
+        val successful = view.isActivated
+        when (successful){
+            true -> view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
+            false -> view.performHapticFeedback(HapticFeedbackConstants.REJECT)
+        }
+    }
     companion object {
         /**
          * Use this factory method to create a new instance of
