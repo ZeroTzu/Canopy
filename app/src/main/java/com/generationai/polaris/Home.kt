@@ -1,21 +1,19 @@
-package com.example.polaris
-
+package com.generationai.polaris
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.polaris.databinding.FragmentHomeBinding
+import com.generationai.polaris.databinding.FragmentHomeBinding
 import org.chromium.net.CronetEngine
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
-import com.example.polaris.utils.MLServiceRequest.ResponseCallback
+import com.generationai.polaris.utils.MLServiceRequest.ResponseCallback
 import android.widget.Toast
 import android.util.Log
 import android.view.HapticFeedbackConstants
 import android.widget.Button
-import com.example.polaris.ui.HapticTouchListener
-import com.example.polaris.utils.MLServiceRequest
+import com.generationai.polaris.utils.MLServiceRequest
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER

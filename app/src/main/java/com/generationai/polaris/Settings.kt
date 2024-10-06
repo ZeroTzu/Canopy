@@ -1,4 +1,4 @@
-package com.example.polaris
+package com.generationai.polaris
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

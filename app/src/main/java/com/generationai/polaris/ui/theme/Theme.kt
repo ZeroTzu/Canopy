@@ -1,6 +1,5 @@
-package com.example.polaris.ui.theme
+package com.generationai.polaris.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

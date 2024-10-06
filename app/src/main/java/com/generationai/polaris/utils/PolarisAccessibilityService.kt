@@ -1,4 +1,4 @@
-package com.example.polaris.utils
+package com.generationai.polaris.utils
 
 import android.accessibilityservice.AccessibilityService
 import android.speech.tts.TextToSpeech
@@ -12,16 +12,16 @@ class PolarisAccessibilityService : AccessibilityService() {
     override fun onServiceConnected() {
         textToSpeech = TextToSpeech(this) { status ->
             if (status == TextToSpeech.SUCCESS) {
-                Log.d("TextToSpeech", "Initialization Success")
+                Log.d("PolarisAccessibilityService", "Initialization Success")
                 isTTSInitialised=true
             } else {
-                Log.d("TextToSpeech", "Initialization Failed")
+                Log.d("PolarisAccessibilityService", "Initialization Failed")
             }
         }
         super.onServiceConnected()
     }
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
-        Log.i("TextToSpeech","onAccessibilityEvent")
+        Log.i("PolarisAccessibilityService","onAccessibilityEvent")
         if (event != null && event.eventType == AccessibilityEvent.TYPE_VIEW_CLICKED) {
             val text = event.text.toString()
             if (text.isNotEmpty()) {
@@ -31,11 +31,13 @@ class PolarisAccessibilityService : AccessibilityService() {
         }
     }
     override fun onInterrupt() {
+        Log.i("PolarisAccessibilityService","onInterrupt")
         if (::textToSpeech.isInitialized) {
             textToSpeech.stop()
         }    }
 
     override fun onDestroy() {
+        Log.i("PolarisAccessibilityService","onDestroy")
         if (::textToSpeech.isInitialized) {
             textToSpeech.shutdown()
         }

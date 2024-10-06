@@ -7,4 +7,70 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="Polaris">#FFFFFFFF</color>
+
+
+    <color name="polaris_grey_10">#1a1a1a</color>
+    <color name="polaris_grey_30">#4d4d4d</color>
+    <color name="polaris_grey">#808080</color>
+    <color name="polaris_grey_70">#979797</color>
+    <color name="polaris_grey_90">#EFEAE6</color>
+
+
+<!--    Jade Goes with Dark Purple-->
+    <color name="polaris_jade_10">#DBFCDB</color>
+    <color name="polaris_jade_30">#CFFBCF</color>
+    <color name="polaris_jade_50">#C5FAC4</color>
+    <color name="polaris_jade_70">#9DC89C</color>
+    <color name="polaris_jade_90">#769675</color>
+
+    <color name="polaris_dark_purple_10">#883D89</color>
+    <color name="polaris_dark_purple_30">#611A62</color>
+    <color name="polaris_dark_purple_50">#3A053B</color>
+    <color name="polaris_dark_purple_70">#2E042F</color>
+    <color name="polaris_dark_purple_90">#230323</color>
+
+
+
+<!--    violet goes with la salle green-->
+    <color name="polaris_violet_10">#FCB2E9</color>
+    <color name="polaris_violet_30">#FB99E2</color>
+    <color name="polaris_violet_50">#FA80DB</color>
+    <color name="polaris_violet_70">#C866AF</color>
+    <color name="polaris_violet_90">#964C84</color>
+
+    <color name="polaris_la_salle_green_10">#4CB365</color>
+    <color name="polaris_la_salle_green_30">#239941</color>
+    <color name="polaris_la_salle_green_50">#057F24</color>
+    <color name="polaris_la_salle_green_70">#04661D</color>
+    <color name="polaris_la_salle_green_90">#034D15</color>
+
+
+<!--    jordy blue goes with beech red-->
+    <color name="polaris_jordy_blue_10">#B2D6FC</color>
+    <color name="polaris_jordy_blue_30">#99C8FB</color>
+    <color name="polaris_jordy_blue">#7FBBFA</color>
+    <color name="polaris_jordy_blue_70">#6695C8</color>
+    <color name="polaris_jordy_blue_90">#4C7096</color>
+
+    <color name="polaris_beech_red_10">#B3814C</color>
+    <color name="polaris_beech_red_30">#996023</color>
+    <color name="polaris_beech_red">#804405</color>
+    <color name="polaris_beech_red_70">#663704</color>
+    <color name="polaris_beech_red_90">#4D2903</color>
+
+    <!--    crocus purple goes with swamp green-->
+    <color name="polaris_crocus_purple_10">#B8ADFC</color>
+    <color name="polaris_crocus_purple_30">#A093FB</color>
+    <color name="polaris_crocus_purple">#9585FA</color>
+    <color name="polaris_crocus_purple_70">#6E60C8</color>
+    <color name="polaris_crocus_purple_90">#524896</color>
+
+    <color name="polaris_swamp_green_10">#A9B74E</color>
+    <color name="polaris_swamp_green_30">#8F9F25</color>
+    <color name="polaris_swamp_green">#758605</color>
+    <color name="polaris_swamp_green_70">#5E6C04</color>
+    <color name="polaris_swamp_green_90">#475103</color>
+
+
 </resources>

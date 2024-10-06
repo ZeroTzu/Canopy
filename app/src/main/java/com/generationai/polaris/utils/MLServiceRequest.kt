@@ -1,4 +1,4 @@
-package com.example.polaris.utils
+package com.generationai.polaris.utils
 
 import android.util.Log
 import org.chromium.net.CronetException

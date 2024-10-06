@@ -1,4 +1,4 @@
-package com.example.polaris.ui
+package com.generationai.polaris.ui
 
 import android.util.Log
 import android.view.HapticFeedbackConstants

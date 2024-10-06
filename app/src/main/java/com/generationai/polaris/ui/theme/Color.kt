@@ -1,4 +1,4 @@
-package com.example.polaris.ui.theme
+package com.generationai.polaris.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -1,4 +1,4 @@
-package com.example.polaris
+package com.generationai.polaris
 
 import org.junit.Test
 
