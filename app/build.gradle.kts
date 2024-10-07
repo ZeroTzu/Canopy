@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.generationai.polaris"
-        minSdk = 30
+        minSdk = 34
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -66,6 +66,13 @@ dependencies {
     implementation(libs.tensorflow.lite.gpu)
     implementation(libs.material)
     implementation(libs.play.services.cronet)
+    implementation(libs.camera.core)
+    implementation (libs.camera.camera2)
+    implementation (libs.camera.lifecycle)
+    implementation (libs.camera.video)
+    implementation (libs.camera.view)
+    implementation (libs.camera.extensions)
+    implementation(libs.lifecycle.extensions)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

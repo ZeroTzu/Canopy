@@ -1,0 +1,145 @@
+package com.generationai.polaris
+
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.Service
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
+import android.os.IBinder
+import android.util.Log
+import android.view.Surface
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
+import androidx.camera.core.Preview
+import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleOwner
+import com.generationai.polaris.utils.Constants
+import java.io.File
+import java.text.SimpleDateFormat
+
+class PolarisBackgroundService : Service(){
+
+    private lateinit var notificationManager: NotificationManager
+    private lateinit var imageCapture: ImageCapture
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Log.i("PolarisBackgroundService", "onStartCommand method called")
+        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        createNotificationChannel()
+
+        startForeground(Constants.BACKGROUND_SERVICE_RUNNING_NOTIFICATION_ID, createNotification())
+
+        //Check for Camera and Microphone, and Location permissions stop the service if any of the permissions are not granted
+        val cameraPermission = checkSelfPermission(android.Manifest.permission.CAMERA)
+        val microphonePermission = checkSelfPermission(android.Manifest.permission.RECORD_AUDIO)
+        val locationPermission = checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)
+        if (cameraPermission == PackageManager.PERMISSION_GRANTED &&
+            microphonePermission == PackageManager.PERMISSION_GRANTED &&
+            locationPermission == PackageManager.PERMISSION_GRANTED) {
+            stopSelf()
+        }
+        startCamera()
+        startImageCapture()
+
+        return START_STICKY
+
+    }
+    override fun onBind(intent: Intent?): IBinder? {
+        return null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+    }
+    override fun onCreate() {
+        super.onCreate()
+    }
+
+    private fun createNotification() :Notification{
+
+        val notificationBuilder = NotificationCompat.Builder(this, "PolarisBackgroundService")
+            .setContentTitle(resources.getString(R.string.background_service_title))
+            .setContentText(resources.getString(R.string.background_service_text))
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setChannelId(Constants.BACKGROUND_SERVICE_CHANNEL_ID)
+        val notification= notificationBuilder.build()
+        return notification
+
+    }
+
+    private fun createNotificationChannel() {
+
+        val notificationChannelId = Constants.BACKGROUND_SERVICE_CHANNEL_ID
+        val channelName = resources.getString(R.string.notification_channel_name)
+        val importance = NotificationManager.IMPORTANCE_HIGH
+        val channel = NotificationChannel(notificationChannelId, channelName, importance)
+        channel.enableLights(true)
+        channel.description = resources.getString(R.string.notification_channel_description)
+        notificationManager.createNotificationChannel(channel)
+    }
+
+    private fun startImageCapture() {
+        // Your code to start image capture here
+
+    }
+
+    private fun startCamera() {
+
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
+        cameraProviderFuture.addListener(Runnable {
+            // CameraProvider
+            val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
+
+            // Set up ImageCapture UseCase
+            imageCapture = ImageCapture.Builder()
+                .setTargetRotation(Surface.ROTATION_0) // Adjust as needed
+                .build()
+
+            // Bind the camera lifecycle
+            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+
+            try {
+                cameraProvider.unbindAll()
+                cameraProvider.bindToLifecycle(
+                    baseContext as LifecycleOwner, // Pass lifecycle owner
+                    cameraSelector,
+                    imageCapture
+                )
+
+                // Now capture a picture
+                takePicture()
+
+            } catch (exc: Exception) {
+                Log.e("PolarisBackgroundService", "Use case binding failed", exc)
+            }
+        },ContextCompat.getMainExecutor(this))
+    }
+
+    private fun takePicture() {
+        // Create output file options (save the image to storage)
+        val file = File(externalMediaDirs.first(), "${System.currentTimeMillis()}.jpg")
+        val outputOptions = ImageCapture.OutputFileOptions.Builder(file).build()
+
+        // Take picture and handle the result
+        imageCapture.takePicture(
+            outputOptions,
+            ContextCompat.getMainExecutor(this),
+            object : ImageCapture.OnImageSavedCallback {
+                override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+                    Log.d("PolarisBackgroundService", "Image saved: ${file.absolutePath}")
+                }
+
+                override fun onError(exc: ImageCaptureException) {
+                    Log.e("PolarisBackgroundService", "Image capture failed", exc)
+                }
+            }
+        )
+    }
+
+}

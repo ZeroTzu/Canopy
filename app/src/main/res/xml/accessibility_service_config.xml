@@ -2,11 +2,12 @@
 <accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
 
     android:accessibilityEventTypes="typeAllMask"
-    android:packageNames="com.generationai.Polaris"
+    android:packageNames="com.generationai.Polaris com.generationai.polaris/com.generationai.polaris.utils.PolarisAccessibilityService"
     android:accessibilityFeedbackType="feedbackAllMask"
     android:notificationTimeout="100"
     android:settingsActivity="com.example.android.apis.accessibility.TestBackActivity"
     android:canRetrieveWindowContent="true"
+    android:accessibilityFlags="flagDefault"
     />
 
     <!--    android:accessibilityEventTypes="typeViewClicked|typeViewFocused"-->

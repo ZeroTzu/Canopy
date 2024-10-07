@@ -44,12 +44,13 @@
                     android:orientation="horizontal"
                     android:gravity="center">
                     <Button
-                        android:id="@+id/start_service_button"
+                        android:id="@+id/debug_button_1"
                         android:text="@string/start_service"
                         android:background="@drawable/custom_button"
                         android:theme="@style/Theme.Polaris.Purple"
                         style="@style/Theme.Polaris.CustomButton1" />
                     <Button
+                        android:id="@+id/debug_button_2"
                         android:text="@string/start_service"
                         android:background="@drawable/custom_button"
                         android:theme="@style/Theme.Polaris.Violet"
@@ -61,12 +62,14 @@
                     android:orientation="horizontal"
                     android:gravity="center">
                     <Button
+                        android:id="@+id/debug_button_3"
                         android:text="@string/start_service"
                         android:background="@drawable/custom_button"
                         style="@style/Theme.Polaris.CustomButton1"
                         android:theme="@style/Theme.Polaris.Jade"
                         />
                     <Button
+                        android:id="@+id/start_service_button"
                         android:text="@string/start_service"
                         android:background="@drawable/custom_button"
                         style="@style/Theme.Polaris.CustomButton1"

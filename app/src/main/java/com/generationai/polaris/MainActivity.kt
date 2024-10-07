@@ -100,7 +100,15 @@ class MainActivity : AppCompatActivity() {
         private val REQUIRED_PERMISSIONS =
             mutableListOf(
                 Manifest.permission.CAMERA,
-                Manifest.permission.RECORD_AUDIO
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.POST_NOTIFICATIONS,
+                Manifest.permission.FOREGROUND_SERVICE,
+                Manifest.permission.FOREGROUND_SERVICE_CAMERA,
+                Manifest.permission.FOREGROUND_SERVICE_LOCATION,
+                Manifest.permission.FOREGROUND_SERVICE_MICROPHONE,
+                Manifest.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK,
             ).apply {
                 if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
                     add(Manifest.permission.WRITE_EXTERNAL_STORAGE)

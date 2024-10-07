@@ -1,4 +1,5 @@
 package com.generationai.polaris
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -52,7 +53,10 @@ class Home : Fragment(),ResponseCallback {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         val rootView = binding.root
 
-        binding.startServiceButton.setOnClickListener{ view ->
+        binding.startServiceButton.setOnClickListener {
+            activity?.startService(Intent(activity, PolarisBackgroundService::class.java))
+        }
+        binding.debugButton1.setOnClickListener{ view ->
             val requestBuilder = cronetEngine.newUrlRequestBuilder(
                 "https://catfact.ninja/fact",
                 MLServiceRequest(this),
@@ -61,6 +65,12 @@ class Home : Fragment(),ResponseCallback {
             val request: org.chromium.net.UrlRequest = requestBuilder.build()
             request.start()  // Start the request
             performHaptic(view)
+        }
+        binding.debugButton2.setOnClickListener{
+
+        }
+        binding.debugButton3.setOnClickListener{
+
         }
         // Inflate the layout for this fragment
         return binding.root

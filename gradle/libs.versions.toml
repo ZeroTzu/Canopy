@@ -13,7 +13,8 @@ tensorflowLiteMetadata = "0.1.0"
 tensorflowLiteGpu = "2.3.0"
 material = "1.12.0"
 play-services-cronet = "18.1.0"
-
+camerax = "1.2.2"
+lifecycleExtensions = "2.0.0"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -29,9 +30,16 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+camera-core = { module = "androidx.camera:camera-core", version.ref = "camerax"}
+camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "camerax" }
+camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "camerax" }
+camera-video = { module = "androidx.camera:camera-video", version.ref = "camerax" }
+camera-view = { module = "androidx.camera:camera-view", version.ref = "camerax" }
+camera-extensions = { module = "androidx.camera:camera-extensions", version.ref = "camerax" }
 tensorflow-lite-support = { group = "org.tensorflow", name = "tensorflow-lite-support", version.ref = "tensorflowLiteSupport" }
 tensorflow-lite-metadata = { group = "org.tensorflow", name = "tensorflow-lite-metadata", version.ref = "tensorflowLiteMetadata" }
 tensorflow-lite-gpu = { group = "org.tensorflow", name = "tensorflow-lite-gpu", version.ref = "tensorflowLiteGpu" }
+lifecycle-extensions = {module="androidx.lifecycle:lifecycle-extensions", version.ref="lifecycleExtensions" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 play-services-cronet = { module = "com.google.android.gms:play-services-cronet", version.ref = "play-services-cronet" }
 
