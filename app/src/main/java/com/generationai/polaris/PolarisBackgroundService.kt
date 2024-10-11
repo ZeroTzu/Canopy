@@ -10,7 +10,9 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.util.Log
 import android.view.Surface
 import androidx.camera.core.CameraSelector
@@ -30,7 +32,15 @@ class PolarisBackgroundService : LifecycleService(){
 
     private lateinit var imageCapture: ImageCapture
     private lateinit var cameraProvider: ProcessCameraProvider
-
+    private val handler = Handler(Looper.getMainLooper())
+    private val pingInterval: Long = 2000
+    private val broadcastRunnable = object : Runnable {
+        override fun run() {
+            sendServiceStatus(true)
+            // Schedule the next ping after 2 seconds
+            handler.postDelayed(this, pingInterval)
+        }
+    }
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.i("PolarisBackgroundService", "onStartCommand method called")
         when(intent?.action){
@@ -43,6 +53,9 @@ class PolarisBackgroundService : LifecycleService(){
     override fun onDestroy() {
         Log.i("PolarisBackgroundService", "onDestroy()")
         super.onDestroy()
+        handler.removeCallbacks(broadcastRunnable)
+        sendServiceStatus(false)
+
         unregisterReceiver(serviceStatusReceiver)
     }
     override fun onCreate() {
@@ -113,18 +126,18 @@ class PolarisBackgroundService : LifecycleService(){
         }
         val intentFilter = IntentFilter(Actions.CHECK_SERVICE_STATUS.toString())
         registerReceiver(serviceStatusReceiver,intentFilter, RECEIVER_EXPORTED)
+        handler.post(broadcastRunnable)
     }
     private val serviceStatusReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == Actions.CHECK_SERVICE_STATUS.toString()) {
                 Log.i("PolarisBackgroundService", "Received ${Actions.CHECK_SERVICE_STATUS} ping")
-                sendServiceStatus()
+                sendServiceStatus(false)
             }
         }
     }
-    private fun sendServiceStatus() {
+    private fun sendServiceStatus(isRunning:Boolean) {
         // Send a broadcast back to the activity with the service status
-        val isRunning = true
         val statusIntent = Intent(Actions.SERVICE_STATUS_RESPONSE.toString()).apply {
             putExtra("isRunning", isRunning)
         }

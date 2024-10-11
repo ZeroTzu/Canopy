@@ -170,6 +170,7 @@ class Home : Fragment(),ResponseCallback {
         return false
     }
     fun updateServiceStatus(isRunning: Boolean) {
+        Log.i("PolarisHome", "updateServiceStatus method called")
         var currentlyShownState=false
         // Count down the latch to unblock the waiting thread
 //        latch.countDown()
@@ -177,13 +178,14 @@ class Home : Fragment(),ResponseCallback {
             resources.getString(R.string.start_service)->currentlyShownState=true
             resources.getString(R.string.stop_service)->currentlyShownState=false
         }
-        if(isRunning!= currentlyShownState){
-            if (isRunning) {
-                binding.startServiceButton.text=resources.getString(R.string.stop_service)
-            } else {
-                // Change button text to "Start Service"
-                binding.startServiceButton.text=resources.getString(R.string.start_service)
-            }
+        if (isRunning) {
+            // Change button text to "Stop Service"
+            Log.i("PolarisHome", "updateServiceStatus: Changing button to show Stop Service ")
+            binding.startServiceButton.text=resources.getString(R.string.stop_service)
+        } else {
+            // Change button text to "Start Service"
+            Log.i("PolarisHome", "updateServiceStatus: Changing button to show Start Service ")
+            binding.startServiceButton.text=resources.getString(R.string.start_service)
         }
 
     }

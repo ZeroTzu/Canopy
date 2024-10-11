@@ -37,13 +37,13 @@ class MainActivity : AppCompatActivity() {
     private val pingInterval: Long = 2000
     private val handler = Handler(Looper.getMainLooper())
     private val viewModel = viewModels<MainActivityViewModel>()
-    private val pingRunnable = object : Runnable {
-        override fun run() {
-            pingService()
-            // Schedule the next ping after 2 seconds
-            handler.postDelayed(this, pingInterval)
-        }
-    }
+//    private val pingRunnable = object : Runnable {
+//        override fun run() {
+//            pingService()
+//            // Schedule the next ping after 2 seconds
+//            handler.postDelayed(this, pingInterval)
+//        }
+//    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -86,7 +86,6 @@ class MainActivity : AppCompatActivity() {
         }
         val intentFilter = IntentFilter(PolarisBackgroundService.Actions.SERVICE_STATUS_RESPONSE.toString())
         registerReceiver(serviceStatusReceiver,intentFilter, RECEIVER_EXPORTED)
-        handler.post(pingRunnable)
     }
 
     private fun pingService() {
@@ -100,6 +99,7 @@ class MainActivity : AppCompatActivity() {
         Log.i("PolarisMainActivity", "isRunning: $isRunning")
         if (viewModel.value.isSertviceRunning.value!=isRunning) {
             viewModel.value.setIsBackgroundServiceRunning(isRunning)
+            Log.i("PolarisMainActivity", "isBackgroundServiceRunning: ${viewModel.value.isSertviceRunning.value}")
         }
 
     }
