@@ -1,20 +1,29 @@
 package com.generationai.polaris
+import android.app.ActivityManager
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
+import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.Toast
+import androidx.compose.runtime.currentCompositionErrors
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.generationai.polaris.databinding.FragmentHomeBinding
+import com.generationai.polaris.utils.Constants
+import com.generationai.polaris.utils.MLServiceRequest
+import com.generationai.polaris.utils.MLServiceRequest.ResponseCallback
 import org.chromium.net.CronetEngine
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
-import com.generationai.polaris.utils.MLServiceRequest.ResponseCallback
-import android.widget.Toast
-import android.util.Log
-import android.view.HapticFeedbackConstants
-import android.widget.Button
-import com.generationai.polaris.utils.MLServiceRequest
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,16 +43,25 @@ class Home : Fragment(),ResponseCallback {
     private lateinit var cronetEngine: CronetEngine
     private lateinit var executor: Executor
     private lateinit var buttonsList: List<Button>
+    private lateinit var notificationManager: NotificationManager
+    private lateinit var activityManager: ActivityManager
+    private lateinit var mainViewModel: MainActivityViewModel
+    private val latch = CountDownLatch(1)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val myBuilder = CronetEngine.Builder(context)
+        notificationManager = context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        activityManager = context?.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        mainViewModel = ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
+        createNotificationChannel()
         cronetEngine= myBuilder.build()
         executor = Executors.newSingleThreadExecutor()
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-//
+
     }
 
     override fun onCreateView(
@@ -54,7 +72,34 @@ class Home : Fragment(),ResponseCallback {
         val rootView = binding.root
 
         binding.startServiceButton.setOnClickListener {
-            activity?.startService(Intent(activity, PolarisBackgroundService::class.java))
+            val context = this.context as? Context
+            if (context!=null){
+                Log.i("PolarisHome", "button Pressed ")
+                val intent = Intent(PolarisBackgroundService.Actions.CHECK_SERVICE_STATUS.toString())
+                requireActivity().sendBroadcast(intent)
+                try {
+                    // Wait for the response, blocking the thread
+                    // After the latch is counted down, decide to start or stop the service
+                    if (!mainViewModel.isSertviceRunning.value) {
+                        Log.i("PolarisHome", "starting Background Service ")
+                        Intent(context, PolarisBackgroundService::class.java).also {
+                            it.action = PolarisBackgroundService.Actions.START.toString()
+                            context.startService(it)
+                            mainViewModel.setIsBackgroundServiceRunning(true)
+                        }
+                    } else {
+                        Log.i("PolarisHome", "stopping Background Service ")
+                        Intent(context, PolarisBackgroundService::class.java).also {
+                            it.action = PolarisBackgroundService.Actions.STOP.toString()
+                            context.startService(it)
+                            mainViewModel.setIsBackgroundServiceRunning(false)
+                        }
+
+                    }
+                } catch (e: InterruptedException) {
+                    e.printStackTrace()
+                }
+            }
         }
         binding.debugButton1.setOnClickListener{ view ->
             val requestBuilder = cronetEngine.newUrlRequestBuilder(
@@ -108,5 +153,38 @@ class Home : Fragment(),ResponseCallback {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+    private fun createNotificationChannel() {
+
+        val notificationChannelId = Constants.BACKGROUND_SERVICE_CHANNEL_ID
+        val channelName = resources.getString(R.string.notification_channel_name)
+        val importance = NotificationManager.IMPORTANCE_HIGH
+        val channel = NotificationChannel(notificationChannelId, channelName, importance)
+        channel.enableLights(true)
+        channel.description = resources.getString(R.string.notification_channel_description)
+        notificationManager.createNotificationChannel(channel)
+    }
+    private fun isServiceRunning(serviceClass:Class<Service>) : Boolean{
+
+
+        return false
+    }
+    fun updateServiceStatus(isRunning: Boolean) {
+        var currentlyShownState=false
+        // Count down the latch to unblock the waiting thread
+//        latch.countDown()
+        when (binding.startServiceButton.text){
+            resources.getString(R.string.start_service)->currentlyShownState=true
+            resources.getString(R.string.stop_service)->currentlyShownState=false
+        }
+        if(isRunning!= currentlyShownState){
+            if (isRunning) {
+                binding.startServiceButton.text=resources.getString(R.string.stop_service)
+            } else {
+                // Change button text to "Start Service"
+                binding.startServiceButton.text=resources.getString(R.string.start_service)
+            }
+        }
+
     }
 }

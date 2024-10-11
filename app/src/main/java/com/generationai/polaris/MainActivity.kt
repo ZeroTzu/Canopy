@@ -14,24 +14,46 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.generationai.polaris.databinding.ActivityMainBinding
 import android.Manifest
+import android.content.BroadcastReceiver
+import android.content.ClipData.Item
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
+import androidx.activity.viewModels
+import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var serviceStatusReceiver: BroadcastReceiver
+    private var isBackgroundServiceRunning: Boolean = false
+    private val pingInterval: Long = 2000
+    private val handler = Handler(Looper.getMainLooper())
+    private val viewModel = viewModels<MainActivityViewModel>()
+    private val pingRunnable = object : Runnable {
+        override fun run() {
+            pingService()
+            // Schedule the next ping after 2 seconds
+            handler.postDelayed(this, pingInterval)
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         //Request permissions (e.g. Camera, Audio etc.)
         if (allPermissionsGranted()) {
             startCamera()
         } else {
             requestPermissions()
         }
-
-
         replaceFragment(Home())
         binding.bottomNavigationView.selectedItemId = R.id.home
         binding.bottomNavigationView.setOnItemSelectedListener {
@@ -47,6 +69,39 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
+        serviceStatusReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                Log.i("PolarisMainActivity", "isBroadcastReceiver received")
+                if (intent.action == PolarisBackgroundService.Actions.SERVICE_STATUS_RESPONSE.toString()) {
+                    val isServiceRunning = intent.getBooleanExtra("isRunning", false)
+                    handleServiceStatus(isServiceRunning)
+                    Log.i("PolarisMainActivity", "isBroadcastReceiver: $isServiceRunning")
+                    val currentFragment=supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+                    if (currentFragment is Home){
+                        currentFragment.updateServiceStatus(isServiceRunning)
+
+                    }
+                }
+            }
+        }
+        val intentFilter = IntentFilter(PolarisBackgroundService.Actions.SERVICE_STATUS_RESPONSE.toString())
+        registerReceiver(serviceStatusReceiver,intentFilter, RECEIVER_EXPORTED)
+        handler.post(pingRunnable)
+    }
+
+    private fun pingService() {
+        // Send a broadcast to the service to check if it's running
+        val intent = Intent(PolarisBackgroundService.Actions.CHECK_SERVICE_STATUS.toString())
+        sendBroadcast(intent)
+        Log.i("PolarisMainActivity", "ping Ran")
+    }
+
+    private fun handleServiceStatus(isRunning: Boolean) {
+        Log.i("PolarisMainActivity", "isRunning: $isRunning")
+        if (viewModel.value.isSertviceRunning.value!=isRunning) {
+            viewModel.value.setIsBackgroundServiceRunning(isRunning)
+        }
+
     }
 
     private fun replaceFragment(fragment: Fragment) {
@@ -54,6 +109,7 @@ class MainActivity : AppCompatActivity() {
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.nav_host_fragment, fragment)
         fragmentTransaction.commit()
+
     }
 
     private val activityResultLauncher =
@@ -131,5 +187,13 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 fun GreetingPreview() {
     PolarisTheme {
         Greeting("Android")
+    }
+}
+
+class MainActivityViewModel : ViewModel() {
+    var isSertviceRunning = mutableStateOf(false)
+        private set
+    fun setIsBackgroundServiceRunning(isRunning: Boolean) {
+        isSertviceRunning.value = isRunning
     }
 }

@@ -50,7 +50,6 @@
         <service android:name=".PolarisBackgroundService"
             android:foregroundServiceType="camera|microphone|location|mediaPlayback">
         </service>
-
     </application>
 
     <queries>
