@@ -34,11 +34,17 @@ class PolarisBackgroundService : LifecycleService(){
     private lateinit var cameraProvider: ProcessCameraProvider
     private val handler = Handler(Looper.getMainLooper())
     private val pingInterval: Long = 2000
-    private val broadcastRunnable = object : Runnable {
+    private val sendServiceStatusRunnable = object : Runnable {
         override fun run() {
             sendServiceStatus(true)
             // Schedule the next ping after 2 seconds
             handler.postDelayed(this, pingInterval)
+        }
+    }
+    private val captureImageRunnable = object : Runnable {
+        override fun run() {
+            takePicture() // Capture a picture
+            handler.postDelayed(this, 5000) // Adjust delay (e.g., 5 seconds)
         }
     }
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -53,7 +59,8 @@ class PolarisBackgroundService : LifecycleService(){
     override fun onDestroy() {
         Log.i("PolarisBackgroundService", "onDestroy()")
         super.onDestroy()
-        handler.removeCallbacks(broadcastRunnable)
+        handler.removeCallbacks(captureImageRunnable)
+        handler.removeCallbacks(sendServiceStatusRunnable)
         sendServiceStatus(false)
 
         unregisterReceiver(serviceStatusReceiver)
@@ -79,7 +86,6 @@ class PolarisBackgroundService : LifecycleService(){
     }
 
     private fun startCamera() {
-
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
         cameraProviderFuture.addListener(Runnable {
             // CameraProvider
@@ -100,10 +106,8 @@ class PolarisBackgroundService : LifecycleService(){
                     cameraSelector,
                     imageCapture
                 )
-
-                // Now capture a picture
-                takePicture()
-
+                handler.post(captureImageRunnable)
+            // Now capture a picture
             } catch (exc: Exception) {
                 Log.e("PolarisBackgroundService", "Use case binding failed", exc)
             }
@@ -126,7 +130,7 @@ class PolarisBackgroundService : LifecycleService(){
         }
         val intentFilter = IntentFilter(Actions.CHECK_SERVICE_STATUS.toString())
         registerReceiver(serviceStatusReceiver,intentFilter, RECEIVER_EXPORTED)
-        handler.post(broadcastRunnable)
+        handler.post(sendServiceStatusRunnable)
     }
     private val serviceStatusReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -143,6 +147,14 @@ class PolarisBackgroundService : LifecycleService(){
         }
         sendBroadcast(statusIntent)
     }
+    private fun sendServiceImage(imagePath:String) {
+        // Send a broadcast back to the activity with the service status
+        val imageIntent = Intent(Actions.SERVICE_IMAGE_TAKEN.toString()).apply {
+            putExtra("imagePath", imagePath)
+        }
+        sendBroadcast(imageIntent)
+        Log.i("PolarisBackgroundService", "image sent")
+    }
     private fun takePicture() {
         // Create output file options (save the image to storage)
         val file = File(externalMediaDirs.first(), "${System.currentTimeMillis()}.jpg")
@@ -155,6 +167,7 @@ class PolarisBackgroundService : LifecycleService(){
             object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     Log.d("PolarisBackgroundService", "Image saved: ${file.absolutePath}")
+                    sendServiceImage(file.absolutePath)
                 }
 
                 override fun onError(exc: ImageCaptureException) {
@@ -167,7 +180,8 @@ class PolarisBackgroundService : LifecycleService(){
         START("com.generationai.polaris.action.START"),
         STOP("com.generationai.polaris.action.STOP"),
         CHECK_SERVICE_STATUS("com.generationai.polaris.action.CHECK_SERVICE_STATUS"),
-        SERVICE_STATUS_RESPONSE("com.generationai.polaris.action.SERVICE_STATUS_RESPONSE");
+        SERVICE_STATUS_RESPONSE("com.generationai.polaris.action.SERVICE_STATUS_RESPONSE"),
+        SERVICE_IMAGE_TAKEN("com.generationai.polaris.action.SERVICE_IMAGE_TAKEN");
 
     }
 

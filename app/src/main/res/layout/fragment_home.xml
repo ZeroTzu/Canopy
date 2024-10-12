@@ -26,9 +26,17 @@
                 android:padding="15dp"
                 android:ellipsize="end"
                 android:maxLines="6"/>
-        </FrameLayout>
 
+        </FrameLayout>
+        <ImageView
+            android:id="@+id/debug_home_fragment_imageView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/home_fragment_topBar"
+            app:layout_constraintBottom_toTopOf="@id/home_fragment_scrollView"
+            app:contentDescription="@string/home_fragment_image_description" />
         <ScrollView
+            android:id="@+id/home_fragment_scrollView"
             android:layout_width="match_parent"
             android:layout_height="348dp"
             app:layout_constraintBottom_toBottomOf="parent"

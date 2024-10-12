@@ -42,7 +42,6 @@ class Home : Fragment(),ResponseCallback {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var cronetEngine: CronetEngine
     private lateinit var executor: Executor
-    private lateinit var buttonsList: List<Button>
     private lateinit var notificationManager: NotificationManager
     private lateinit var activityManager: ActivityManager
     private lateinit var mainViewModel: MainActivityViewModel
@@ -187,6 +186,22 @@ class Home : Fragment(),ResponseCallback {
             Log.i("PolarisHome", "updateServiceStatus: Changing button to show Start Service ")
             binding.startServiceButton.text=resources.getString(R.string.start_service)
         }
+
+    }
+    fun updateImage(imagePath: String?){
+        try{
+            if (imagePath!=null){
+                binding.homeFragmentTopBarTextView.text=imagePath
+                binding.debugHomeFragmentImageView.setImageURI(android.net.Uri.parse(imagePath))
+                binding.homeFragmentTopBarTextView.requestLayout()
+                Log.i("PolarisHome", "updateImage success: $imagePath")
+            }else{
+                Log.i("PolarisHome", "updateImage failed due to no path: $imagePath")
+            }
+        }catch (e:Exception){
+            Log.e("PolarisHome", "updateImage failed: ${e.message}")
+        }
+
 
     }
 }

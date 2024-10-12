@@ -33,6 +33,7 @@ import androidx.lifecycle.ViewModel
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var serviceStatusReceiver: BroadcastReceiver
+    private lateinit var imageReceiver: BroadcastReceiver
     private var isBackgroundServiceRunning: Boolean = false
     private val pingInterval: Long = 2000
     private val handler = Handler(Looper.getMainLooper())
@@ -71,19 +72,33 @@ class MainActivity : AppCompatActivity() {
         }
         serviceStatusReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
-                Log.i("PolarisMainActivity", "isBroadcastReceiver received")
                 if (intent.action == PolarisBackgroundService.Actions.SERVICE_STATUS_RESPONSE.toString()) {
                     val isServiceRunning = intent.getBooleanExtra("isRunning", false)
                     handleServiceStatus(isServiceRunning)
-                    Log.i("PolarisMainActivity", "isBroadcastReceiver: $isServiceRunning")
+                    Log.i("PolarisMainActivity", "serviceStatusReceiver received isRunning Value: $isServiceRunning")
                     val currentFragment=supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
                     if (currentFragment is Home){
                         currentFragment.updateServiceStatus(isServiceRunning)
 
                     }
                 }
+                else if (intent.action == PolarisBackgroundService.Actions.SERVICE_IMAGE_TAKEN.toString()) {
+                    val imagePath = intent.getStringExtra("imagePath")
+                    Log.i("PolarisMainActivity", "=imageReceiver received imagePath: $imagePath")
+                    val currentFragment =
+                        supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+                    if (currentFragment is Home) {
+                        //change the imageview to show the image
+                        currentFragment.updateImage(imagePath)
+
+                    }
+                }
+                else{
+                    Log.i("PolarisMainActivity", "serviceStatusReceiver received unknown action: ${intent.action}")
+                }
             }
         }
+
         val intentFilter = IntentFilter(PolarisBackgroundService.Actions.SERVICE_STATUS_RESPONSE.toString())
         registerReceiver(serviceStatusReceiver,intentFilter, RECEIVER_EXPORTED)
     }
