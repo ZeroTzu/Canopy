@@ -20,6 +20,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -82,10 +83,29 @@ class MainActivity : AppCompatActivity() {
 
                     }
                 }
+                else if (intent.action == PolarisBackgroundService.Actions.SERVICE_LOCATION_TAKEN.toString()) {
+                    val location: Location? = intent.getParcelableExtra("location",Location::class.java)
+                    val currentFragment=supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+                    if (location!=null){
+                        val locationTime=location.time
+                        val locationLongitude=location.longitude
+                        val locationLatitude=location.longitude
+                        val locationAltitude=location.altitude
+                        val locationSpeed=location.speed
+                        val locationAccuracy=location.accuracy
+                        val locationBearing=location.bearing
+                        Log.i("PolarisMainActivity", "serviceStatusReceiver received location Value: [ longitude: $locationLongitude, latitude: $locationLatitude, altitude: $locationAltitude, bearing: $locationBearing,time:$locationTime, speed: $locationSpeed, accuracy: $locationAccuracy]")
+                    }else{
+                        Log.i("PolarisMainActivity", "serviceStatusReceiver received location Value: null")
+                    }
+                    if (currentFragment is Home){
+                        return
+                    }
+                }
                 else if (intent.action == PolarisBackgroundService.Actions.SERVICE_STATUS_RESPONSE.toString()) {
                     val isServiceRunning = intent.getBooleanExtra("isRunning", false)
                     handleServiceStatus(isServiceRunning)
-                    Log.i("PolarisMainActivity", "serviceStatusReceiver receivedd isRunning Value: $isServiceRunning")
+                    Log.i("PolarisMainActivity", "serviceStatusReceiver received isRunning Value: $isServiceRunning")
                     val currentFragment=supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
                     if (currentFragment is Home){
                         currentFragment.updateServiceStatus(isServiceRunning)
@@ -101,6 +121,7 @@ class MainActivity : AppCompatActivity() {
         val intentFilter = IntentFilter().apply{
             addAction(PolarisBackgroundService.Actions.SERVICE_STATUS_RESPONSE.toString())
             addAction(PolarisBackgroundService.Actions.SERVICE_IMAGE_TAKEN.toString())
+            addAction(PolarisBackgroundService.Actions.SERVICE_LOCATION_TAKEN.toString())
 
         }
         registerReceiver(serviceStatusReceiver,intentFilter, RECEIVER_EXPORTED)

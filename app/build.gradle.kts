@@ -73,6 +73,7 @@ dependencies {
     implementation (libs.camera.view)
     implementation (libs.camera.extensions)
     implementation(libs.lifecycle.extensions)
+    implementation(libs.play.services.location)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

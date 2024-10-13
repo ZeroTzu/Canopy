@@ -15,6 +15,7 @@ material = "1.12.0"
 play-services-cronet = "18.1.0"
 camerax = "1.2.2"
 lifecycleExtensions = "2.0.0"
+playServicesLocation = "21.3.0"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -42,6 +43,7 @@ tensorflow-lite-gpu = { group = "org.tensorflow", name = "tensorflow-lite-gpu", 
 lifecycle-extensions = {module="androidx.lifecycle:lifecycle-extensions", version.ref="lifecycleExtensions" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 play-services-cronet = { module = "com.google.android.gms:play-services-cronet", version.ref = "play-services-cronet" }
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

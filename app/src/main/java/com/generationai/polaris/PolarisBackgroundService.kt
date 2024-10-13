@@ -1,5 +1,6 @@
 package com.generationai.polaris
 
+import android.Manifest
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -9,6 +10,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Build
 import android.os.Handler
 import android.os.IBinder
@@ -20,11 +22,14 @@ import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleService
 import com.generationai.polaris.utils.Constants
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import java.io.File
 import java.text.SimpleDateFormat
 
@@ -32,6 +37,7 @@ class PolarisBackgroundService : LifecycleService(){
 
     private lateinit var imageCapture: ImageCapture
     private lateinit var cameraProvider: ProcessCameraProvider
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val handler = Handler(Looper.getMainLooper())
     private val pingInterval: Long = 2000
     private val sendServiceStatusRunnable = object : Runnable {
@@ -44,9 +50,16 @@ class PolarisBackgroundService : LifecycleService(){
     private val captureImageRunnable = object : Runnable {
         override fun run() {
             takePicture() // Capture a picture
-            handler.postDelayed(this, 5000) // Adjust delay (e.g., 5 seconds)
+            handler.postDelayed(this, 5000) //
         }
     }
+    private val captureLocationRunnable = object : Runnable {
+        override fun run() {
+            getCurrentLocation() // get the current location
+            handler.postDelayed(this, 5000) //
+        }
+    }
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.i("PolarisBackgroundService", "onStartCommand method called")
         when(intent?.action){
@@ -61,6 +74,7 @@ class PolarisBackgroundService : LifecycleService(){
         super.onDestroy()
         handler.removeCallbacks(captureImageRunnable)
         handler.removeCallbacks(sendServiceStatusRunnable)
+        handler.removeCallbacks(captureLocationRunnable)
         sendServiceStatus(false)
 
         unregisterReceiver(serviceStatusReceiver)
@@ -128,9 +142,11 @@ class PolarisBackgroundService : LifecycleService(){
         }else{
             stopSelf()
         }
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         val intentFilter = IntentFilter(Actions.CHECK_SERVICE_STATUS.toString())
         registerReceiver(serviceStatusReceiver,intentFilter, RECEIVER_EXPORTED)
         handler.post(sendServiceStatusRunnable)
+        handler.post(captureLocationRunnable)
     }
     private val serviceStatusReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -140,6 +156,34 @@ class PolarisBackgroundService : LifecycleService(){
             }
         }
     }
+    private fun getCurrentLocation(){
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            //TODO Make a system to request for permissions and relaunch the service
+            return
+        }
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location : Location? ->
+                // Got last known location. In some rare situations this can be null.
+                if (location!=null){
+                    sendCurrentLocation(location)
+                }
+            }
+    }
+    private fun sendCurrentLocation(location:Location){
+        val locationIntent = Intent(Actions.SERVICE_LOCATION_TAKEN.toString()).apply {
+            putExtra("location", location)
+        }
+        sendBroadcast(locationIntent)
+    }
+
+
     private fun sendServiceStatus(isRunning:Boolean) {
         // Send a broadcast back to the activity with the service status
         val statusIntent = Intent(Actions.SERVICE_STATUS_RESPONSE.toString()).apply {
@@ -184,7 +228,8 @@ class PolarisBackgroundService : LifecycleService(){
         STOP("com.generationai.polaris.action.STOP"),
         CHECK_SERVICE_STATUS("com.generationai.polaris.action.CHECK_SERVICE_STATUS"),
         SERVICE_STATUS_RESPONSE("com.generationai.polaris.action.SERVICE_STATUS_RESPONSE"),
-        SERVICE_IMAGE_TAKEN("com.generationai.polaris.action.SERVICE_IMAGE_TAKEN");
+        SERVICE_IMAGE_TAKEN("com.generationai.polaris.action.SERVICE_IMAGE_TAKEN"),
+        SERVICE_LOCATION_TAKEN("com.generationai.polaris.action.SERVICE_LOCATION_TAKEN")
 
     }
 
