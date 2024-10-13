@@ -146,6 +146,9 @@ class PolarisBackgroundService : LifecycleService(){
             putExtra("isRunning", isRunning)
         }
         sendBroadcast(statusIntent)
+        Log.i("PolarisBackgroundService", "status sent" +
+                "")
+
     }
     private fun sendServiceImage(imagePath:String) {
         // Send a broadcast back to the activity with the service status
