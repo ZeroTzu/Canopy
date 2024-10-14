@@ -191,7 +191,7 @@ class Home : Fragment(),ResponseCallback {
     fun updateImage(imagePath: String?){
         try{
             if (imagePath!=null){
-                binding.homeFragmentTopBarTextView.text=imagePath
+//                binding.homeFragmentTopBarTextView.text=imagePath
                 binding.debugHomeFragmentImageView.setImageURI(android.net.Uri.parse(imagePath))
                 binding.homeFragmentTopBarTextView.requestLayout()
                 Log.i("PolarisHome", "updateImage success: $imagePath")
