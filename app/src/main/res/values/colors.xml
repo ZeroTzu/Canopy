@@ -73,4 +73,12 @@
     <color name="polaris_swamp_green_90">#475103</color>
 
 
+
+    <color name="polaris_blue_10">#949db0</color>
+    <color name="polaris_blue_30">#717c96</color>
+    <color name="polaris_blue_50">#4D5B7C</color>
+    <color name="polaris_blue_70">#3e4963</color>
+    <color name="polaris_blue_90">#2e374a</color>
+
+
 </resources>

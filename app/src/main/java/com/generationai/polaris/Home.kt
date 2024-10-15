@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.compose.runtime.currentCompositionErrors
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.generationai.polaris.databinding.FragmentHomeBinding
@@ -113,9 +114,6 @@ class Home : Fragment(),ResponseCallback {
         binding.debugButton2.setOnClickListener{
 
         }
-        binding.debugButton3.setOnClickListener{
-
-        }
         // Inflate the layout for this fragment
         return binding.root
     }
@@ -181,10 +179,12 @@ class Home : Fragment(),ResponseCallback {
             // Change button text to "Stop Service"
             Log.i("PolarisHome", "updateServiceStatus: Changing button to show Stop Service ")
             binding.startServiceButton.text=resources.getString(R.string.stop_service)
+            binding.startServiceButton.icon=ResourcesCompat.getDrawable(resources,R.drawable.baseline_stop_24,requireContext().theme)
         } else {
             // Change button text to "Start Service"
             Log.i("PolarisHome", "updateServiceStatus: Changing button to show Start Service ")
             binding.startServiceButton.text=resources.getString(R.string.start_service)
+            binding.startServiceButton.icon=ResourcesCompat.getDrawable(resources,R.drawable.baseline_play_arrow_24,requireContext().theme)
         }
 
     }

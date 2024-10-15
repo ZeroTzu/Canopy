@@ -3,6 +3,7 @@
     <string name="home">Home</string>
     <string name="settings">Settings</string>
     <string name="history">History</string>
+    <string name="debug_button">Debug Button</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="start_service">Start Service</string>
     <string name="stop_service">Stop Service</string>
@@ -15,5 +16,7 @@
     <string name="notification_channel_description">Notification channel for Polaris background service</string>
 
     <string name="home_fragment_image_description">The most recent image taken by the camera</string>
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

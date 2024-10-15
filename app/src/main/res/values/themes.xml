@@ -2,31 +2,54 @@
 <resources>
 <!--    <style name="Theme.Polaris" parent="Theme.AppCompat.DayNight.NoActionBar" />-->
     <style name="Theme.Polaris" parent="Theme.Material3.DayNight.NoActionBar" >
-        <item name="colorPrimary">@color/polaris_jordy_blue_70</item>
-        <item name="colorPrimaryVariant">@color/polaris_jordy_blue</item>
+        <item name="colorPrimary">@color/polaris_blue_50</item>
+        <item name="colorPrimaryVariant">@color/polaris_blue_30</item>
+        <item name="colorPrimaryDark">@color/polaris_blue_90</item>
         <item name="colorOnPrimary">@color/white</item>
-
-        <item name="android:colorBackground">@color/polaris_grey_90</item>
-        <item name="colorSecondary">@color/polaris_beech_red</item>
-        <item name="colorSurface">@color/polaris_beech_red_10</item>
-        <item name="colorOnSurface">@color/black</item>
+        <item name="android:colorAccent">@color/white</item>
+        <item name="android:colorError">#7C2424</item>
+        <item name="android:colorBackground">@color/polaris_blue_50</item>
+        <item name="colorSecondary">@color/polaris_blue_50</item>
+        <item name="colorSurface">@color/polaris_grey_30</item>
+        <item name="colorOnSurface">@color/polaris_blue_50</item>
     </style>
 
-    <style name="Theme.Polaris.Jade" parent="Theme.Polaris">
-        <item name="colorPrimary">@color/polaris_jade_90</item>
-        <item name="colorPrimaryVariant">@color/polaris_jade_50</item>
-        <item name="colorOnPrimary">@color/white</item>
+<!--    <style name="Theme.Polaris.Jade" parent="Theme.Polaris">-->
+<!--        <item name="colorPrimary">@color/polaris_jade_90</item>-->
+<!--        <item name="colorPrimaryVariant">@color/polaris_jade_50</item>-->
+<!--        <item name="colorOnPrimary">@color/white</item>-->
 
-        <item name="android:colorBackground">@color/polaris_grey_90</item>
-        <item name="colorSecondary">@color/polaris_violet_30</item>
-        <item name="colorSurface">@color/white</item>
-        <item name="colorOnSurface">@color/polaris_jade_90</item>
-    </style>
+<!--        <item name="android:colorBackground">@color/polaris_grey_90</item>-->
+<!--        <item name="colorSecondary">@color/polaris_violet_30</item>-->
+<!--        <item name="colorSurface">@color/white</item>-->
+<!--        <item name="colorOnSurface">@color/polaris_blue_50</item>-->
+<!--    </style>-->
 
-    <style name="Theme.Polaris.Violet" parent="Theme.Polaris">
-        <item name="colorPrimary">@color/polaris_violet_70</item>
-        <item name="colorPrimaryVariant">@color/polaris_violet_30</item>
-        <item name="colorOnPrimary">@color/white</item>
+<!--    <style name="Theme.Polaris.Violet" parent="Theme.Polaris">-->
+<!--        <item name="colorPrimary">@color/black</item>-->
+<!--        <item name="colorPrimaryVariant">@color/polaris_violet_30</item>-->
+<!--        <item name="colorOnPrimary">@color/white</item>-->
+
+<!--        <item name="android:colorBackground">@color/polaris_grey_90</item>-->
+<!--        <item name="colorSecondary">@color/polaris_la_salle_green_50</item>-->
+<!--        <item name="colorSurface">@color/polaris_la_salle_green_10</item>-->
+<!--        <item name="colorOnSurface">@color/polaris_violet_90</item>-->
+<!--    </style>-->
+
+<!--    <style name="Theme.Polaris.Purple" parent="Theme.Polaris">-->
+<!--        <item name="colorPrimary">@color/polaris_dark_purple_10</item>-->
+<!--        <item name="colorPrimaryVariant">@color/polaris_dark_purple_10</item>-->
+<!--        <item name="colorOnPrimary">@color/white</item>-->
+
+<!--        <item name="android:colorBackground">@color/polaris_grey_90</item>-->
+<!--        <item name="colorSecondary">@color/polaris_dark_purple_30</item>-->
+<!--        <item name="colorSurface">@color/polaris_jade_10</item>-->
+<!--        <item name="colorOnSurface">@color/polaris_dark_purple_30</item>-->
+<!--    </style>-->
+    <style name="Theme.Polaris.Secondary" parent="Theme.Polaris">
+        <item name="colorPrimary">@color/polaris_grey_90</item>
+        <item name="colorPrimaryVariant">@color/polaris_grey_90</item>
+        <item name="colorOnPrimary">@color/polaris_blue_50</item>
 
         <item name="android:colorBackground">@color/polaris_grey_90</item>
         <item name="colorSecondary">@color/polaris_la_salle_green_50</item>
@@ -34,27 +57,48 @@
         <item name="colorOnSurface">@color/polaris_violet_90</item>
     </style>
 
-    <style name="Theme.Polaris.Purple" parent="Theme.Polaris">
-        <item name="colorPrimary">@color/polaris_dark_purple_10</item>
-        <item name="colorPrimaryVariant">@color/polaris_dark_purple_10</item>
-        <item name="colorOnPrimary">@color/white</item>
-
-        <item name="android:colorBackground">@color/polaris_grey_90</item>
-        <item name="colorSecondary">@color/polaris_dark_purple_30</item>
-        <item name="colorSurface">@color/polaris_jade_10</item>
-        <item name="colorOnSurface">@color/polaris_dark_purple_30</item>
-    </style>
-
     <style name="Theme.Polaris.CustomButton1" parent="Theme.Polaris">
-        <item name="android:layout_width">170dp</item>
-        <item name="android:layout_height">170dp</item>
-        <item name="android:background">@drawable/custom_button</item>
+        <item name="android:layout_width">90dp</item>
+        <item name="android:layout_height">110dp</item>
+        <item name="android:background">@drawable/custom_button</item> <!-- Drawable for button -->
+        <item name="android:backgroundTint">?attr/colorOnPrimary</item>
+        <item name="android:textColor">?attr/colorPrimaryDark</item>
         <item name="android:layout_margin">2dp</item>
-        <item name="android:gravity">top|left</item>
-        <item name="android:paddingLeft">10dp</item>
+        <item name="android:gravity">bottom|center</item>
         <item name="android:paddingTop">7dp</item>
         <item name="android:radius">1dp</item>
+        <item name="android:elevation">4dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:paddingBottom">20dp</item>
+    </style>
+    <style name="Theme.Polaris.CustomButtonCircle" parent="Theme.Polaris">
+        <item name="android:layout_width">20dp</item>
+        <item name="android:layout_height">20dp</item>
+        <item name="android:background">@drawable/custom_button_circle</item> <!-- Drawable for button -->
+        <item name="android:backgroundTint">?attr/colorOnPrimary</item>
+        <item name="android:textColor">?attr/colorPrimaryDark</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:gravity">bottom|center</item>
+        <item name="android:paddingTop">7dp</item>
+        <item name="android:radius">1dp</item>
+        <item name="android:elevation">20dp</item>
+    </style>
 
+    <style name="Theme.Polaris.MapFrame" parent="Theme.Polaris">
+        <item name="android:layout_width">90dp</item>
+        <item name="android:layout_height">110dp</item>
+        <item name="android:background">@drawable/custom_map_frame</item> <!-- Drawable for button -->
+        <item name="android:backgroundTint">?attr/colorOnPrimary</item>
+        <item name="android:textColor">?attr/colorPrimaryDark</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:gravity">bottom|center</item>
+        <item name="android:paddingTop">7dp</item>
+        <item name="android:radius">1dp</item>
+        <item name="android:elevation">4dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:paddingBottom">20dp</item>
     </style>
 
 
