@@ -32,24 +32,14 @@
                 android:maxLines="6"/>
 
         </FrameLayout>
-        <FrameLayout
-            android:id="@+id/debug_command_fragment_imageView"
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/map"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintTop_toBottomOf="@id/command_fragment_topBar"
             app:layout_constraintBottom_toTopOf="@id/debug_command_fragment_bottom_layout"
-            app:contentDescription="@string/home_fragment_image_description"
-            android:backgroundTint="@color/black"
-            android:padding="30dp">
-            <androidx.fragment.app.FragmentContainerView
-                xmlns:map="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/map"
-                android:name="com.google.android.gms.maps.SupportMapFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context=".MainActivity" />
+            android:name="com.generationai.polaris.Map"/>
 
-        </FrameLayout>
         <LinearLayout
             android:id="@+id/debug_command_fragment_bottom_layout"
             android:layout_width="match_parent"
