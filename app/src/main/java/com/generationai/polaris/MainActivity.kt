@@ -59,14 +59,10 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigationView.selectedItemId = R.id.home
         binding.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
-                R.id.home -> {
-                    replaceFragment(Home())
-                }
-
+                R.id.home -> replaceFragment(Home())
                 R.id.settings -> replaceFragment(Settings())
                 R.id.history -> replaceFragment(History())
-                else -> {
-                }
+                R.id.command -> replaceFragment(Command())
             }
             true
         }

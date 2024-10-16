@@ -10,4 +10,7 @@
     <item android:title="@string/history"
         android:id="@+id/history"
         android:icon="@drawable/baseline_history_24"/>
+    <item android:title="@string/command"
+        android:id="@+id/command"
+        android:icon="@drawable/baseline_history_24"/>
 </menu>
