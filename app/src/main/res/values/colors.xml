@@ -80,5 +80,7 @@
     <color name="polaris_blue_70">#3e4963</color>
     <color name="polaris_blue_90">#2e374a</color>
 
+    <color name="transparent">#00FFFFFF</color>
+
 
 </resources>

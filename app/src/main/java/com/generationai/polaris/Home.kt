@@ -162,8 +162,6 @@ class Home : Fragment(),ResponseCallback {
         notificationManager.createNotificationChannel(channel)
     }
     private fun isServiceRunning(serviceClass:Class<Service>) : Boolean{
-
-
         return false
     }
     fun updateServiceStatus(isRunning: Boolean) {
