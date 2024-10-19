@@ -1,4 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <style name="Theme.Polaris.CustomButton1.style" parent="Widget.Material3.Button.ElevatedButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:maxWidth">100dp</item>
+        <item name="android:maxHeight">130dp</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:background">@drawable/custom_button</item>
+        <item name="android:gravity">bottom|center</item>
+        <item name="android:paddingTop">7dp</item>
+        <item name="android:radius">1dp</item>
+        <item name="android:elevation">4dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:padding">15dp</item>
+        <item name="android:paddingBottom">40dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="iconSize">12dp</item>
+    </style>
+    <style name="Theme.Polaris.CustomButton2.style" parent="Theme.Polaris">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:maxWidth">100dp</item>
+        <item name="android:maxHeight">130dp</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:gravity">bottom|center</item>
+        <item name="android:background">@drawable/custom_button2</item>
+        <item name="android:paddingTop">7dp</item>
+        <item name="android:radius">1dp</item>
+        <item name="android:elevation">4dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:padding">15dp</item>
+        <item name="android:paddingBottom">40dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="Theme.Polaris.CustomButtonCircle.style" parent="Theme.Polaris">
+        <item name="android:layout_width">20dp</item>
+        <item name="android:layout_height">20dp</item>
+        <item name="android:background">@drawable/custom_button_circle</item> <!-- Drawable for button -->
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:gravity">bottom|center</item>
+        <item name="android:paddingTop">7dp</item>
+        <item name="android:radius">1dp</item>
+        <item name="android:elevation">20dp</item>
+    </style>
 </resources>

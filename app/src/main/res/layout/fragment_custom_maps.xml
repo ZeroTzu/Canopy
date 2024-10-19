@@ -1,41 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardCornerRadius="10dp">
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/map"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            tools:context=".CustomMapsFragment"
-            android:layout_weight="1"/>
+        android:layout_height="match_parent"
+        android:theme="@style/Theme.Polaris.MapFrame"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        >
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="90dp"
-            android:theme="@style/Theme.Polaris.Secondary">
-            <LinearLayout
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:padding="0dp"
+            android:background="@color/transparent"
+            >
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center_vertical">
-                <com.google.android.material.button.MaterialButton
-                    android:layout_width="60dp"
-                    android:layout_height="60dp" />
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="hihi">
-
-                </com.google.android.material.switchmaterial.SwitchMaterial>
-
-            </LinearLayout>
+                tools:context=".CustomMapsFragment"
+                android:background="@color/transparent"
+                android:layout_margin="7dp"
+                />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/custom_map_frame"
+                />
         </FrameLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:background="@color/transparent">
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:icon="@drawable/baseline_gps_fixed_24"
+                app:iconGravity="textTop"
+                app:iconSize="30dp"
+                style="@style/Theme.Polaris.CustomButtonCircle"
+                android:theme="@style/Theme.Polaris"
+                />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                />
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                style="@style/Theme.Polaris.CustomButton2"
+                android:text="@string/view_travel_history"
+                android:padding="8dp"
+                android:gravity="center"
+                android:ellipsize="end"
+                android:layout_gravity="end"
+                android:layout_weight="1"
+                />
+        </LinearLayout>
     </LinearLayout>
 
-</com.google.android.material.card.MaterialCardView>

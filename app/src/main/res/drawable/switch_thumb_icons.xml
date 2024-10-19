@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:state_checked="true"
+        android:state_enabled="false"
+        android:drawable="@drawable/light_switch_icon_disabled"
+        />
+    <item
+        android:state_checked="false"
+        android:state_enabled="false"
+        android:drawable="@drawable/dark_switch_icon_disabled"
+        />
+    <item
+        android:state_checked="true"
+        android:state_enabled="true"
+        android:drawable="@drawable/light_switch_icon"
+        />
+    <item
+        android:state_checked="false"
+        android:state_enabled="true"
+        android:drawable="@drawable/dark_switch_icon"
+        />
+</selector>

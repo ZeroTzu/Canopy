@@ -3,12 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Settings">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/settings" />
+    <androidx.appcompat.widget.SwitchCompat
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        app:track="@drawable/light_dark_switch_track"
+        android:thumb="@drawable/switch_thumb"/>
 
 </FrameLayout>

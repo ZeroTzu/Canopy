@@ -72,7 +72,7 @@
                     style="@style/Theme.Polaris.CustomButtonCircle"
                     app:icon="@drawable/baseline_notifications_24"
                     app:iconGravity="textTop"
-                    app:iconSize="25dp"
+                    app:iconSize="30dp"
                     android:theme="@style/Theme.Polaris.Secondary"
                     android:elevation="8dp"
                     android:text="@string/notifications"/>
@@ -82,7 +82,7 @@
                     android:layout_height="50dp"
                     app:icon="@drawable/baseline_logout_24"
                     app:iconGravity="textTop"
-                    app:iconSize="25dp"
+                    app:iconSize="30dp"
                     app:iconTint="?attr/colorError"
                     style="@style/Theme.Polaris.CustomButtonCircle"
                     android:theme="@style/Theme.Polaris.Secondary"
@@ -104,11 +104,12 @@
                         android:id="@+id/command_debug_button_1"
                         android:text="@string/debug_button"
                         android:background="@drawable/custom_button"
-                        style="@style/Theme.Polaris.CustomButton1"
                         app:theme="@style/Theme.Polaris.Secondary"
                         app:icon="@drawable/baseline_blind_24"
                         app:iconGravity="textTop"
-                        app:iconSize="40dp" />
+                        app:iconSize="50dp"
+                        style="@style/Theme.Polaris.CustomButton1"
+                        android:theme="@style/Theme.Polaris.Secondary"/>
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/command_debug_button_2"
@@ -116,9 +117,9 @@
                         android:background="@drawable/custom_button"
                         app:icon="@drawable/baseline_play_arrow_24"
                         app:iconGravity="textTop"
-                        app:iconSize="40dp"
+                        app:iconSize="50dp"
                         style="@style/Theme.Polaris.CustomButton1"
-                        app:theme="@style/Theme.Polaris.Secondary" />
+                        android:theme="@style/Theme.Polaris.Secondary" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/command_start_service_button"
@@ -126,9 +127,9 @@
                         android:background="@drawable/custom_button"
                         app:icon="@drawable/baseline_play_arrow_24"
                         app:iconGravity="textTop"
-                        app:iconSize="40dp"
+                        app:iconSize="50dp"
                         style="@style/Theme.Polaris.CustomButton1"
-                        app:theme="@style/Theme.Polaris.Secondary" />
+                        android:theme="@style/Theme.Polaris.Secondary" />
                 </LinearLayout>
             </ScrollView>
 
