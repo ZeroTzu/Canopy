@@ -67,6 +67,8 @@ dependencies {
     implementation(libs.tensorflow.lite.gpu)
     implementation(libs.material)
     implementation(libs.play.services.cronet)
+    implementation(libs.retrofit2.retrofit)
+    implementation(libs.retrofit2.converter.gson)
     implementation(libs.camera.core)
     implementation (libs.camera.camera2)
     implementation (libs.camera.lifecycle)

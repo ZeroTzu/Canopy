@@ -15,16 +15,21 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.compose.runtime.currentCompositionErrors
 import androidx.core.content.res.ResourcesCompat
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.edit
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.generationai.polaris.databinding.FragmentHomeBinding
 import com.generationai.polaris.utils.Constants
 import com.generationai.polaris.utils.MLServiceRequest
 import com.generationai.polaris.utils.MLServiceRequest.ResponseCallback
+import kotlinx.coroutines.launch
 import org.chromium.net.CronetEngine
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
+import java.util.prefs.Preferences
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -115,12 +120,21 @@ class Home : Fragment(),ResponseCallback {
         binding.homeFragmentLogoutButton.setOnClickListener{
             val intent = Intent(requireActivity(), LoginActivity::class.java)
 
-            //Stop the background service before logging out
-            Intent(context, PolarisBackgroundService::class.java).also {
-                it.action = PolarisBackgroundService.Actions.STOP.toString()
-                requireActivity().startService(it)
+
+            if(mainViewModel.isSertviceRunning.value){
+                //Stop the background service before logging out
+                Intent(context, PolarisBackgroundService::class.java).also {
+                    it.action = PolarisBackgroundService.Actions.STOP.toString()
+                    requireActivity().startService(it)
+                }
             }
 
+
+            lifecycleScope.launch {
+                requireActivity().dataStore.edit {
+                    it.clear()
+                }
+            }
             //start login activity and stop the MainActivity so that user cant navigate back
             startActivity(intent)
             requireActivity().finish()
@@ -141,6 +155,11 @@ class Home : Fragment(),ResponseCallback {
         when (successful){
             true -> view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
             false -> view.performHapticFeedback(HapticFeedbackConstants.REJECT)
+        }
+    }
+    private suspend fun logoutUser(){
+        requireActivity().dataStore.edit { preferences ->
+            preferences.clear()
         }
     }
     companion object {
@@ -210,7 +229,5 @@ class Home : Fragment(),ResponseCallback {
         }catch (e:Exception){
             Log.e("PolarisHome", "updateImage failed: ${e.message}")
         }
-
-
     }
 }

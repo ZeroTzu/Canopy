@@ -1,0 +1,23 @@
+package com.generationai.polaris.utils
+
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+
+object RetrofitClient {
+    private const val BASE_URL = "https://reqres.in//"
+
+    // Lazy initialization of Retrofit instance
+    val instance: Retrofit by lazy {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    // Function to get UserService
+    fun getBackendInterface(): BackendInterface {
+        return instance.create(BackendInterface::class.java)
+    }
+
+    // You can add more services here for other APIs if needed in the future
+}

@@ -12,5 +12,6 @@ public class Constants {
         const val BACKGROUND_SERVICE_ALIVE = 72914
         val EMAIL_KEY = stringPreferencesKey("user_email")
         val PASSWORD_KEY = stringPreferencesKey("user_password")
+        val SESSION_TOKEN_KEY = stringPreferencesKey("user_session_token")
     }
 }

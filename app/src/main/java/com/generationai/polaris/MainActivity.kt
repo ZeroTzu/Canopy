@@ -27,6 +27,7 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.mutableStateOf
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
@@ -198,6 +199,12 @@ class MainActivity : AppCompatActivity() {
             preferences[Constants.EMAIL_KEY]  // Use the stringPreferencesKey to access the value
         }.firstOrNull()
     }
+    private suspend fun logoutUser(){
+        dataStore.edit { preferences ->
+            preferences.clear()
+        }
+    }
+
     private suspend fun getPasswordFromDataStore(): String? {
         return dataStore.data.map { preferences ->
             preferences[Constants.PASSWORD_KEY]  // Use the stringPreferencesKey to access the value
