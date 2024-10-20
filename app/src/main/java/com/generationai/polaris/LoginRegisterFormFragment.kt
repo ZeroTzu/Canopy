@@ -1,10 +1,12 @@
 package com.generationai.polaris
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.generationai.polaris.databinding.FragmentLoginRegisterFormBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -20,7 +22,7 @@ class LoginRegisterFormFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-
+    private lateinit var binding: FragmentLoginRegisterFormBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -32,9 +34,20 @@ class LoginRegisterFormFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
+        binding=FragmentLoginRegisterFormBinding.inflate(layoutInflater)
+
+
+
+        binding.fragmentLoginRegisterFormLoginButton.setOnClickListener{
+            //TODO: CHECK VALID INPUT, SEND API REQUEST, RECEIVE API RESPONSE, SAVE TOKEN, NAVIGATE TO LOGIN PAGE
+            requireActivity().supportFragmentManager.beginTransaction().replace(R.id.login_activity_fragmentContainerView,LoginFormFragment()).commit()
+        }
+        binding.fragmentLoginRegisterFormCancelButton.setOnClickListener{
+            requireActivity().supportFragmentManager.beginTransaction().replace(R.id.login_activity_fragmentContainerView,LoginLandingFragment()).commit()
+        }
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_login_register_form, container, false)
+        return binding.root
     }
 
     companion object {

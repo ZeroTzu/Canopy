@@ -31,6 +31,7 @@
                 android:textSize="30sp"
                 android:gravity="center_horizontal"
                 android:textStyle="bold"
+                android:textColor="?attr/colorOnPrimary"
                 />
         </FrameLayout>
 
@@ -40,6 +41,12 @@
             android:layout_gravity="center_vertical"
             android:backgroundTint="@color/light_blue"
             android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/login"
+                android:textStyle="bold"
+                android:textColor="?attr/colorOnPrimary"/>
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/fragment_login_form_email_textInputLayout"
                 android:layout_width="match_parent"
@@ -61,7 +68,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/light_blue"
-                app:placeholderText=""
+                app:placeholderText="@string/password"
                 app:counterEnabled="true"
                 android:hint="@string/password"
                 >
@@ -80,13 +87,21 @@
             android:orientation="vertical"
             android:layout_gravity="bottom">
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/fragment_login_form_password_loginButton"
+                android:id="@+id/fragment_login_form_loginButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:theme="@style/Theme.Polaris.Secondary"
                 style="@style/Theme.Polaris.CustomButton2"
                 android:text="@string/login"/>
-
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/fragment_login_form_cancelButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel"
+                android:textColor="?attr/colorOnPrimary"
+                app:theme="@style/Theme.Polaris.Tertiary"
+                style="@style/Theme.Polaris.CustomButton2"
+                />
         </LinearLayout>
 
 

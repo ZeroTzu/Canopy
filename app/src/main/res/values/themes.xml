@@ -44,7 +44,27 @@
         <item name="colorSecondary">@color/polaris_la_salle_green_50</item>
         <item name="colorSurface">@color/polaris_la_salle_green_10</item>
         <item name="colorOnSurface">@color/polaris_violet_90</item>
+    </style>
+    <style name="Theme.Polaris.Tertiary" parent="Theme.Polaris">
+        <item name="colorPrimary">@color/polaris_grey</item>
+        <item name="colorPrimaryVariant">@color/polaris_grey_90</item>
+        <item name="colorPrimaryDark">@color/black </item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="android:colorBackground">@color/polaris_grey_90</item>
+        <item name="colorSecondary">@color/polaris_la_salle_green_50</item>
+        <item name="colorSurface">@color/polaris_la_salle_green_10</item>
+        <item name="colorOnSurface">@color/polaris_violet_90</item>
+    </style>
 
+    <style name="Theme.Polaris.LoginForm" parent="Theme.Polaris">
+        <item name="colorPrimary">@color/polaris_grey</item>
+        <item name="colorPrimaryVariant">@color/polaris_grey_90</item>
+        <item name="colorPrimaryDark">@color/black </item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="android:colorBackground">@color/polaris_grey_90</item>
+        <item name="colorSecondary">@color/polaris_la_salle_green_50</item>
+        <item name="colorSurface">@color/polaris_la_salle_green_10</item>
+        <item name="colorOnSurface">@color/polaris_violet_90</item>
     </style>
 
     <style name="Theme.Polaris.CustomButton1" parent="Theme.Polaris">

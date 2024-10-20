@@ -64,10 +64,8 @@ class Home : Fragment(),ResponseCallback {
 
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
+    {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         val rootView = binding.root
 
@@ -113,6 +111,19 @@ class Home : Fragment(),ResponseCallback {
         }
         binding.debugButton2.setOnClickListener{
 
+        }
+        binding.homeFragmentLogoutButton.setOnClickListener{
+            val intent = Intent(requireActivity(), LoginActivity::class.java)
+
+            //Stop the background service before logging out
+            Intent(context, PolarisBackgroundService::class.java).also {
+                it.action = PolarisBackgroundService.Actions.STOP.toString()
+                requireActivity().startService(it)
+            }
+
+            //start login activity and stop the MainActivity so that user cant navigate back
+            startActivity(intent)
+            requireActivity().finish()
         }
         // Inflate the layout for this fragment
         return binding.root

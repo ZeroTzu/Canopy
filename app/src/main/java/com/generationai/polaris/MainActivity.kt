@@ -15,7 +15,6 @@ import androidx.fragment.app.Fragment
 import com.generationai.polaris.databinding.ActivityMainBinding
 import android.Manifest
 import android.content.BroadcastReceiver
-import android.content.ClipData.Item
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -26,10 +25,28 @@ import android.os.Looper
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.lifecycleScope
+import com.generationai.polaris.utils.Constants
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
+val Context.dataStore by preferencesDataStore(name = "user_prefs")
+
+object DataStoreManager {
+    private lateinit var dataStoreInstance: DataStore<Preferences>
+
+    fun getInstance(context: Context): DataStore<Preferences> {
+        if (!::dataStoreInstance.isInitialized) {
+            dataStoreInstance = context.dataStore // Initialize it once
+        }
+        return dataStoreInstance
+    }
+}
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -38,15 +55,23 @@ class MainActivity : AppCompatActivity() {
     private val pingInterval: Long = 2000
     private val handler = Handler(Looper.getMainLooper())
     private val viewModel = viewModels<MainActivityViewModel>()
-//    private val pingRunnable = object : Runnable {
-//        override fun run() {
-//            pingService()
-//            // Schedule the next ping after 2 seconds
-//            handler.postDelayed(this, pingInterval)
-//        }
-//    }
+
+    private val dataStore: DataStore<Preferences> by lazy {DataStoreManager.getInstance(this)}
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        //check if the user is logged in
+        lifecycleScope.launch{
+            val email=getEmailFromDataStore()
+            val password=getPasswordFromDataStore()
+            Log.i("PolarisMainActivity", "onCreate: email: $email, password: $password")
+            if (email==null || password==null){
+                val intent = Intent(this@MainActivity, LoginActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+        }
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         //Request permissions (e.g. Camera, Audio etc.)
@@ -129,7 +154,6 @@ class MainActivity : AppCompatActivity() {
         sendBroadcast(intent)
         Log.i("PolarisMainActivity", "ping Ran")
     }
-
     private fun handleServiceStatus(isRunning: Boolean) {
         Log.i("PolarisMainActivity", "isRunning: $isRunning")
         if (viewModel.value.isSertviceRunning.value!=isRunning) {
@@ -169,8 +193,16 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-    private fun takePhoto() {}
-
+    private suspend fun getEmailFromDataStore(): String? {
+        return dataStore.data.map { preferences ->
+            preferences[Constants.EMAIL_KEY]  // Use the stringPreferencesKey to access the value
+        }.firstOrNull()
+    }
+    private suspend fun getPasswordFromDataStore(): String? {
+        return dataStore.data.map { preferences ->
+            preferences[Constants.PASSWORD_KEY]  // Use the stringPreferencesKey to access the value
+        }.firstOrNull()
+    }
     private fun captureVideo() {}
 
     private fun startCamera() {}
@@ -232,3 +264,4 @@ class MainActivityViewModel : ViewModel() {
         isSertviceRunning.value = isRunning
     }
 }
+
