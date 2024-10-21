@@ -115,32 +115,39 @@ class LoginFormFragment : Fragment() {
                 if(!response.isSuccessful){
                     return
                 }
-                val loginResponse = response.body() ?: return
-                Log.i("LoginActivity", "onResponse: ${loginResponse.name}, ${loginResponse.job}")
-                //use this for actual implementation, rmb to change the values in LoginResponse as well
+//                val loginResponse = response.body() ?: return
+//                Log.i("LoginActivity", "onResponse: $loginResponse")
+////                use this for actual implementation, rmb to change the values in LoginResponse as well
 //                val uid = loginResponse.uid
 //                val username = loginResponse.username
 //                val email = loginResponse.email
 //                val sessionToken= loginResponse.sessionToken
 //                lifecycleScope.launch{
-//                    requireActivity().dataStore.edit { preferences ->
-//                        run{
-//                            preferences[Constants.EMAIL_KEY] = email ?:""
-//                            preferences[Constants.PASSWORD_KEY] = password
-//                            preferences[Constants.SESSION_TOKEN_KEY] = sessionToken ?: ""
+//                    if (isAdded){
+//                        requireActivity().dataStore.edit { preferences ->
+//                            run{
+//                                preferences[Constants.EMAIL_KEY] = email?:""
+//                                preferences[Constants.PASSWORD_KEY] = password
+//                            }
 //                        }
+//                        val intent=Intent(requireActivity(),MainActivity::class.java)
+//                        startActivity(intent)
+//                        requireActivity().finish()
 //                    }
 //                }
-                //TEMPORARY VALUES FOR TESTING
-                val uid = "12345678"
-                val username = "Testis"
-                val email = "test@test.com"
-
+                val loginResponse = response.body() ?: ""
+                Log.i("LoginActivity", "onResponse: $loginResponse")
+//                use this for actual implementation, rmb to change the values in LoginResponse as well
+                val uid = ""
+                val username = email
+                val email = email
+                val password= password
+                val sessionToken= ""
                 lifecycleScope.launch{
                     if (isAdded){
                         requireActivity().dataStore.edit { preferences ->
                             run{
-                                preferences[Constants.EMAIL_KEY] = email
+                                preferences[Constants.EMAIL_KEY] = email?:""
                                 preferences[Constants.PASSWORD_KEY] = password
                             }
                         }

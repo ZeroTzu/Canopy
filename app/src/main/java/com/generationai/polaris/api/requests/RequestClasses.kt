@@ -6,4 +6,4 @@ package com.generationai.polaris.api.requests
 //TEMPORARY VALUES FOR TESTING
 data class LoginRequest(val name:String,val job:String)
 
-data class RegisterRequest(var username:String, var email:String, var sessionToken:String)
+data class RegisterRequest(var username:String, var email:String, var password:String)

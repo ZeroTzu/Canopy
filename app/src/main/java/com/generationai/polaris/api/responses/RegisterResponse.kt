@@ -5,4 +5,9 @@ package com.generationai.polaris.api.responses
      var username:String?=null
      var email:String?=null
      var sessionToken:String?=null
+     var password:String?=null
  }
+
+//class RegisterResponse {
+//
+//}
