@@ -59,11 +59,11 @@ class LoginRegisterFormFragment : Fragment() {
         val emailEditText = binding.fragmentLoginRegisterFormEmailTextInputLayout.editText!!
         val passwordEditText = binding.fragmentLoginRegisterFormPasswordTextInputLayout.editText!!
         val confirmPasswordEditText = binding.fragmentLoginRegisterFormConfirmPasswordTextInputLayout.editText!!
-
+        val loginActivity = activity as LoginActivity
 
         binding.fragmentLoginRegisterFormLoginButton.setOnClickListener{
             //TODO: CHECK VALID INPUT, SEND API REQUEST, RECEIVE API RESPONSE, SAVE TOKEN, NAVIGATE TO LOGIN PAGE
-            if(!(checkEmailInput(emailEditText) && checkPasswordInput(passwordEditText) && checkPasswordSame(passwordEditText,confirmPasswordEditText))){
+            if(!(loginActivity.checkEmailInput(emailEditText) && loginActivity.checkPasswordInput(passwordEditText) && loginActivity.checkPasswordSame(passwordEditText,confirmPasswordEditText))){
                 return@setOnClickListener
             }
             performRegister(emailEditText.text.toString(),passwordEditText.text.toString())
@@ -73,37 +73,6 @@ class LoginRegisterFormFragment : Fragment() {
         }
         // Inflate the layout for this fragment
         return binding.root
-    }
-
-    private fun checkPasswordSame(passwordEditText: EditText,confirmPasswordEditText: EditText):Boolean {
-        val isSame = passwordEditText.text.toString()==confirmPasswordEditText.text.toString()
-        if(!isSame){
-            passwordEditText.error="Password not the same"
-            confirmPasswordEditText.error="Password not the same"
-        }
-        return isSame
-    }
-
-    private fun checkEmailInput(emailEditText: EditText):Boolean {
-        var isValid = false
-        emailEditText.text
-        if(Patterns.EMAIL_ADDRESS.matcher(emailEditText.text).matches()) {
-            isValid = true
-        }
-        else{
-            emailEditText.error = "Invalid Email"
-        }
-        return isValid
-    }
-
-    private fun checkPasswordInput(passwordEditText: EditText):Boolean {
-        var isValid = false
-        if(true){
-            isValid=true
-        }else{
-            passwordEditText.error = "Invalid Password"
-        }
-        return isValid
     }
     private fun performRegister(email:String,password:String){
         Log.i("PolarisLoginActivity","performRegister invoked")
@@ -115,11 +84,12 @@ class LoginRegisterFormFragment : Fragment() {
                     Log.e("PolarisLoginActivity","response failed:${response.body()}")
                     return
                 }
-                if(response.body()==null){
-                    Log.e("PolarisLoginActivity","response is null")
+                val registerResponse = response.body()?:return
+                if(registerResponse.status.toString()==Constants.BACK_END_SERVER_STATUS_FAILED){
+                    val message =registerResponse.message!!.toString()
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
                     return
                 }
-                val registerResponse = response.body()!!
                 Log.i("PolarisLoginActivity", "onResponse: $registerResponse")
                 val uid = ""
                 val username = registerResponse.username.toString()
@@ -141,16 +111,13 @@ class LoginRegisterFormFragment : Fragment() {
                         val intent=Intent(requireActivity(),MainActivity::class.java)
                         startActivity(intent)
                         requireActivity().finish()
-//                        requireActivity().supportFragmentManager.beginTransaction().replace(R.id.login_activity_fragmentContainerView,LoginFormFragment()).commit()
                     }
                 }
-
             }
             override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
-                Log.e("LoginActivity", "Error: ${t.message}")
+                Log.e("PolarisLoginActivity", "Error: ${t.message}")
                 Toast.makeText(requireContext(), "Login Failed due to Error", Toast.LENGTH_SHORT).show()
             }
-
         })
     }
 

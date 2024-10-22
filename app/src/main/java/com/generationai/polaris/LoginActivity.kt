@@ -1,6 +1,8 @@
 package com.generationai.polaris
 
 import android.os.Bundle
+import android.util.Patterns
+import android.widget.EditText
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -43,4 +45,38 @@ class LoginActivity : AppCompatActivity() {
             preferences[Constants.PASSWORD_KEY]  // Use the stringPreferencesKey to access the value
         }.firstOrNull()
     }
+
+    fun checkPasswordSame(passwordEditText: EditText, confirmPasswordEditText: EditText):Boolean {
+        val isSame = passwordEditText.text.toString()==confirmPasswordEditText.text.toString()
+        if(!isSame){
+            passwordEditText.error="Password not the same"
+            confirmPasswordEditText.error="Password not the same"
+        }
+        return isSame
+    }
+
+    fun checkEmailInput(emailEditText: EditText):Boolean {
+        var isValid = false
+        emailEditText.text
+        if(Patterns.EMAIL_ADDRESS.matcher(emailEditText.text).matches()) {
+            isValid = true
+        }
+        else{
+            emailEditText.error = "Invalid Email"
+        }
+        return isValid
+    }
+
+    fun checkPasswordInput(passwordEditText: EditText):Boolean {
+        var isValid = false
+        val password=passwordEditText.text.toString()
+        if(password.length>=3){
+            isValid=true
+        }else{
+            passwordEditText.error="Password must contain at least 3 characters"
+        }
+        return isValid
+    }
+
+
 }

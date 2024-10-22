@@ -15,5 +15,13 @@ public class Constants {
         val EMAIL_KEY = stringPreferencesKey("user_email")
         val PASSWORD_KEY = stringPreferencesKey("user_password")
         val SESSION_TOKEN_KEY = stringPreferencesKey("user_session_token")
+
+
+        val BACK_END_SERVER_STATUS_SUCCESS = "success"
+        val BACK_END_SERVER_STATUS_FAILED = "error"
+        val BACK_END_SERVER_CODE_WRONG_PASSWORD =-20003
+        val BACK_END_SERVER_CODE_EMAIL_DOES_NOT_EXIST =-20002
+        val BACK_END_SERVER_CODE_EMAIL_ALREADY_EXISTS =-20001
+
     }
 }
