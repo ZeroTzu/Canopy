@@ -10,19 +10,18 @@ import retrofit2.http.*
 
 interface BackendInterface {
 
-    @POST("registerUser")
+    @POST("/ords/admin/api/polaris/registerUser")
     fun registerUser(@Body user: RegisterRequest): Call<RegisterResponse>
-
 
     //Actual implmentation, rmb to change the values in LoginResponse as well
 //    @POST("loginUser")
 //    fun loginUser(@Body loginRequest: LoginRequest): Call<LoginResponse>
-//
-//
+
+
     //TEMPORARY IMPLEMENTATION FOR TESTING
-    @POST("/api/users")
+    @POST("/ords/admin/api/polaris/loginUser")
     fun loginUser(@Body loginRequest: LoginRequest): Call<LoginResponse>
 
-    @GET("user/{uid}")
+    @POST("/api/users")
     fun getUser(@Path("uid") uid: String): Call<UserClass>
 }

@@ -2,11 +2,28 @@ package com.generationai.polaris
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.util.Patterns
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.Toast
+import androidx.datastore.preferences.core.edit
+import androidx.lifecycle.lifecycleScope
+import com.generationai.polaris.api.requests.LoginRequest
+import com.generationai.polaris.api.requests.RegisterRequest
+import com.generationai.polaris.api.responses.LoginResponse
+import com.generationai.polaris.api.responses.RegisterResponse
 import com.generationai.polaris.databinding.FragmentLoginRegisterFormBinding
+import com.generationai.polaris.utils.BackendInterface
+import com.generationai.polaris.utils.Constants
+import com.generationai.polaris.utils.RetrofitClient
+import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -23,12 +40,14 @@ class LoginRegisterFormFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var binding: FragmentLoginRegisterFormBinding
+    private lateinit var backendInterface: BackendInterface
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+        backendInterface = RetrofitClient.getBackendInterface()
     }
 
     override fun onCreateView(
@@ -37,17 +56,69 @@ class LoginRegisterFormFragment : Fragment() {
     ): View {
         binding=FragmentLoginRegisterFormBinding.inflate(layoutInflater)
 
-
+        val emailEditText = binding.fragmentLoginRegisterFormEmailTextInputLayout.editText!!
+        val passwordEditText = binding.fragmentLoginRegisterFormPasswordTextInputLayout.editText!!
+        val confirmPasswordEditText = binding.fragmentLoginRegisterFormConfirmPasswordTextInputLayout.editText!!
+        val loginActivity = activity as LoginActivity
 
         binding.fragmentLoginRegisterFormLoginButton.setOnClickListener{
             //TODO: CHECK VALID INPUT, SEND API REQUEST, RECEIVE API RESPONSE, SAVE TOKEN, NAVIGATE TO LOGIN PAGE
-            requireActivity().supportFragmentManager.beginTransaction().replace(R.id.login_activity_fragmentContainerView,LoginFormFragment()).commit()
+            if(!(loginActivity.checkEmailInput(emailEditText) && loginActivity.checkPasswordInput(passwordEditText) && loginActivity.checkPasswordSame(passwordEditText,confirmPasswordEditText))){
+                return@setOnClickListener
+            }
+            performRegister(emailEditText.text.toString(),passwordEditText.text.toString())
         }
         binding.fragmentLoginRegisterFormCancelButton.setOnClickListener{
             requireActivity().supportFragmentManager.beginTransaction().replace(R.id.login_activity_fragmentContainerView,LoginLandingFragment()).commit()
         }
         // Inflate the layout for this fragment
         return binding.root
+    }
+    private fun performRegister(email:String,password:String){
+        Log.i("PolarisLoginActivity","performRegister invoked")
+        val username=email
+        backendInterface.registerUser(RegisterRequest(username,email,password)).enqueue(object :
+            Callback<RegisterResponse> {
+            override fun onResponse(call: Call<RegisterResponse>, response: Response<RegisterResponse>) {
+                if(!response.isSuccessful){
+                    Log.e("PolarisLoginActivity","response failed:${response.body()}")
+                    return
+                }
+                val registerResponse = response.body()?:return
+                if(registerResponse.status.toString()==Constants.BACK_END_SERVER_STATUS_FAILED){
+                    val message =registerResponse.message!!.toString()
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                    return
+                }
+                Log.i("PolarisLoginActivity", "onResponse: $registerResponse")
+                val uid = ""
+                val username = registerResponse.username.toString()
+                val email = registerResponse.email.toString()
+                val password= registerResponse.password.toString()
+                val sessionToken= ""
+                lifecycleScope.launch{
+                    if (isAdded){
+                        requireActivity().dataStore.edit { preferences ->
+                            run{
+                                preferences[Constants.USER_ID_KEY] = uid
+                                preferences[Constants.USER_NAME_KEY] = username
+                                preferences[Constants.EMAIL_KEY] = email
+                                preferences[Constants.PASSWORD_KEY] = password
+                                preferences[Constants.SESSION_TOKEN_KEY] = sessionToken
+
+                            }
+                        }
+                        val intent=Intent(requireActivity(),MainActivity::class.java)
+                        startActivity(intent)
+                        requireActivity().finish()
+                    }
+                }
+            }
+            override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
+                Log.e("PolarisLoginActivity", "Error: ${t.message}")
+                Toast.makeText(requireContext(), "Login Failed due to Error", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     companion object {

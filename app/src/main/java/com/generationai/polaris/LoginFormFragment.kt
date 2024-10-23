@@ -63,8 +63,9 @@ class LoginFormFragment : Fragment() {
             val emailEditText = binding.fragmentLoginFormEmailTextInputLayout.editText!!
             val passwordEditText = binding.fragmentLoginFormPasswordTextInputLayout.editText!!
 
+            val loginActivity =activity as LoginActivity
             //exit if email or password is invalid
-            if(!(checkEmailInput(emailEditText) && checkPasswordInput(passwordEditText))){
+            if(!(loginActivity.checkEmailInput(emailEditText) && loginActivity.checkPasswordInput(passwordEditText))){
                 return@setOnClickListener
             }
 
@@ -86,29 +87,9 @@ class LoginFormFragment : Fragment() {
         super.onAttach(context)
 
     }
-
-    private fun checkEmailInput(emailEditText: EditText):Boolean {
-        var isValid = false
-        emailEditText.text
-        if(Patterns.EMAIL_ADDRESS.matcher(emailEditText.text).matches()) {
-            isValid = true
-        }
-        else{
-            emailEditText.error = "Invalid Email"
-        }
-        return isValid
-    }
-
-    private fun checkPasswordInput(passwordEditText: EditText):Boolean {
-        var isValid = false
-        if(true){
-            isValid=true
-        }else{
-            passwordEditText.error = "Invalid Password"
-        }
-        return isValid
-    }
     private fun performLogin(email:String,password:String){
+
+        Log.e("PolarisLoginActivity","email $email, password $password")
 
         backendInterface.loginUser(LoginRequest(email,password)).enqueue(object :Callback<LoginResponse>{
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
@@ -116,32 +97,29 @@ class LoginFormFragment : Fragment() {
                     return
                 }
                 val loginResponse = response.body() ?: return
-                Log.i("LoginActivity", "onResponse: ${loginResponse.name}, ${loginResponse.job}")
-                //use this for actual implementation, rmb to change the values in LoginResponse as well
-//                val uid = loginResponse.uid
-//                val username = loginResponse.username
-//                val email = loginResponse.email
-//                val sessionToken= loginResponse.sessionToken
-//                lifecycleScope.launch{
-//                    requireActivity().dataStore.edit { preferences ->
-//                        run{
-//                            preferences[Constants.EMAIL_KEY] = email ?:""
-//                            preferences[Constants.PASSWORD_KEY] = password
-//                            preferences[Constants.SESSION_TOKEN_KEY] = sessionToken ?: ""
-//                        }
-//                    }
-//                }
-                //TEMPORARY VALUES FOR TESTING
-                val uid = "12345678"
-                val username = "Testis"
-                val email = "test@test.com"
+
+                Log.i("PolarisLoginActivity", "onResponse: ${loginResponse.code}")
+                if(loginResponse.status.toString()==Constants.BACK_END_SERVER_STATUS_FAILED){
+                    val message =loginResponse.message!!.toString()
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                    return
+                }
+
+                val uid = ""
+                val username = email
+                val email = email
+                val password= password
+                val sessionToken= ""
 
                 lifecycleScope.launch{
                     if (isAdded){
                         requireActivity().dataStore.edit { preferences ->
                             run{
+                                preferences[Constants.USER_ID_KEY] = uid
+                                preferences[Constants.USER_NAME_KEY] = username
                                 preferences[Constants.EMAIL_KEY] = email
                                 preferences[Constants.PASSWORD_KEY] = password
+                                preferences[Constants.SESSION_TOKEN_KEY] = sessionToken
                             }
                         }
                         val intent=Intent(requireActivity(),MainActivity::class.java)
