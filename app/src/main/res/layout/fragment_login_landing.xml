@@ -32,11 +32,16 @@
                  />
         </FrameLayout>
 
-        <VideoView
+        <com.airbnb.lottie.LottieAnimationView
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:layout_gravity="center_vertical"
-            android:backgroundTint="@color/light_blue" />
+            app:lottie_rawRes="@raw/spaceman_animation"
+            app:lottie_loop="true"
+            app:lottie_autoPlay="true"
+            app:lottie_progress='1'
+
+            />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

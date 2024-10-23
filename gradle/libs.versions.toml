@@ -26,6 +26,7 @@ data-store-preferences="1.1.1"
 uiTestJunit4Android = "1.6.6"
 retrofit="2.11.0"
 retrofit-converterGson ="2.11.0"
+lottie="6.5.2"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -53,6 +54,8 @@ tensorflow-lite-support = { group = "org.tensorflow", name = "tensorflow-lite-su
 tensorflow-lite-metadata = { group = "org.tensorflow", name = "tensorflow-lite-metadata", version.ref = "tensorflowLiteMetadata" }
 tensorflow-lite-gpu = { group = "org.tensorflow", name = "tensorflow-lite-gpu", version.ref = "tensorflowLiteGpu" }
 lifecycle-extensions = {module="androidx.lifecycle:lifecycle-extensions", version.ref="lifecycleExtensions" }
+lottie = {module="com.airbnb.android:lottie", version.ref="lottie" }
+
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 play-services-cronet = { module = "com.google.android.gms:play-services-cronet", version.ref = "play-services-cronet" }
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
@@ -63,6 +66,7 @@ androidx-activity = { group = "androidx.activity", name = "activity", version.re
 androidx-ui-test-junit4-android = { group = "androidx.compose.ui", name = "ui-test-junit4-android", version.ref = "uiTestJunit4Android" }
 retrofit2-retrofit = {module ="com.squareup.retrofit2:retrofit",version.ref="retrofit"}
 retrofit2-converter-gson ={module = "com.squareup.retrofit2:converter-gson", version.ref="retrofit-converterGson"}
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

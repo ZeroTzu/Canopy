@@ -114,9 +114,9 @@ class Home : Fragment(),ResponseCallback {
             request.start()  // Start the request
             performHaptic(view)
         }
-        binding.debugButton2.setOnClickListener{
-
-        }
+//        binding.debugButton2.setOnClickListener{
+//
+//        }
         binding.homeFragmentLogoutButton.setOnClickListener{
             val intent = Intent(requireActivity(), LoginActivity::class.java)
 

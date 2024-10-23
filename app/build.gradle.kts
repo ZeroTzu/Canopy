@@ -84,6 +84,7 @@ dependencies {
     implementation(libs.datastore.preferences)
     implementation(libs.datastore.preferences.core)
     implementation(libs.androidx.ui.test.junit4.android)
+    implementation(libs.lottie)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

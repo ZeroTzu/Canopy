@@ -71,7 +71,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:maxWidth">100dp</item>
-        <item name="android:maxHeight">130dp</item>
+        <item name="android:maxHeight">100dp</item>
         <item name="android:background">@drawable/custom_button</item>
         <item name="android:backgroundTint">?attr/colorOnPrimary</item>
         <item name="android:textColor">?attr/colorPrimaryDark</item>
@@ -80,9 +80,9 @@
         <item name="android:paddingTop">7dp</item>
         <item name="android:radius">1dp</item>
         <item name="android:elevation">4dp</item>
-        <item name="android:textSize">12sp</item>
-        <item name="android:padding">15dp</item>
-        <item name="android:paddingBottom">40dp</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:paddingRight">7dp</item>
+        <item name="android:paddingLeft">7dp</item>
         <item name="android:textStyle">bold</item>
     </style>
     <style name="Theme.Polaris.CustomButton2" parent="Theme.Polaris">
@@ -104,18 +104,38 @@
         <item name="android:textStyle">bold</item>
     </style>
     <style name="Theme.Polaris.CustomButtonCircle" parent="Theme.Polaris">
-        <item name="android:layout_width">20dp</item>
-        <item name="android:layout_height">20dp</item>
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
         <item name="android:background">@drawable/custom_button_circle</item> <!-- Drawable for button -->
+        <item name="android:backgroundTint">?attr/colorOnPrimary</item>
+        <item name="android:textColor">?attr/colorPrimaryDark</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:gravity">bottom|center</item>
+        <item name="android:radius">1dp</item>
+        <item name="android:elevation">20dp</item>
+        <item name="android:paddingBottom">2dp</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingStart">1dp</item>
+        <item name="android:paddingEnd">1dp</item>
+    </style>
+    <style name="Theme.Polaris.FloatingActionButton" parent="Theme.Polaris">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:maxWidth">100dp</item>
+        <item name="android:maxHeight">130dp</item>
         <item name="android:backgroundTint">?attr/colorOnPrimary</item>
         <item name="android:textColor">?attr/colorPrimaryDark</item>
         <item name="android:layout_margin">2dp</item>
         <item name="android:gravity">bottom|center</item>
         <item name="android:paddingTop">7dp</item>
         <item name="android:radius">1dp</item>
-        <item name="android:elevation">20dp</item>
+        <item name="android:elevation">4dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:padding">15dp</item>
+        <item name="android:paddingBottom">40dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@drawable/custom_button2</item> <!-- Drawable for button -->
     </style>
-
     <style name="Theme.Polaris.MapFrame" parent="Theme.Polaris.Secondary">
         <item name="android:layout_width">90dp</item>
         <item name="android:layout_height">110dp</item>
