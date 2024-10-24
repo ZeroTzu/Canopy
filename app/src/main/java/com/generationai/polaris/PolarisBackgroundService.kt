@@ -25,11 +25,25 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleService
+import androidx.lifecycle.lifecycleScope
+import com.generationai.polaris.api.AddLocationRequest
+import com.generationai.polaris.api.AddLocationResponse
+import com.generationai.polaris.utils.BackendInterface
 import com.generationai.polaris.utils.Constants
+import com.generationai.polaris.utils.RetrofitClient
+import com.generationai.polaris.utils.UserClass
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.File
 import java.text.SimpleDateFormat
 
@@ -40,6 +54,9 @@ class PolarisBackgroundService : LifecycleService(){
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val handler = Handler(Looper.getMainLooper())
     private val pingInterval: Long = 2000
+    private lateinit var backendInterface: BackendInterface
+    private val dataStore: DataStore<Preferences> by lazy {DataStoreManager.getInstance(this)}
+    private lateinit var user:UserClass
     private val sendServiceStatusRunnable = object : Runnable {
         override fun run() {
             sendServiceStatus(true)
@@ -94,10 +111,6 @@ class PolarisBackgroundService : LifecycleService(){
         return notification
     }
 
-    private fun startImageCapture() {
-        // Your code to start image capture here
-
-    }
 
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
@@ -112,7 +125,6 @@ class PolarisBackgroundService : LifecycleService(){
 
             // Bind the camera lifecycle
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-
             try {
                 cameraProvider.unbindAll()
                 cameraProvider.bindToLifecycle(
@@ -128,17 +140,24 @@ class PolarisBackgroundService : LifecycleService(){
         },ContextCompat.getMainExecutor(this))
     }
     private fun start(){
-
         startForeground(Constants.BACKGROUND_SERVICE_RUNNING_NOTIFICATION_ID, createNotification())
         //Check for Camera and Microphone, and Location permissions stop the service if any of the permissions are not granted
         val cameraPermission = checkSelfPermission(android.Manifest.permission.CAMERA)
         val microphonePermission = checkSelfPermission(android.Manifest.permission.RECORD_AUDIO)
         val locationPermission = checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)
+        backendInterface = RetrofitClient.getBackendInterface()
+
+
+        lifecycleScope.launch {
+
+            val email=getEmailFromDataStore().toString()
+            val password=getPasswordFromDataStore().toString()
+            user= UserClass(email,password)
+        }
         if (cameraPermission == PackageManager.PERMISSION_GRANTED &&
             microphonePermission == PackageManager.PERMISSION_GRANTED &&
             locationPermission == PackageManager.PERMISSION_GRANTED) {
             startCamera()
-            startImageCapture()
         }else{
             stopSelf()
         }
@@ -148,6 +167,7 @@ class PolarisBackgroundService : LifecycleService(){
         handler.post(sendServiceStatusRunnable)
         handler.post(captureLocationRunnable)
     }
+
     private val serviceStatusReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == Actions.CHECK_SERVICE_STATUS.toString()) {
@@ -180,10 +200,34 @@ class PolarisBackgroundService : LifecycleService(){
         val locationIntent = Intent(Actions.SERVICE_LOCATION_TAKEN.toString()).apply {
             putExtra("location", location)
         }
+        val latitude =location.latitude
+        val longitude =location.longitude
+        val altitude =location.altitude
+        val addLocationRequest = AddLocationRequest(user.email,latitude,longitude,altitude)
+        backendInterface.addLocation(addLocationRequest).enqueue(object: Callback<AddLocationResponse>{
+            override fun onResponse(call: Call<AddLocationResponse>, response: Response<AddLocationResponse>)
+            {
+                val addLocationResponse = response.body()?:return
+
+                Log.i("PolarisBackgroundService","addLocation Callback: ${addLocationResponse.status.toString()}")
+            }
+
+            override fun onFailure(call: Call<AddLocationResponse>, e: Throwable) {
+                    Log.i("PolarisBackgroundService","addLocation Callback Failure: $e")
+            }
+        })
         sendBroadcast(locationIntent)
     }
-
-
+    private suspend fun getEmailFromDataStore(): String? {
+        return dataStore.data.map { preferences ->
+            preferences[Constants.EMAIL_KEY]  // Use the stringPreferencesKey to access the value
+        }.firstOrNull()
+    }
+    private suspend fun getPasswordFromDataStore(): String? {
+        return dataStore.data.map { preferences ->
+            preferences[Constants.PASSWORD_KEY]  // Use the stringPreferencesKey to access the value
+        }.firstOrNull()
+    }
     private fun sendServiceStatus(isRunning:Boolean) {
         // Send a broadcast back to the activity with the service status
         val statusIntent = Intent(Actions.SERVICE_STATUS_RESPONSE.toString()).apply {
@@ -194,6 +238,7 @@ class PolarisBackgroundService : LifecycleService(){
                 "")
 
     }
+
     private fun sendServiceImage(imagePath:String) {
         // Send a broadcast back to the activity with the service status
         val imageIntent = Intent(Actions.SERVICE_IMAGE_TAKEN.toString()).apply {
@@ -201,6 +246,9 @@ class PolarisBackgroundService : LifecycleService(){
         }
         sendBroadcast(imageIntent)
         Log.i("PolarisBackgroundService", "image sent")
+    }
+    private fun sendLocation(email:String, latitude:Float, longitude:Float){
+
     }
     private fun takePicture() {
         // Create output file options (save the image to storage)
@@ -230,7 +278,6 @@ class PolarisBackgroundService : LifecycleService(){
         SERVICE_STATUS_RESPONSE("com.generationai.polaris.action.SERVICE_STATUS_RESPONSE"),
         SERVICE_IMAGE_TAKEN("com.generationai.polaris.action.SERVICE_IMAGE_TAKEN"),
         SERVICE_LOCATION_TAKEN("com.generationai.polaris.action.SERVICE_LOCATION_TAKEN")
-
     }
 
 

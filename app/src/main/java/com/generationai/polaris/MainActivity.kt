@@ -60,7 +60,6 @@ class MainActivity : AppCompatActivity() {
     private val dataStore: DataStore<Preferences> by lazy {DataStoreManager.getInstance(this)}
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         //check if the user is logged in
         lifecycleScope.launch{
             val email=getEmailFromDataStore()
@@ -72,7 +71,6 @@ class MainActivity : AppCompatActivity() {
                 finish()
             }
         }
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         //Request permissions (e.g. Camera, Audio etc.)
@@ -102,7 +100,6 @@ class MainActivity : AppCompatActivity() {
                     if (currentFragment is Home) {
                         //change the imageview to show the image
                         currentFragment.updateImage(imagePath)
-
                     }
                 }
                 else if (intent.action == PolarisBackgroundService.Actions.SERVICE_LOCATION_TAKEN.toString()) {

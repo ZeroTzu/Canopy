@@ -1,7 +1,6 @@
 package com.generationai.polaris.utils
 
-class UserClass {
-    lateinit var uid:String
-    lateinit var username:String
-    lateinit var email:String
+data class UserClass(val email:String, val password:String) {
+    private var uid:String?=null
+    private var username:String?=null
 }
