@@ -153,4 +153,20 @@
     </style>
 
 
+    <!-- In styles.xml -->
+    <style name="NeutralTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <!-- Neutral background color for the input field -->
+        <item name="boxBackgroundColor">@color/polaris_grey_90</item> <!-- Light gray background to contrast with black -->
+        <!-- Outline border color -->
+        <item name="boxStrokeColor">#BDBDBD</item> <!-- Gray border color when not focused -->
+        <!-- Text color for hint text -->
+        <item name="hintTextColor">@color/neutral_hint</item>
+        <!-- Text color for input text -->
+        <item name="android:textColor">#333333</item> <!-- Dark gray for good readability on neutral background -->
+        <item name="placeholderTextColor">@color/polaris_blue_50</item>
+        <!-- Floating label color when focused -->
+        <item name="hintTextAppearance">@style/TextAppearance.MaterialComponents.Caption</item>
+    </style>
+
+
 </resources>

@@ -32,6 +32,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import com.generationai.polaris.utils.Constants
+import com.generationai.polaris.utils.UserClass
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -55,6 +56,7 @@ class MainActivity : AppCompatActivity() {
     private var isBackgroundServiceRunning: Boolean = false
     private val pingInterval: Long = 2000
     private val handler = Handler(Looper.getMainLooper())
+    private lateinit var userClass: UserClass
     private val viewModel = viewModels<MainActivityViewModel>()
 
     private val dataStore: DataStore<Preferences> by lazy {DataStoreManager.getInstance(this)}
@@ -69,6 +71,9 @@ class MainActivity : AppCompatActivity() {
                 val intent = Intent(this@MainActivity, LoginActivity::class.java)
                 startActivity(intent)
                 finish()
+            }
+            else{
+                userClass= UserClass(email,password)
             }
         }
         binding = ActivityMainBinding.inflate(layoutInflater)

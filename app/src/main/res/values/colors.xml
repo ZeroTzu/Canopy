@@ -84,4 +84,10 @@
     <color name="transparent">#00FFFFFF</color>
 
 
+
+    <!-- In colors.xml -->
+    <color name="neutral_hint">#757575</color> <!-- Medium gray for hint text -->
+    <color name="neutral_border">#888888</color> <!-- Border color on focus -->
+
+
 </resources>

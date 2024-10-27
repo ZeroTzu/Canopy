@@ -32,7 +32,7 @@ class AddLocationResponse {
     var timestamp:Timestamp?=null
 
 }
-class Location{
+class LocationItem{
     var latitude:Double?=null
     var longitude:Double?=null
     var altitude:Float?=null

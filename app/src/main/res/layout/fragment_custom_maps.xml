@@ -1,69 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/transparent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_controls"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="7dp" />
     <LinearLayout
-        android:orientation="vertical"
+        android:id="@+id/custom_maps_filters_linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:theme="@style/Theme.Polaris.MapFrame"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_height="wrap_content"
+        android:maxHeight="250dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_controls"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:paddingBottom="20dp"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        app:layout_constraintEnd_toEndOf="@+id/map"
+        app:layout_constraintStart_toStartOf="@+id/map"
+        app:layout_constraintBottom_toBottomOf="@+id/map"
         >
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:padding="0dp"
-            android:background="@color/transparent"
-            >
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/map"
-                android:name="com.google.android.gms.maps.SupportMapFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context=".CustomMapsFragment"
-                android:background="@color/transparent"
-                android:layout_margin="7dp"
-                />
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/custom_map_frame"
-                />
-        </FrameLayout>
 
-
-        <LinearLayout
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/custom_maps_start_filter_textInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:background="@color/transparent">
-            <com.google.android.material.button.MaterialButton
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                app:icon="@drawable/baseline_gps_fixed_24"
-                app:iconGravity="textTop"
-                app:iconSize="30dp"
-                style="@style/Theme.Polaris.CustomButtonCircle"
-                android:theme="@style/Theme.Polaris"
-                />
+            android:layout_weight="1"
+            android:hint="@string/start_filter"
+            app:placeholderText="@string/start_filter"
+            style="@style/NeutralTextInputLayout"
+            >
 
-            <androidx.appcompat.widget.SwitchCompat
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                />
-            <com.google.android.material.button.MaterialButton
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                style="@style/Theme.Polaris.CustomButton2"
-                android:text="@string/view_travel_history"
-                android:padding="8dp"
-                android:gravity="center"
-                android:ellipsize="end"
-                android:layout_gravity="end"
-                android:layout_weight="1"
-                />
-        </LinearLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColorHint="@color/neutral_hint"
+                android:textColor="#333333"
+                android:inputType="none"
+                android:padding="10dp"
+                android:textIsSelectable="false"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/custom_maps_end_filter_textInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/end_filter"
+            app:placeholderText="@string/end_filter"
+            style="@style/NeutralTextInputLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColorHint="@color/neutral_hint"
+                android:textColor="#333333"
+                android:inputType="none"
+                android:padding="10dp"
+                android:textIsSelectable="false"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/custom_maps_clear_filters_button"
+            app:icon="@drawable/baseline_filter_alt_off_24"
+            app:iconGravity="textTop"
+            app:iconSize="25dp"
+            style="@style/Theme.Polaris.CustomButtonCircle"
+            android:theme="@style/Theme.Polaris.Secondary"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/bottom_controls"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:background="@color/transparent"
+        app:layout_constraintTop_toBottomOf="@id/map"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            app:icon="@drawable/baseline_gps_fixed_24"
+            app:iconGravity="textTop"
+            app:iconSize="25dp"
+            style="@style/Theme.Polaris.CustomButtonCircle"
+            android:theme="@style/Theme.Polaris.Secondary"
+            />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/custom_maps_filters_button"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            style="@style/Theme.Polaris.CustomButton2"
+            android:text="@string/view_travel_history"
+            android:padding="8dp"
+            android:gravity="center"
+            android:ellipsize="end"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:theme="@style/Theme.Polaris.Secondary"
+            />
     </LinearLayout>
 
+</androidx.constraintlayout.widget.ConstraintLayout>
