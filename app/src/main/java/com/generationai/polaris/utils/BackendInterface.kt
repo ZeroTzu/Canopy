@@ -8,6 +8,7 @@ import com.generationai.polaris.api.LoginRequest
 import com.generationai.polaris.api.RegisterRequest
 import com.generationai.polaris.api.LoginResponse
 import com.generationai.polaris.api.RegisterResponse
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
 import java.time.Instant
@@ -36,7 +37,7 @@ interface BackendInterface {
     fun getLocationFiltered(
         @Path ("email") email: String,
         @Path ("startTime") longitude: Instant,
-        @Path ("endTime") latitude: Instant): Call<GetLocationResponse>
+        @Path ("endTime") latitude: Instant): Call<ResponseBody>
 //
 //    @POST("/api/users")
 //    fun getUser(@Path("uid") uid: String,@Path()): Call<UserClass>

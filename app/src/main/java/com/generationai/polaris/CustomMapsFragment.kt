@@ -12,8 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.compose.ui.graphics.vector.addPathNodes
-import com.generationai.polaris.api.GetLocationResponse
+import androidx.compose.material3.rememberTimePickerState
 import com.generationai.polaris.api.LocationItem
 import com.generationai.polaris.databinding.FragmentCustomMapsBinding
 import com.generationai.polaris.utils.BackendInterface
@@ -25,20 +24,25 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.Polyline
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
+import okhttp3.ResponseBody
+import org.json.JSONArray
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.time.Instant
+import java.time.LocalDateTime
 import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoField
 import java.util.Calendar
-import java.util.Date
 
 class CustomMapsFragment : Fragment(), OnMapReadyCallback {
 
@@ -48,10 +52,13 @@ class CustomMapsFragment : Fragment(), OnMapReadyCallback {
     private lateinit var filterStartInstant:Instant
     private lateinit var filterEndInstant:Instant
     private lateinit var backendInterface: BackendInterface
+    private lateinit var mMap: GoogleMap
     private val callback = OnMapReadyCallback { googleMap ->
+        mMap=googleMap
         val sydney = LatLng(-34.0, 151.0)
         googleMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(),R.raw.map_light))
         val polyline1 = googleMap.addPolyline(
             PolylineOptions()
             .clickable(true)
@@ -63,7 +70,6 @@ class CustomMapsFragment : Fragment(), OnMapReadyCallback {
                 LatLng(-32.306, 149.248),
                 LatLng(-32.491, 147.309)))
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(-23.684, 133.903), 4f))
-        polyline1.remove()
         addMarkers(googleMap)
     }
 
@@ -101,20 +107,28 @@ class CustomMapsFragment : Fragment(), OnMapReadyCallback {
             setOnClickListener {
                 if (childFragmentManager.findFragmentByTag("start_date_tag") == null
                     && childFragmentManager.findFragmentByTag("end_date_tag") == null) { // Check if dialog is already showing
+                    val finalCalendar: Calendar = Calendar.getInstance()
+                    val zonedInstant = filterStartInstant.atZone(ZoneId.systemDefault())
 
-                    val calendar:Calendar = Calendar.getInstance()
+                    val calendar: Calendar = Calendar.getInstance().apply {
+                        set(Calendar.HOUR_OF_DAY, zonedInstant.get(ChronoField.HOUR_OF_DAY))
+                        set(Calendar.MINUTE, zonedInstant.get(ChronoField.MINUTE_OF_HOUR))
+                        set(Calendar.DAY_OF_MONTH, zonedInstant.get(ChronoField.DAY_OF_MONTH))
+                        set(Calendar.MONTH, zonedInstant.get(ChronoField.MONTH_OF_YEAR) - 1) // Adjust for 0-based month
+                        set(Calendar.YEAR, zonedInstant.get(ChronoField.YEAR))
+                    }
 
+                    val tempCalendar = Calendar.getInstance()
                     val materialDatePicker = MaterialDatePicker.Builder.datePicker()
                         .setTitleText("Select start date")
                         .setSelection(filterStartInstant.toEpochMilli())
-                        .setCalendarConstraints(CalendarConstraints.Builder().setEnd(calendar.timeInMillis).build())
+                        .setCalendarConstraints(CalendarConstraints.Builder().setEnd(tempCalendar.timeInMillis).build())
                         .build()
 
                     materialDatePicker.show(childFragmentManager, "start_date_tag")
                     materialDatePicker.addOnPositiveButtonClickListener { selectedDate ->
-                        val calendar = Calendar.getInstance().apply {
-                            timeInMillis=selectedDate
-                        }
+                        // Set date in `finalCalendar`
+                        finalCalendar.timeInMillis = selectedDate
 
                         val materialTimePicker = MaterialTimePicker.Builder()
                             .setTitleText("Select start time")
@@ -124,16 +138,22 @@ class CustomMapsFragment : Fragment(), OnMapReadyCallback {
 
                         materialTimePicker.show(childFragmentManager, "start_time_tag")
                         materialTimePicker.addOnPositiveButtonClickListener {
-                            calendar.set(Calendar.HOUR_OF_DAY, materialTimePicker.hour)
-                            calendar.set(Calendar.MINUTE, materialTimePicker.minute)
-                            filterStartInstant = calendar.time.toInstant()
+                            // Set time in `finalCalendar`
+                            finalCalendar.set(Calendar.HOUR_OF_DAY, materialTimePicker.hour)
+                            finalCalendar.set(Calendar.MINUTE, materialTimePicker.minute)
 
+                            // Create `filterStartInstant` in UTC
+                            filterStartInstant = finalCalendar.toInstant()
+
+                            // Format and display the selected date and time
                             val formattedDate = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
                                 .format(filterStartInstant.atZone(ZoneId.systemDefault()).toLocalDateTime())
                             binding.customMapsStartFilterTextInputLayout.editText?.setText(formattedDate)
-                            getLocationHistoryBetweenDates(filterStartInstant,filterEndInstant)
+
+                            getLocationHistoryBetweenDates(filterStartInstant, filterEndInstant)
                         }
                     }
+
                 }
             }
         }
@@ -146,19 +166,28 @@ class CustomMapsFragment : Fragment(), OnMapReadyCallback {
                 if (childFragmentManager.findFragmentByTag("start_date_tag") == null
                     && childFragmentManager.findFragmentByTag("end_date_tag") == null) { // Check if dialog is already showing
 
-                    val calendar:Calendar = Calendar.getInstance()
+                    val finalCalendar: Calendar = Calendar.getInstance()
+                    val zonedInstant = filterStartInstant.atZone(ZoneId.systemDefault())
 
+                    val calendar: Calendar = Calendar.getInstance().apply {
+                        set(Calendar.HOUR_OF_DAY, zonedInstant.get(ChronoField.HOUR_OF_DAY))
+                        set(Calendar.MINUTE, zonedInstant.get(ChronoField.MINUTE_OF_HOUR))
+                        set(Calendar.DAY_OF_MONTH, zonedInstant.get(ChronoField.DAY_OF_MONTH))
+                        set(Calendar.MONTH, zonedInstant.get(ChronoField.MONTH_OF_YEAR) - 1) // Adjust for 0-based month
+                        set(Calendar.YEAR, zonedInstant.get(ChronoField.YEAR))
+                    }
+
+                    val tempCalendar = Calendar.getInstance()
                     val materialDatePicker = MaterialDatePicker.Builder.datePicker()
                         .setTitleText("Select start date")
-                        .setSelection(filterEndInstant.toEpochMilli())
-                        .setCalendarConstraints(CalendarConstraints.Builder().setEnd(calendar.timeInMillis).build())
+                        .setSelection(filterStartInstant.toEpochMilli())
+                        .setCalendarConstraints(CalendarConstraints.Builder().setEnd(tempCalendar.timeInMillis).build())
                         .build()
 
                     materialDatePicker.show(childFragmentManager, "start_date_tag")
                     materialDatePicker.addOnPositiveButtonClickListener { selectedDate ->
-                        val calendar = Calendar.getInstance().apply {
-                            timeInMillis=selectedDate
-                        }
+                        // Set date in `finalCalendar`
+                        finalCalendar.timeInMillis = selectedDate
 
                         val materialTimePicker = MaterialTimePicker.Builder()
                             .setTitleText("Select start time")
@@ -168,15 +197,18 @@ class CustomMapsFragment : Fragment(), OnMapReadyCallback {
 
                         materialTimePicker.show(childFragmentManager, "start_time_tag")
                         materialTimePicker.addOnPositiveButtonClickListener {
-                            calendar.set(Calendar.HOUR_OF_DAY, materialTimePicker.hour)
-                            calendar.set(Calendar.MINUTE, materialTimePicker.minute)
-                            filterEndInstant = calendar.time.toInstant()
 
+                            finalCalendar.set(Calendar.HOUR_OF_DAY, materialTimePicker.hour)
+                            finalCalendar.set(Calendar.MINUTE, materialTimePicker.minute)
+
+                            filterEndInstant = finalCalendar.toInstant()
+
+                            // Format and display the selected date and time
                             val formattedDate = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
                                 .format(filterEndInstant.atZone(ZoneId.systemDefault()).toLocalDateTime())
-
                             binding.customMapsEndFilterTextInputLayout.editText?.setText(formattedDate)
-                            getLocationHistoryBetweenDates(filterStartInstant,filterEndInstant)
+
+                            getLocationHistoryBetweenDates(filterStartInstant, filterEndInstant)
                         }
                     }
                 }
@@ -196,9 +228,20 @@ class CustomMapsFragment : Fragment(), OnMapReadyCallback {
                 binding.customMapsFiltersLinearLayout.visibility = View.GONE
             }
         }
+        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
+        binding.customMapsNightModeToggleSwitchCompat.setOnCheckedChangeListener { _, isChecked ->
+            mapFragment?.getMapAsync { googleMap ->
+                val mapStyleResource = if (isChecked) {
+                    R.raw.map_night // Night mode style
+                } else {
+                    R.raw.map_light // Light mode style
+                }
+                googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), mapStyleResource))
+            }
+        }
+
         return binding.root
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
@@ -206,29 +249,82 @@ class CustomMapsFragment : Fragment(), OnMapReadyCallback {
     }
     fun getLocationHistoryBetweenDates(startInstant:Instant,endInstant: Instant){
         var locations=ArrayList<LocationItem>()
-        backendInterface.getLocationFiltered("tida@gmail.com",startInstant,endInstant).enqueue(object: Callback<GetLocationResponse>{
-            override fun onResponse(
-                call: Call<GetLocationResponse>,
-                response: Response<GetLocationResponse>
-            ) {
-                val getLocationResponse:GetLocationResponse=response.body()?:return
-                if (getLocationResponse.status==Constants.BACK_END_SERVER_STATUS_FAILED) {
-                    if (getLocationResponse.code==Constants.BACK_END_SERVER_CODE_NO_LOCATION_RETURNED){
-                        Toast.makeText(context,"No Location History Found",Toast.LENGTH_SHORT).show()
-                        return
-                    }
-                    Toast.makeText(context,"Back End Error",Toast.LENGTH_SHORT).show()
+        backendInterface.getLocationFiltered("tida@gmail.com", startInstant, endInstant).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                val responseBody: ResponseBody = response.body() ?: return
+                val jsonString = responseBody.string()  // Use .string() to get the actual content
+                Log.i("CustomMapsFragment", "Response: $jsonString")
+                var isSuccessful = 0
+                try {
+                    val jsonObject = JSONObject(jsonString)
+                    isSuccessful = 2
+                } catch (e: Exception) {
+                    // Failed to parse as object, fallback to error handling
                 }
-                val tempVal=getLocationResponse
-                if (tempVal.locations==null) return
-                Log.i("PolarisCustomMapsFragment", "locations: ${tempVal.locations}")
-                setMapMarkers(tempVal.locations?:return)
+                try {
+                    jsonString.replace("}{","},{")
+                    val jsonArray = JSONArray(jsonString)
+                    if (jsonArray.length() == 0) isSuccessful = 3
+                    else isSuccessful = 1
+                } catch (e: Exception) {
+                    // Failed to parse as array, continue to check if it's an object
+                }
+
+
+                when (isSuccessful) {
+                    1 -> {
+                        Toast.makeText(context, "Found Locations", Toast.LENGTH_SHORT).show()
+                        val jsonArray = JSONArray(jsonString)
+                        val locationItems = ArrayList<LocationItem>()
+                        for (i in 0 until jsonArray.length()) {
+                            val jsonObject = jsonArray.getJSONObject(i)
+                            //format the server timestamp into iso 8601
+                            val timestampString = jsonObject.getString("timestamp")
+                                .replace(" AM", "")
+                                .replace(" PM", "")
+                                .replace(" UTC", "")
+                            Log.i("CustomMapsFragment", "Timestamp String: $timestampString")
+                            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ssXXX")
+
+// Parse to LocalDateTime, then convert to Instant
+                            val parsedInstant = LocalDateTime.parse(timestampString, formatter)
+                                .toInstant(ZoneOffset.UTC)
+                            val locationItem = LocationItem().apply {
+                                latitude = jsonObject.getDouble("latitude")
+                                longitude = jsonObject.getDouble("longitude")
+                                altitude = jsonObject.getDouble("altitude").toFloat()
+                                timestamp = parsedInstant
+                            }
+                            locationItems.add(locationItem)
+                        }
+                        setMapMarkers(locationItems)
+                    }
+                    2 -> {
+                        val jsonObject = JSONObject(jsonString)
+                        val status = jsonObject.getString("status")
+                        val code = jsonObject.getInt("code")
+                        if (status == Constants.BACK_END_SERVER_STATUS_FAILED) {
+                            if (code == Constants.BACK_END_SERVER_CODE_NO_LOCATION_RETURNED) {
+                                Toast.makeText(context, "Server Returned Error", Toast.LENGTH_SHORT).show()
+                                return
+                            }
+                        }
+                    }
+                    3 -> {
+                        clearMap()
+                        Toast.makeText(context, "No Results Found", Toast.LENGTH_SHORT).show()
+                    }
+                    else -> {
+                        Toast.makeText(context, "Case not caught", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
 
-            override fun onFailure(p0: Call<GetLocationResponse>, p1: Throwable) {
-
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                // Handle network failure
             }
         })
+
 
     }
     override fun onMapReady(p0: GoogleMap) {
@@ -240,19 +336,29 @@ class CustomMapsFragment : Fragment(), OnMapReadyCallback {
         googleMap.addMarker(MarkerOptions().position(LatLng(-34.0, 151.0)).title("Marker in Sydney"))
     }
     fun setMapMarkers(locations:ArrayList<LocationItem>){
+
+        Log.i("CustomMapsFragment", "Adding Locations: $locations")
         var mapFragment = parentFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
-        mapFragment?.getMapAsync{googleMap ->
+        mMap.let {
+            googleMap ->
             var tempPolyLineOptions = PolylineOptions()
                 .clickable(true)
                 .color(Color.BLUE)
                 .width(10f)
             for (location in locations){
+                Log.i("CustomMapsFragment", "Latitude: ${location.latitude}, Longitude: ${location.longitude}")
                 tempPolyLineOptions.add(LatLng(location.latitude!!.toDouble(),location.longitude!!.toDouble()))
             }
             googleMap.clear()
             googleMap.addPolyline(tempPolyLineOptions)
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(locations[0].latitude!!.toDouble(),locations[0].longitude!!.toDouble()), 10f))
+            Log.i("CustomMapsFragment", "Locations added: $locations")
 
         }
+
+    }
+    fun clearMap(){
+        mMap.clear()
     }
     override fun onPause() {
 

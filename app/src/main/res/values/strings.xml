@@ -5,8 +5,8 @@
     <string name="history">History</string>
     <string name="command">Command</string>
     <string name="debug_button">Debug Button</string>
-    <string name="start_service">Start Service</string>
-    <string name="stop_service">Stop Service</string>
+    <string name="start_service">Start</string>
+    <string name="stop_service">Stop</string>
     <string name="log_out">Log Out</string>
     <string name="notifications">Notifications</string>
     <string name="assistant">Assistant</string>

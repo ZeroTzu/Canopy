@@ -97,21 +97,33 @@ class MainActivity : AppCompatActivity() {
         binding.mainActivitySidePanel.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.home -> {
+                    for (i in 0 until binding.mainActivitySidePanel.menu.size()) {
+                        binding.mainActivitySidePanel.menu.getItem(i).isChecked = false
+                    }
                     it.isChecked=true
                     replaceFragment(Home())
                     drawerLayout.close()
                 }
                 R.id.settings -> {
+                    for (i in 0 until binding.mainActivitySidePanel.menu.size()) {
+                        binding.mainActivitySidePanel.menu.getItem(i).isChecked = false
+                    }
                     it.isChecked=true
                     replaceFragment(Settings())
                     drawerLayout.close()
                 }
                 R.id.history -> {
+                    for (i in 0 until binding.mainActivitySidePanel.menu.size()) {
+                        binding.mainActivitySidePanel.menu.getItem(i).isChecked = false
+                    }
                     it.isChecked=true
                     replaceFragment(History())
                     drawerLayout.close()
                 }
                 R.id.command -> {
+                    for (i in 0 until binding.mainActivitySidePanel.menu.size()) {
+                        binding.mainActivitySidePanel.menu.getItem(i).isChecked = false
+                    }
                     it.isChecked=true
                     replaceFragment(Command())
                     drawerLayout.close()

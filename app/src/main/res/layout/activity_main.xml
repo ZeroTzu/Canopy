@@ -5,12 +5,13 @@
     android:id="@+id/main_activity_drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:openDrawer="start">
+    tools:openDrawer="start"
+    android:theme="@style/Theme.Polaris">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:theme="@style/Theme.Polaris">
+        >
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/main_activity_top_appBarLayout"
@@ -25,10 +26,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 style="@style/Widget.MaterialComponents.ActionBar.Primary"
-                app:menu="@menu/bottom_navigation"
                 app:title="@string/app_name"
                 app:navigationIcon="@drawable/baseline_menu_24"
-                app:layout_collapseMode="pin"/>
+                app:layout_collapseMode="pin"
+                android:background="@drawable/gradient1"/>
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.core.widget.NestedScrollView

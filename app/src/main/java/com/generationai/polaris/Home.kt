@@ -147,8 +147,6 @@ class Home : Fragment(),ResponseCallback {
         activity?.runOnUiThread {
             Toast.makeText(context, response, Toast.LENGTH_LONG).show()
         }
-        binding.homeFragmentTopBarTextView.text=response
-        binding.homeFragmentTopBarTextView.requestLayout()
     }
     fun performHaptic(view: View){
         val successful = view.isActivated
@@ -221,7 +219,6 @@ class Home : Fragment(),ResponseCallback {
             if (imagePath!=null){
 //                binding.homeFragmentTopBarTextView.text=imagePath
                 binding.debugHomeFragmentImageView.setImageURI(android.net.Uri.parse(imagePath))
-                binding.homeFragmentTopBarTextView.requestLayout()
                 Log.i("PolarisHome", "updateImage success: $imagePath")
             }else{
                 Log.i("PolarisHome", "updateImage failed due to no path: $imagePath")

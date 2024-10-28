@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Home"
-    android:theme="@style/Theme.Polaris"
+    android:theme="@style/AppTheme"
     >
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -17,19 +17,6 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
-            <TextView
-                android:id="@+id/home_fragment_topBar_TextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/app_name"
-                android:gravity="center"
-                android:textSize="24sp"
-                android:textColor="?attr/colorOnPrimary"
-                android:padding="15dp"
-                android:ellipsize="end"
-                android:maxLines="6"
-                android:textStyle="bold"/>
-
         </FrameLayout>
         <ImageView
             android:id="@+id/debug_home_fragment_imageView"
@@ -55,14 +42,13 @@
                 android:gravity="bottom"
                 android:layout_marginEnd="10dp">
 
+                <!-- Removed shadowColor -->
+
                 <com.google.android.material.button.MaterialButton
                     style="@style/Theme.Polaris.CustomButtonCircle"
                     app:icon="@drawable/baseline_notifications_24"
                     app:iconGravity="textTop"
-
-                    app:iconSize="25dp"
-                    android:theme="@style/Theme.Polaris.Secondary"
-                    android:elevation="8dp" /> <!-- Removed shadowColor -->
+                    app:iconSize="25dp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/home_fragment_logoutButton"
@@ -71,7 +57,7 @@
                     app:iconSize="25dp"
                     app:iconTint="?attr/colorError"
                     style="@style/Theme.Polaris.CustomButtonCircle"
-                    android:theme="@style/Theme.Polaris.Secondary" />
+                     />
             </LinearLayout>
 
             <ScrollView
@@ -95,30 +81,15 @@
                         app:icon="@drawable/baseline_blind_24"
                         app:iconGravity="textTop"
                         app:iconSize="40dp"
-                        style="@style/Theme.Polaris.CustomButton1"
+                        style="@style/Theme.Polaris.CustomButtonFloatingWithIcon"
                         android:theme="@style/Theme.Polaris.Secondary"
                         android:visibility="invisible"/>
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/enter_command_button"
-                        android:text="@string/command"
-                        android:background="@drawable/custom_button"
-                        app:icon="@drawable/baseline_lightbulb_24"
-                        app:iconGravity="textTop"
-                        app:iconSize="40dp"
-                        style="@style/Theme.Polaris.CustomButton1"
-                        android:theme="@style/Theme.Polaris.Secondary"
-                        />
-
-                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/start_service_button"
                         android:text="@string/start_service"
-                        android:background="@drawable/custom_button"
                         app:icon="@drawable/baseline_play_arrow_24"
-                        app:iconGravity="textTop"
-                        app:iconSize="40dp"
-                        style="@style/Theme.Polaris.CustomButton1"
-                        android:theme="@style/Theme.Polaris.Secondary" />
+                        style="@style/Theme.Polaris.CustomButtonFloatingWithIcon" />
                 </LinearLayout>
             </ScrollView>
 
