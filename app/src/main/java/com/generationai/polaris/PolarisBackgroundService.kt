@@ -57,6 +57,7 @@ class PolarisBackgroundService : LifecycleService(){
     private lateinit var backendInterface: BackendInterface
     private val dataStore: DataStore<Preferences> by lazy {DataStoreManager.getInstance(this)}
     private lateinit var user:UserClass
+    private var lastLocationRequest:AddLocationRequest?=null
     private val sendServiceStatusRunnable = object : Runnable {
         override fun run() {
             sendServiceStatus(true)
@@ -204,12 +205,18 @@ class PolarisBackgroundService : LifecycleService(){
         val longitude =location.longitude
         val altitude =location.altitude
         val addLocationRequest = AddLocationRequest(user.email,latitude,longitude,altitude)
+        if (lastLocationRequest!=null){
+            if (isSameCoords(lastLocationRequest!!,addLocationRequest)){
+
+            }
+        }
         backendInterface.addLocation(addLocationRequest).enqueue(object: Callback<AddLocationResponse>{
             override fun onResponse(call: Call<AddLocationResponse>, response: Response<AddLocationResponse>)
             {
                 val addLocationResponse = response.body()?:return
 
                 Log.i("PolarisBackgroundService","addLocation Callback: ${addLocationResponse.status.toString()}")
+                lastLocationRequest=addLocationRequest
             }
 
             override fun onFailure(call: Call<AddLocationResponse>, e: Throwable) {
@@ -217,6 +224,13 @@ class PolarisBackgroundService : LifecycleService(){
             }
         })
         sendBroadcast(locationIntent)
+    }
+    private fun isSameCoords(req1:AddLocationRequest,req2:AddLocationRequest):Boolean{
+        var isSame=false
+        if (req1.latitude==req2.latitude && req1.longitude==req2.longitude && req1.altitude==req2.altitude){
+            isSame=true;
+        }
+        return isSame
     }
     private suspend fun getEmailFromDataStore(): String? {
         return dataStore.data.map { preferences ->

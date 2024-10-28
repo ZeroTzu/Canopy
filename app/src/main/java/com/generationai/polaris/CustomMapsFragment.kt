@@ -1,17 +1,23 @@
 package com.generationai.polaris
 
+import android.graphics.Color
 import androidx.fragment.app.Fragment
 
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.InputType
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.compose.ui.graphics.vector.addPathNodes
+import com.generationai.polaris.api.GetLocationResponse
 import com.generationai.polaris.api.LocationItem
 import com.generationai.polaris.databinding.FragmentCustomMapsBinding
 import com.generationai.polaris.utils.BackendInterface
+import com.generationai.polaris.utils.Constants
 import com.generationai.polaris.utils.RetrofitClient
 
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -25,6 +31,9 @@ import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -56,7 +65,6 @@ class CustomMapsFragment : Fragment(), OnMapReadyCallback {
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(-23.684, 133.903), 4f))
         polyline1.remove()
         addMarkers(googleMap)
-        // Set listeners for click events.
     }
 
 //    private var getUserLocationHistoryRunnable= Runnable {
@@ -122,8 +130,8 @@ class CustomMapsFragment : Fragment(), OnMapReadyCallback {
 
                             val formattedDate = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
                                 .format(filterStartInstant.atZone(ZoneId.systemDefault()).toLocalDateTime())
-
                             binding.customMapsStartFilterTextInputLayout.editText?.setText(formattedDate)
+                            getLocationHistoryBetweenDates(filterStartInstant,filterEndInstant)
                         }
                     }
                 }
@@ -168,6 +176,7 @@ class CustomMapsFragment : Fragment(), OnMapReadyCallback {
                                 .format(filterEndInstant.atZone(ZoneId.systemDefault()).toLocalDateTime())
 
                             binding.customMapsEndFilterTextInputLayout.editText?.setText(formattedDate)
+                            getLocationHistoryBetweenDates(filterStartInstant,filterEndInstant)
                         }
                     }
                 }
@@ -179,6 +188,7 @@ class CustomMapsFragment : Fragment(), OnMapReadyCallback {
             binding.customMapsEndFilterTextInputLayout.editText?.setText("")
             getDefaultFilterInstants()
         }
+        binding.customMapsFiltersLinearLayout.visibility = View.GONE
         binding.customMapsFiltersButton.setOnClickListener {
             if (binding.customMapsFiltersLinearLayout.visibility == View.GONE){
                 binding.customMapsFiltersLinearLayout.visibility = View.VISIBLE
@@ -193,23 +203,59 @@ class CustomMapsFragment : Fragment(), OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
-
-
     }
-    fun getLocationHistoryBetweenDates(startDate:String,endDate:String){
-        TODO("Not yet implemented")
-        val locations=ArrayList<LocationItem>()
+    fun getLocationHistoryBetweenDates(startInstant:Instant,endInstant: Instant){
+        var locations=ArrayList<LocationItem>()
+        backendInterface.getLocationFiltered("tida@gmail.com",startInstant,endInstant).enqueue(object: Callback<GetLocationResponse>{
+            override fun onResponse(
+                call: Call<GetLocationResponse>,
+                response: Response<GetLocationResponse>
+            ) {
+                val getLocationResponse:GetLocationResponse=response.body()?:return
+                if (getLocationResponse.status==Constants.BACK_END_SERVER_STATUS_FAILED) {
+                    if (getLocationResponse.code==Constants.BACK_END_SERVER_CODE_NO_LOCATION_RETURNED){
+                        Toast.makeText(context,"No Location History Found",Toast.LENGTH_SHORT).show()
+                        return
+                    }
+                    Toast.makeText(context,"Back End Error",Toast.LENGTH_SHORT).show()
+                }
+                val tempVal=getLocationResponse
+                if (tempVal.locations==null) return
+                Log.i("PolarisCustomMapsFragment", "locations: ${tempVal.locations}")
+                setMapMarkers(tempVal.locations?:return)
+            }
+
+            override fun onFailure(p0: Call<GetLocationResponse>, p1: Throwable) {
+
+            }
+        })
 
     }
     override fun onMapReady(p0: GoogleMap) {
         TODO("Not yet implemented")
 
+
     }
     fun addMarkers(googleMap: GoogleMap){
         googleMap.addMarker(MarkerOptions().position(LatLng(-34.0, 151.0)).title("Marker in Sydney"))
+    }
+    fun setMapMarkers(locations:ArrayList<LocationItem>){
+        var mapFragment = parentFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
+        mapFragment?.getMapAsync{googleMap ->
+            var tempPolyLineOptions = PolylineOptions()
+                .clickable(true)
+                .color(Color.BLUE)
+                .width(10f)
+            for (location in locations){
+                tempPolyLineOptions.add(LatLng(location.latitude!!.toDouble(),location.longitude!!.toDouble()))
+            }
+            googleMap.clear()
+            googleMap.addPolyline(tempPolyLineOptions)
 
+        }
     }
     override fun onPause() {
+
         super.onPause()
     }
 //    fun addMarkers(locations:ArrayList<LocationItem>){

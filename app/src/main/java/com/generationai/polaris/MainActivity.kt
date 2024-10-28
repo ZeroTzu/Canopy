@@ -1,18 +1,5 @@
 package com.generationai.polaris
 
-import android.os.Build
-import android.os.Bundle
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.generationai.polaris.ui.theme.PolarisTheme
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
-import com.generationai.polaris.databinding.ActivityMainBinding
 import android.Manifest
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -20,19 +7,36 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.location.Location
+import android.os.Build
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.View
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.content.ContextCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
+import com.generationai.polaris.databinding.ActivityMainBinding
+import com.generationai.polaris.ui.theme.PolarisTheme
 import com.generationai.polaris.utils.Constants
 import com.generationai.polaris.utils.UserClass
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -85,13 +89,33 @@ class MainActivity : AppCompatActivity() {
             requestPermissions()
         }
         replaceFragment(Home())
-        binding.bottomNavigationView.selectedItemId = R.id.home
-        binding.bottomNavigationView.setOnItemSelectedListener {
+
+        val drawerLayout=binding.mainActivityDrawerLayout
+        val toolbar = binding.mainActivityMaterialToolbar
+        toolbar.setNavigationOnClickListener { v: View? -> drawerLayout.open() }
+
+        binding.mainActivitySidePanel.setNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.home -> replaceFragment(Home())
-                R.id.settings -> replaceFragment(Settings())
-                R.id.history -> replaceFragment(History())
-                R.id.command -> replaceFragment(Command())
+                R.id.home -> {
+                    it.isChecked=true
+                    replaceFragment(Home())
+                    drawerLayout.close()
+                }
+                R.id.settings -> {
+                    it.isChecked=true
+                    replaceFragment(Settings())
+                    drawerLayout.close()
+                }
+                R.id.history -> {
+                    it.isChecked=true
+                    replaceFragment(History())
+                    drawerLayout.close()
+                }
+                R.id.command -> {
+                    it.isChecked=true
+                    replaceFragment(Command())
+                    drawerLayout.close()
+                }
             }
             true
         }

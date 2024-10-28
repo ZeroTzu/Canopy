@@ -3,12 +3,14 @@ package com.generationai.polaris.utils
 
 import com.generationai.polaris.api.AddLocationRequest
 import com.generationai.polaris.api.AddLocationResponse
+import com.generationai.polaris.api.GetLocationResponse
 import com.generationai.polaris.api.LoginRequest
 import com.generationai.polaris.api.RegisterRequest
 import com.generationai.polaris.api.LoginResponse
 import com.generationai.polaris.api.RegisterResponse
 import retrofit2.Call
 import retrofit2.http.*
+import java.time.Instant
 
 interface BackendInterface {
 
@@ -28,14 +30,13 @@ interface BackendInterface {
     fun addLocation(@Body loginRequest: AddLocationRequest): Call<AddLocationResponse>
 
     @GET("/ords/admin/api/polaris/getLocation/{email}")
-    fun getLocation(@Path ("email") email: String): Call<AddLocationResponse>
+    fun getLocation(@Path ("email") email: String): Call<GetLocationResponse>
 
-    @GET("/ords/admin/api/polaris/getLocation/{email}/{latitude}/{longitude}")
-    fun getFilteredLocation(
+    @GET("/ords/admin/api/polaris/getLocation/{email}/{startTime}/{endTime}")
+    fun getLocationFiltered(
         @Path ("email") email: String,
-        @Path ("longitude") longitude: Float,
-        @Path ("latitude") latitude: Float): Call<AddLocationResponse>
-
+        @Path ("startTime") longitude: Instant,
+        @Path ("endTime") latitude: Instant): Call<GetLocationResponse>
 //
 //    @POST("/api/users")
 //    fun getUser(@Path("uid") uid: String,@Path()): Call<UserClass>

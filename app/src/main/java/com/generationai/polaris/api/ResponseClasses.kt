@@ -1,6 +1,7 @@
 package com.generationai.polaris.api
 
 import java.sql.Timestamp
+import java.time.Instant
 
 class LoginResponse{
     var uid:String? = null
@@ -32,9 +33,16 @@ class AddLocationResponse {
     var timestamp:Timestamp?=null
 
 }
+
+class GetLocationResponse{
+    var code:Int?=null
+    var status:String?=null
+    var message:String?=null
+    var locations:ArrayList<LocationItem>?=null
+}
 class LocationItem{
     var latitude:Double?=null
     var longitude:Double?=null
     var altitude:Float?=null
-    var timestamp:String?=null
+    var timestamp:Instant?=null
 }

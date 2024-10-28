@@ -38,8 +38,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="@string/start_filter"
-            app:placeholderText="@string/start_filter"
+            android:hint="@string/start_date"
+            app:placeholderText="@string/start_date"
             style="@style/NeutralTextInputLayout"
             >
 
@@ -58,8 +58,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="@string/end_filter"
-            app:placeholderText="@string/end_filter"
+            android:hint="@string/end_date"
+            app:placeholderText="@string/end_date"
             style="@style/NeutralTextInputLayout">
 
             <com.google.android.material.textfield.TextInputEditText

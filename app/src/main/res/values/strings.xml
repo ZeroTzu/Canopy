@@ -15,6 +15,8 @@
     <string name="background_service_text">We are using your camera, microphone and location to observe your surrounding and keep you safe.</string>
     <string name="notification_channel_name">Polaris Background Service</string>
     <string name="notification_channel_description">Notification channel for Polaris background service</string>
+    <string name="start_date">Start Date</string>
+    <string name="end_date">End Date</string>
 
     <string name="home_fragment_image_description">The most recent image taken by the camera</string>
     <!-- TODO: Remove or change this placeholder text -->
