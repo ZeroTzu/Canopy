@@ -32,5 +32,6 @@
     <string name="clear_filters">Clear Filters</string>
     <string name="start_filter">Start Filter</string>
     <string name="end_filter">End Filter</string>
+    <string name="manage_family">Manage Family</string>
 
 </resources>

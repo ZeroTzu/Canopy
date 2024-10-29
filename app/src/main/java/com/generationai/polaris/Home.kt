@@ -118,26 +118,9 @@ class Home : Fragment(),ResponseCallback {
 //
 //        }
         binding.homeFragmentLogoutButton.setOnClickListener{
-            val intent = Intent(requireActivity(), LoginActivity::class.java)
-
-
-            if(mainViewModel.isSertviceRunning.value){
-                //Stop the background service before logging out
-                Intent(context, PolarisBackgroundService::class.java).also {
-                    it.action = PolarisBackgroundService.Actions.STOP.toString()
-                    requireActivity().startService(it)
-                }
-            }
-
-
             lifecycleScope.launch {
-                requireActivity().dataStore.edit {
-                    it.clear()
-                }
+                (activity as? MainActivity)?.logoutUser()
             }
-            //start login activity and stop the MainActivity so that user cant navigate back
-            startActivity(intent)
-            requireActivity().finish()
         }
         // Inflate the layout for this fragment
         return binding.root

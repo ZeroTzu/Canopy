@@ -27,6 +27,8 @@
                 android:layout_height="?attr/actionBarSize"
                 style="@style/Widget.MaterialComponents.ActionBar.Primary"
                 app:title="@string/app_name"
+                app:titleTextColor="?attr/colorOnPrimary"
+                app:navigationIconTint="?attr/colorOnPrimary"
                 app:navigationIcon="@drawable/baseline_menu_24"
                 app:layout_collapseMode="pin"
                 android:background="@drawable/gradient1"/>

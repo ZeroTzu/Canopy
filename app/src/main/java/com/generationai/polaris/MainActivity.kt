@@ -30,6 +30,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.generationai.polaris.databinding.ActivityMainBinding
 import com.generationai.polaris.ui.theme.PolarisTheme
@@ -96,38 +97,49 @@ class MainActivity : AppCompatActivity() {
 
         binding.mainActivitySidePanel.setNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.home -> {
+                R.id.side_panel_home -> {
                     for (i in 0 until binding.mainActivitySidePanel.menu.size()) {
                         binding.mainActivitySidePanel.menu.getItem(i).isChecked = false
                     }
-                    it.isChecked=true
+                    it.isChecked = true
                     replaceFragment(Home())
                     drawerLayout.close()
                 }
-                R.id.settings -> {
+
+                R.id.side_panel_home -> {
                     for (i in 0 until binding.mainActivitySidePanel.menu.size()) {
                         binding.mainActivitySidePanel.menu.getItem(i).isChecked = false
                     }
-                    it.isChecked=true
+                    it.isChecked = true
                     replaceFragment(Settings())
                     drawerLayout.close()
                 }
-                R.id.history -> {
+
+                R.id.side_panel_home -> {
                     for (i in 0 until binding.mainActivitySidePanel.menu.size()) {
                         binding.mainActivitySidePanel.menu.getItem(i).isChecked = false
                     }
-                    it.isChecked=true
+                    it.isChecked = true
                     replaceFragment(History())
                     drawerLayout.close()
                 }
-                R.id.command -> {
+
+                R.id.side_panel_command -> {
                     for (i in 0 until binding.mainActivitySidePanel.menu.size()) {
                         binding.mainActivitySidePanel.menu.getItem(i).isChecked = false
                     }
-                    it.isChecked=true
+                    it.isChecked = true
                     replaceFragment(Command())
                     drawerLayout.close()
                 }
+
+                R.id.side_panel_manage_family -> {}
+                R.id.side_panel_logout -> {
+                    lifecycleScope.launch {
+                        logoutUser()
+                    }
+                }
+
             }
             true
         }
@@ -237,7 +249,26 @@ class MainActivity : AppCompatActivity() {
             preferences[Constants.EMAIL_KEY]  // Use the stringPreferencesKey to access the value
         }.firstOrNull()
     }
-    private suspend fun logoutUser(){
+    suspend fun logoutUser(){
+
+        val intent = Intent(this@MainActivity, LoginActivity::class.java)
+        var mainViewModel = ViewModelProvider(this@MainActivity)[MainActivityViewModel::class.java]
+        if(mainViewModel.isSertviceRunning.value){
+            //Stop the background service before logging out
+            Intent(this, PolarisBackgroundService::class.java).also {
+                it.action = PolarisBackgroundService.Actions.STOP.toString()
+                this@MainActivity.startService(it)
+            }
+        }
+        lifecycleScope.launch {
+            baseContext.dataStore.edit {
+                it.clear()
+            }
+        }
+        //start login activity and stop the MainActivity so that user cant navigate back
+        startActivity(intent)
+        this@MainActivity.finish()
+
         dataStore.edit { preferences ->
             preferences.clear()
         }
