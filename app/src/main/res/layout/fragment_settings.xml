@@ -7,10 +7,41 @@
     tools:context=".Settings">
 
     <!-- TODO: Update blank fragment layout -->
-    <androidx.appcompat.widget.SwitchCompat
-        android:layout_width="200dp"
-        android:layout_height="100dp"
-        app:track="@drawable/light_dark_switch_track"
-        android:thumb="@drawable/switch_thumb"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/settings"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="10dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Upload GPS Location"/>
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/fragment_settings_upload_gps_location_switchCompat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
 
 </FrameLayout>

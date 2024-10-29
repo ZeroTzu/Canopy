@@ -5,6 +5,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.lifecycle.lifecycleScope
+import com.generationai.polaris.databinding.FragmentSettingsBinding
+import com.generationai.polaris.utils.Constants
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -20,6 +29,8 @@ class Settings : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private lateinit var binding: FragmentSettingsBinding
+    private val dataStore: DataStore<Preferences> by lazy {DataStoreManager.getInstance(requireContext())}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,10 +44,35 @@ class Settings : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_settings, container, false)
+        binding = FragmentSettingsBinding.inflate(inflater, container, false)
+
+
+
+        binding.fragmentSettingsUploadGpsLocationSwitchCompat.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                lifecycleScope.launch {
+                    setSendLocationToDataStore(true)
+                }
+            } else {
+                lifecycleScope.launch {
+                    setSendLocationToDataStore(false)
+                }
+            }
+        }
+        return binding.root
     }
 
+    private suspend fun getSendLocationFromDataStore(): Boolean {
+        val value =dataStore.data.map { preferences ->
+            preferences[Constants.SEND_LOCATION_KEY]  // Use the stringPreferencesKey to access the value
+        }.firstOrNull()
+        return value.toBoolean()
+    }
+    private suspend fun setSendLocationToDataStore(value: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[Constants.SEND_LOCATION_KEY] = value.toString()
+        }
+    }
     companion object {
         /**
          * Use this factory method to create a new instance of
