@@ -93,8 +93,7 @@ class MainActivity : AppCompatActivity() {
 
         val drawerLayout=binding.mainActivityDrawerLayout
         val toolbar = binding.mainActivityMaterialToolbar
-        toolbar.setNavigationOnClickListener { v: View? -> drawerLayout.open() }
-
+        toolbar.setNavigationOnClickListener { drawerLayout.open() }
         binding.mainActivitySidePanel.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.side_panel_home -> {
@@ -135,6 +134,7 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.side_panel_manage_family -> {}
                 R.id.side_panel_logout -> {
+                    drawerLayout.close()
                     lifecycleScope.launch {
                         logoutUser()
                     }

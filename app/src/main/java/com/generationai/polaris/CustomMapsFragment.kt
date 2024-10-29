@@ -55,22 +55,7 @@ class CustomMapsFragment : Fragment(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private val callback = OnMapReadyCallback { googleMap ->
         mMap=googleMap
-        val sydney = LatLng(-34.0, 151.0)
-        googleMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
-        googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(),R.raw.map_light))
-        val polyline1 = googleMap.addPolyline(
-            PolylineOptions()
-            .clickable(true)
-            .add(
-                LatLng(-35.016, 143.321),
-                LatLng(-34.747, 145.592),
-                LatLng(-34.364, 147.891),
-                LatLng(-33.501, 150.217),
-                LatLng(-32.306, 149.248),
-                LatLng(-32.491, 147.309)))
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(-23.684, 133.903), 4f))
-        addMarkers(googleMap)
+        getLocationHistoryBetweenDates(filterStartInstant, filterEndInstant)
     }
 
 //    private var getUserLocationHistoryRunnable= Runnable {
