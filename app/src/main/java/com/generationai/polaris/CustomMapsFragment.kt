@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.location.Location
 import androidx.fragment.app.Fragment
 
 import android.os.Bundle
@@ -78,6 +79,7 @@ class CustomMapsFragment : Fragment(), OnMapReadyCallback {
         lastLocations=ArrayList()
         handler.post(captureImageRunnable)
     }
+
 
 //    private var getUserLocationHistoryRunnable= Runnable {
 //\    }
@@ -257,6 +259,33 @@ class CustomMapsFragment : Fragment(), OnMapReadyCallback {
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
     }
+    fun filterLocations(locations: ArrayList<LocationItem>, minDistance: Float): ArrayList<LocationItem> {
+        val filteredLocations = ArrayList<LocationItem>()
+        if (locations.isEmpty()) return filteredLocations
+
+        // Add the first location by default
+        filteredLocations.add(locations[0])
+
+        // Iterate and add only locations far enough from the last added point
+        for (i in 1 until locations.size) {
+            val lastAddedLocation = filteredLocations.last()
+            val currentLocation = locations[i]
+
+            val results = FloatArray(1)
+            Location.distanceBetween(
+                lastAddedLocation.latitude!!.toDouble(), lastAddedLocation.longitude!!.toDouble(),
+                currentLocation.latitude!!.toDouble(), currentLocation.longitude!!.toDouble(),
+                results
+            )
+
+            // Check if the distance is greater than the specified minimum
+            if (results[0] > minDistance) {
+                filteredLocations.add(currentLocation)
+            }
+        }
+        return filteredLocations
+    }
+
     fun getLocationHistoryBetweenDates(startInstant:Instant,endInstant: Instant){
         backendInterface.getLocationFiltered("tida@gmail.com", startInstant, endInstant).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
@@ -306,7 +335,8 @@ class CustomMapsFragment : Fragment(), OnMapReadyCallback {
                             }
                             locations.add(locationItem)
                         }
-                        setMapMarkers(locations)
+                        val filteredLocations=filterLocations(locations, 100f)
+                        setMapMarkers(filteredLocations)
 
                     }
                     2 -> {
@@ -377,9 +407,6 @@ class CustomMapsFragment : Fragment(), OnMapReadyCallback {
 
             // Add polyline to the map
             googleMap.addPolyline(tempPolyLineOptions)
-            if (lastLocations!=locations){
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(locations[0].latitude!!.toDouble(), locations[0].longitude!!.toDouble()), 10f))
-            }
             Log.i("CustomMapsFragment", "Locations added: $locations")
         }
     }
