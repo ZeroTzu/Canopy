@@ -1,6 +1,9 @@
 package com.generationai.polaris
 
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.PorterDuff
 import androidx.fragment.app.Fragment
 
 import android.os.Bundle
@@ -13,6 +16,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.compose.material3.rememberTimePickerState
+import androidx.core.content.ContextCompat
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.generationai.polaris.api.LocationItem
 import com.generationai.polaris.databinding.FragmentCustomMapsBinding
 import com.generationai.polaris.utils.BackendInterface
@@ -23,6 +28,8 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
@@ -36,6 +43,7 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -43,6 +51,8 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoField
 import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 class CustomMapsFragment : Fragment(), OnMapReadyCallback {
 
@@ -53,9 +63,17 @@ class CustomMapsFragment : Fragment(), OnMapReadyCallback {
     private lateinit var filterEndInstant:Instant
     private lateinit var backendInterface: BackendInterface
     private lateinit var mMap: GoogleMap
+    private val captureImageRunnable = object : Runnable {
+        override fun run() {
+            getLocationHistoryBetweenDates(filterStartInstant, filterEndInstant)
+            handler.postDelayed(this, 5000) //
+        }
+    }
     private val callback = OnMapReadyCallback { googleMap ->
         mMap=googleMap
-        getLocationHistoryBetweenDates(filterStartInstant, filterEndInstant)
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(1.3521, 103.8198), 11f))
+
+        handler.post(captureImageRunnable)
     }
 
 //    private var getUserLocationHistoryRunnable= Runnable {
@@ -320,27 +338,81 @@ class CustomMapsFragment : Fragment(), OnMapReadyCallback {
     fun addMarkers(googleMap: GoogleMap){
         googleMap.addMarker(MarkerOptions().position(LatLng(-34.0, 151.0)).title("Marker in Sydney"))
     }
-    fun setMapMarkers(locations:ArrayList<LocationItem>){
-
+    fun setMapMarkers(locations: ArrayList<LocationItem>) {
         Log.i("CustomMapsFragment", "Adding Locations: $locations")
-        var mapFragment = parentFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
-        mMap.let {
-            googleMap ->
-            var tempPolyLineOptions = PolylineOptions()
+        val mapFragment = parentFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
+        mMap.let { googleMap ->
+            // Clear the map first to avoid duplicates
+            googleMap.clear()
+
+            // Create polyline options
+            val tempPolyLineOptions = PolylineOptions()
                 .clickable(true)
                 .color(Color.BLUE)
                 .width(10f)
-            for (location in locations){
+
+            // Iterate through locations to add markers and polyline
+            for (i in locations.indices) {
+                val location = locations[i]
                 Log.i("CustomMapsFragment", "Latitude: ${location.latitude}, Longitude: ${location.longitude}")
-                tempPolyLineOptions.add(LatLng(location.latitude!!.toDouble(),location.longitude!!.toDouble()))
+                tempPolyLineOptions.add(LatLng(location.latitude!!.toDouble(), location.longitude!!.toDouble()))
+
+                if (i == 0) { // Latest position
+                    // Create a larger red marker
+                    val personIcon = createCustomMarker(R.drawable.baseline_person_pin_24, Color.RED, 10f) // Scale up by 1.5x
+                    val markerOptions = MarkerOptions()
+                        .position(LatLng(location.latitude!!.toDouble(), location.longitude!!.toDouble()))
+                        .title("As of ${formatTimestamp(location.timestamp!!.toEpochMilli())}") // Set title
+                        .icon(personIcon)
+
+                    googleMap.addMarker(markerOptions)
+                }
             }
-            googleMap.clear()
+
+            // Add polyline to the map
             googleMap.addPolyline(tempPolyLineOptions)
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(locations[0].latitude!!.toDouble(),locations[0].longitude!!.toDouble()), 10f))
+
             Log.i("CustomMapsFragment", "Locations added: $locations")
-
         }
+    }
 
+    private fun createCustomMarker(drawableId: Int, color: Int, scale: Float): BitmapDescriptor {
+        // Create a bitmap from the vector drawable and change its color
+        val drawable = ContextCompat.getDrawable(requireContext(), drawableId)?.mutate() // Ensure the drawable can be modified
+        drawable?.setColorFilter(color, PorterDuff.Mode.SRC_IN)
+
+        // Set the size based on the scale factor
+        val bitmap = Bitmap.createBitmap(((drawable?.intrinsicWidth ?: (0 * scale))).toInt(), ((drawable?.intrinsicHeight
+            ?: (0 * scale))).toInt(), Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        drawable?.setBounds(0, 0, canvas.width, canvas.height)
+        drawable?.draw(canvas)
+
+        return BitmapDescriptorFactory.fromBitmap(bitmap)
+    }
+
+
+
+
+
+    fun formatTimestamp(timestamp: Long): String {
+        val dateFormat = SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault())
+        val date = Date(timestamp)
+        return dateFormat.format(date)
+    }
+
+
+        fun vectorToBitmap(vectorResId: Int): Bitmap {
+        val drawable = ContextCompat.getDrawable(requireContext(), vectorResId)
+
+        // Create a bitmap with the appropriate size
+        val bitmap = Bitmap.createBitmap(drawable!!.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        // Set the bounds for the drawable and draw it
+        drawable.setBounds(0, 0, canvas.width, canvas.height)
+        drawable.draw(canvas)
+
+        return bitmap
     }
     fun clearMap(){
         mMap.clear()
