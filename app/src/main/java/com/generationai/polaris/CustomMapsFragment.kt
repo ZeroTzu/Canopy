@@ -58,6 +58,7 @@ class CustomMapsFragment : Fragment(), OnMapReadyCallback {
 
     private var handler: Handler = Handler(Looper.getMainLooper())
     private lateinit var locations:ArrayList<LocationItem>
+    private lateinit var lastLocations:ArrayList<LocationItem>
     private lateinit var binding: FragmentCustomMapsBinding
     private lateinit var filterStartInstant:Instant
     private lateinit var filterEndInstant:Instant
@@ -65,6 +66,7 @@ class CustomMapsFragment : Fragment(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private val captureImageRunnable = object : Runnable {
         override fun run() {
+
             getLocationHistoryBetweenDates(filterStartInstant, filterEndInstant)
             handler.postDelayed(this, 5000) //
         }
@@ -72,7 +74,8 @@ class CustomMapsFragment : Fragment(), OnMapReadyCallback {
     private val callback = OnMapReadyCallback { googleMap ->
         mMap=googleMap
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(1.3521, 103.8198), 11f))
-
+        locations=ArrayList()
+        lastLocations=ArrayList()
         handler.post(captureImageRunnable)
     }
 
@@ -251,7 +254,6 @@ class CustomMapsFragment : Fragment(), OnMapReadyCallback {
         mapFragment?.getMapAsync(callback)
     }
     fun getLocationHistoryBetweenDates(startInstant:Instant,endInstant: Instant){
-        var locations=ArrayList<LocationItem>()
         backendInterface.getLocationFiltered("tida@gmail.com", startInstant, endInstant).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 val responseBody: ResponseBody = response.body() ?: return
@@ -276,9 +278,9 @@ class CustomMapsFragment : Fragment(), OnMapReadyCallback {
 
                 when (isSuccessful) {
                     1 -> {
-                        Toast.makeText(context, "Found Locations", Toast.LENGTH_SHORT).show()
                         val jsonArray = JSONArray(jsonString)
-                        val locationItems = ArrayList<LocationItem>()
+
+                        if (locations!=ArrayList<LocationItem>()) lastLocations=locations
                         for (i in 0 until jsonArray.length()) {
                             val jsonObject = jsonArray.getJSONObject(i)
                             //format the server timestamp into iso 8601
@@ -298,9 +300,10 @@ class CustomMapsFragment : Fragment(), OnMapReadyCallback {
                                 altitude = jsonObject.getDouble("altitude").toFloat()
                                 timestamp = parsedInstant
                             }
-                            locationItems.add(locationItem)
+                            locations.add(locationItem)
                         }
-                        setMapMarkers(locationItems)
+                        setMapMarkers(locations)
+
                     }
                     2 -> {
                         val jsonObject = JSONObject(jsonString)
@@ -315,7 +318,6 @@ class CustomMapsFragment : Fragment(), OnMapReadyCallback {
                     }
                     3 -> {
                         clearMap()
-                        Toast.makeText(context, "No Results Found", Toast.LENGTH_SHORT).show()
                     }
                     else -> {
                         Toast.makeText(context, "Case not caught", Toast.LENGTH_SHORT).show()
@@ -371,7 +373,9 @@ class CustomMapsFragment : Fragment(), OnMapReadyCallback {
 
             // Add polyline to the map
             googleMap.addPolyline(tempPolyLineOptions)
-
+            if (lastLocations!=locations){
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(locations[0].latitude!!.toDouble(), locations[0].longitude!!.toDouble()), 10f))
+            }
             Log.i("CustomMapsFragment", "Locations added: $locations")
         }
     }
@@ -418,9 +422,18 @@ class CustomMapsFragment : Fragment(), OnMapReadyCallback {
         mMap.clear()
     }
     override fun onPause() {
-
+        handler.removeCallbacks(captureImageRunnable)
         super.onPause()
     }
+    override fun onResume() {
+        handler.post(captureImageRunnable)
+        super.onResume()
+    }
+    override fun onDestroy() {
+        handler.removeCallbacks(captureImageRunnable)
+        super.onDestroy()
+    }
+
 //    fun addMarkers(locations:ArrayList<LocationItem>){
 //        for (location in locations){
 //            val latLng=LatLng(location.latitude!!,location.longitude!!)

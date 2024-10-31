@@ -152,7 +152,7 @@
         <item name="android:textStyle">bold</item>
     </style>
     <style name="Theme.Polaris.TitleTextView" parent="Theme.Polaris">
-        <item name="android:textColor">?attr/colorPrimaryDark</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">30sp</item>
         <item name="android:gravity">center_horizontal</item>
@@ -193,26 +193,6 @@
         <!-- Floating label color when focused -->
         <item name="hintTextAppearance">@style/TextAppearance.MaterialComponents.Caption</item>
     </style>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     <style name="AppTheme" parent="Theme.Material3.DayNight.NoActionBar">

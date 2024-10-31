@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:openDrawer="start"
-    android:theme="@style/Theme.Polaris">
+    android:theme="@style/AppTheme">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -27,11 +27,13 @@
                 android:layout_height="?attr/actionBarSize"
                 style="@style/Widget.MaterialComponents.ActionBar.Primary"
                 app:title="@string/app_name"
-                app:titleTextColor="?attr/colorOnPrimary"
-                app:navigationIconTint="?attr/colorOnPrimary"
+                app:titleTextColor="?attr/colorPrimary"
+                app:titleTextAppearance="@style/Theme.Polaris.TitleTextView"
+                app:navigationIconTint="?attr/colorPrimary"
                 app:navigationIcon="@drawable/baseline_menu_24"
                 app:layout_collapseMode="pin"
-                android:background="@drawable/gradient1"/>
+                app:elevation="10dp"
+                android:backgroundTint="?attr/colorOnPrimary"/>
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.core.widget.NestedScrollView
