@@ -129,6 +129,7 @@ class CustomMapsFragment : Fragment(), OnMapReadyCallback {
                         .setTitleText("Select start date")
                         .setSelection(filterStartInstant.toEpochMilli())
                         .setCalendarConstraints(CalendarConstraints.Builder().setEnd(tempCalendar.timeInMillis).build())
+                        .setTheme(R.style.AppThemeOverlay_MaterialCalendar)
                         .build()
 
                     materialDatePicker.show(childFragmentManager, "start_date_tag")
@@ -140,6 +141,7 @@ class CustomMapsFragment : Fragment(), OnMapReadyCallback {
                             .setTitleText("Select start time")
                             .setHour(calendar.get(Calendar.HOUR_OF_DAY))
                             .setMinute(calendar.get(Calendar.MINUTE))
+                            .setTheme(R.style.AppThemeOverlay_MaterialTimePicker)
                             .build()
 
                         materialTimePicker.show(childFragmentManager, "start_time_tag")
@@ -188,6 +190,7 @@ class CustomMapsFragment : Fragment(), OnMapReadyCallback {
                         .setTitleText("Select start date")
                         .setSelection(filterStartInstant.toEpochMilli())
                         .setCalendarConstraints(CalendarConstraints.Builder().setEnd(tempCalendar.timeInMillis).build())
+                        .setTheme(R.style.AppThemeOverlay_MaterialCalendar)
                         .build()
 
                     materialDatePicker.show(childFragmentManager, "start_date_tag")
@@ -199,6 +202,7 @@ class CustomMapsFragment : Fragment(), OnMapReadyCallback {
                             .setTitleText("Select start time")
                             .setHour(calendar.get(Calendar.HOUR_OF_DAY))
                             .setMinute(calendar.get(Calendar.MINUTE))
+                            .setTheme(R.style.AppThemeOverlay_MaterialTimePicker)
                             .build()
 
                         materialTimePicker.show(childFragmentManager, "start_time_tag")
