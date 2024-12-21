@@ -83,6 +83,8 @@ dependencies {
     implementation(libs.datastore.preferences.core)
     implementation(libs.androidx.ui.test.junit4.android)
     implementation(libs.lottie)
+    implementation(libs.firebase.auth)
+    implementation(platform(libs.firebase.bom))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
