@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.map
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private val dataStore: DataStore<Preferences> by lazy {DataStoreManager.getInstance(this)}
-
+    private lateinit var firebaseAuth:FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

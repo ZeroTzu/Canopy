@@ -128,9 +128,12 @@
         <item name="android:padding">15dp</item>
         <item name="android:paddingBottom">40dp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:background">@drawable/custom_button2_stroked</item>
+        <item name="android:background">none</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
-        <item name="backgroundTint">?attr/colorSurfaceDim</item>
+        <item name="backgroundTint">@color/transparent</item>
+        <item name="borderWidth">0dp</item>
+
+
     </style>
     <style name="Theme.Polaris.CustomButtonCircle" parent="Widget.Material3.Button.ElevatedButton.Icon">
         <item name="android:layout_width">50dp</item>
@@ -181,19 +184,19 @@
 
     <!-- In styles.xml -->
     <style name="NeutralTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <!-- Neutral background color for the input field -->
         <item name="boxBackgroundColor">@color/polaris_grey_90</item> <!-- Light gray background to contrast with black -->
-        <!-- Outline border color -->
         <item name="boxStrokeColor">#BDBDBD</item> <!-- Gray border color when not focused -->
-        <!-- Text color for hint text -->
         <item name="hintTextColor">@color/neutral_hint</item>
-        <!-- Text color for input text -->
         <item name="android:textColor">#333333</item> <!-- Dark gray for good readability on neutral background -->
         <item name="placeholderTextColor">@color/polaris_blue_50</item>
-        <!-- Floating label color when focused -->
         <item name="hintTextAppearance">@style/TextAppearance.MaterialComponents.Caption</item>
     </style>
 
+    <style name="InputLayout_Curved" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu">
+        <item name="borderRoundPercent">0.5</item>
+        <item name="borderWidth">0dp</item>
+        <item name="backgroundColor">?attr/colorAccent</item>
+    </style>
 
     <style name="ThemeOverlay.App.TimePicker" parent="ThemeOverlay.MaterialComponents.TimePicker">
         <item name="textAppearanceOverline">@style/TextAppearance.App.TimePicker.Title</item>
@@ -304,6 +307,7 @@
         <item name="colorSurfaceContainerHigh">@color/md_theme_surfaceContainerHigh</item>
         <item name="colorSurfaceContainerHighest">@color/md_theme_surfaceContainerHighest</item>
     </style>
+
 
 
 

@@ -1,5 +1,5 @@
 [versions]
-agp = "8.6.1"
+agp = "8.7.2"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -27,6 +27,7 @@ uiTestJunit4Android = "1.7.4"
 retrofit="2.11.0"
 retrofit-converterGson ="2.11.0"
 lottie="6.5.2"
+google-firebase="33.7.0"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -56,6 +57,8 @@ tensorflow-lite-gpu = { group = "org.tensorflow", name = "tensorflow-lite-gpu", 
 lifecycle-extensions = {module="androidx.lifecycle:lifecycle-extensions", version.ref="lifecycleExtensions" }
 lottie = {module="com.airbnb.android:lottie", version.ref="lottie" }
 
+firebase-bom = {module = "com.google.firebase:firebase-bom", version.ref= "google-firebase"}
+firebase-auth = {module="com.google.firebase:firebase-auth"}
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 play-services-cronet = { module = "com.google.android.gms:play-services-cronet", version.ref = "play-services-cronet" }
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
