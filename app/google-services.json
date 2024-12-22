@@ -7,17 +7,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:80558157809:android:65824beb6a9445168fde50",
+        "mobilesdk_app_id": "1:80558157809:android:541ef6ea24802b1a8fde50",
         "android_client_info": {
-          "package_name": "com.teamname.wefarm"
+          "package_name": "com.teamname.canopy"
         }
       },
       "oauth_client": [
         {
-          "client_id": "80558157809-42ftqb1h245591e7btopnh47gdeo3qse.apps.googleusercontent.com",
+          "client_id": "80558157809-s66cksgt2kcd8bisqe3o7marf8g28a9b.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.teamname.wefarm",
+            "package_name": "com.teamname.canopy",
             "certificate_hash": "e77fb1c58caec596cd4560bc0dfae0809bc27afa"
           }
         },
