@@ -62,7 +62,20 @@ class LoginRegisterFormFragment : Fragment() {
             if(!(loginActivity.checkEmailInput(emailEditText) && loginActivity.checkPasswordInput(passwordEditText) && loginActivity.checkPasswordSame(passwordEditText,confirmPasswordEditText))){
                 return@setOnClickListener
             }
-            performRegister(emailEditText.text.toString(),passwordEditText.text.toString())
+
+            (activity as LoginActivity).firebaseAuth.createUserWithEmailAndPassword(emailEditText.text.toString(),passwordEditText.text.toString())
+                .addOnCompleteListener{
+                    if(it.isSuccessful){
+                        redirectToLogin()
+                    }
+                    else {
+                        Toast.makeText(
+                            requireContext(),
+                            it.exception.toString(),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
         }
         binding.fragmentLoginRegisterFormCancelButton.setOnClickListener{
             requireActivity().supportFragmentManager.beginTransaction().replace(R.id.login_activity_fragmentContainerView,LoginLandingFragment()).commit()
@@ -104,9 +117,7 @@ class LoginRegisterFormFragment : Fragment() {
 
                             }
                         }
-                        val intent=Intent(requireActivity(),MainActivity::class.java)
-                        startActivity(intent)
-                        requireActivity().finish()
+                        redirectToLogin()
                     }
                 }
             }
@@ -117,6 +128,11 @@ class LoginRegisterFormFragment : Fragment() {
         })
     }
 
+    fun redirectToLogin(){
+        val intent=Intent(requireActivity(),MainActivity::class.java)
+        startActivity(intent)
+        requireActivity().finish()
+    }
     companion object {
         /**
          * Use this factory method to create a new instance of

@@ -17,6 +17,7 @@ import com.generationai.polaris.databinding.FragmentLoginFormBinding
 import com.generationai.polaris.utils.BackendInterface
 import com.generationai.polaris.utils.Constants
 import com.generationai.polaris.utils.RetrofitClient
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -63,9 +64,24 @@ class LoginFormFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            //send the API Request using coroutines
-            performLogin(emailEditText.text.toString(),passwordEditText.text.toString())
-
+            (activity as LoginActivity).firebaseAuth.signInWithEmailAndPassword(emailEditText.text.toString(),passwordEditText.text.toString())
+                .addOnCompleteListener{
+                    if (it.isSuccessful){
+                        redirectToHome()
+                    }
+                    else{
+                        Toast.makeText(requireContext(), it.exception.toString(), Toast.LENGTH_SHORT).show()
+                    }
+                }
+        }
+        binding.fragmentLoginFormGoogleCustomButtonLayout.apply {
+            customButtonMaterialButton.setIconResource(R.drawable.google)
+            customButtonMaterialButton.text=R.string.google_sign_in.toString()
+            customButtonMaterialButton.setOnClickListener{
+                var googleIdOption = GetGoogleIdOption.Builder()
+                    .setFilterByAuthorizedAccounts(false)
+                    .setServerClientId(R.string.default)
+            }
         }
         binding.fragmentLoginFormCancelButton.setOnClickListener{
             requireActivity().supportFragmentManager.beginTransaction().replace(R.id.login_activity_fragmentContainerView,LoginLandingFragment()).commit()
@@ -116,9 +132,7 @@ class LoginFormFragment : Fragment() {
                                 preferences[Constants.SESSION_TOKEN_KEY] = sessionToken
                             }
                         }
-                        val intent=Intent(requireActivity(),MainActivity::class.java)
-                        startActivity(intent)
-                        requireActivity().finish()
+                        redirectToHome()
                     }
                 }
 
@@ -131,6 +145,12 @@ class LoginFormFragment : Fragment() {
         })
     }
 
+    fun redirectToHome(){
+        val intent=Intent(requireActivity(),MainActivity::class.java)
+        startActivity(intent)
+        requireActivity().finish()
+
+    }
     companion object {
         /**
          * Use this factory method to create a new instance of

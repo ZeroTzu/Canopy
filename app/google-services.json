@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "80558157809",
+    "project_id": "wefarm-c0178",
+    "storage_bucket": "wefarm-c0178.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:80558157809:android:65824beb6a9445168fde50",
+        "android_client_info": {
+          "package_name": "com.teamname.wefarm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "80558157809-42ftqb1h245591e7btopnh47gdeo3qse.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.teamname.wefarm",
+            "certificate_hash": "e77fb1c58caec596cd4560bc0dfae0809bc27afa"
+          }
+        },
+        {
+          "client_id": "80558157809-m6u31r0hue7r0t8364dkd50jjmfgqfqn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfz-E7-i8AfG8R-q06oliXd7z1asvBDyg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "80558157809-m6u31r0hue7r0t8364dkd50jjmfgqfqn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
