@@ -2,15 +2,16 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
+    alias(libs.plugins.google.gms.google.services)
 
 }
 
 android {
-    namespace = "com.generationai.polaris"
+    namespace = "com.teamname.canopy"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.generationai.polaris"
+        applicationId = "com.teamname.canopy"
         minSdk = 34
         targetSdk = 34
         versionCode = 1
@@ -42,6 +43,7 @@ android {
         compose = true
         mlModelBinding = true
         viewBinding = true
+        dataBinding = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
