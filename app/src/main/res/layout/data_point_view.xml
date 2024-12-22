@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="150dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="100dp"
+    android:layout_marginTop="20dp">
+
+    <!-- Data Point Icon -->
+    <ImageView
+        android:id="@+id/data_point_icon"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:contentDescription="@string/temperature_and_humidity_data"
+        android:src="@drawable/baseline_data_thresholding_24" />
+
+    <!-- Temperature and Humidity -->
+    <TextView
+        android:id="@+id/data_point_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/data_point_icon"
+        android:layout_marginStart="8dp"
+        android:text="24.3°C, 60% Humidity, 800 µmol/m²/s"
+        android:textSize="11sp"
+        android:textColor="@color/black" />
+</RelativeLayout>

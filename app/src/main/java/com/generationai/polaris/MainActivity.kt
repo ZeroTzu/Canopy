@@ -152,7 +152,7 @@ class MainActivity : AppCompatActivity() {
                         supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
                     if (currentFragment is Home) {
                         //change the imageview to show the image
-                        currentFragment.updateImage(imagePath)
+//                        currentFragment.updateImage(imagePath)
                     }
                 }
                 else if (intent.action == PolarisBackgroundService.Actions.SERVICE_LOCATION_TAKEN.toString()) {

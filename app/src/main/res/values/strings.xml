@@ -33,5 +33,11 @@
     <string name="start_filter">Start Filter</string>
     <string name="end_filter">End Filter</string>
     <string name="manage_family">Manage Family</string>
+    <string name="example">Example</string>
+    <string name="tap_in">Tap In</string>
+    <string name="report_issue">Report Issue</string>
+    <string name="help">Help</string>
+    <string name="temperature_24_c">Temperature: 24°C</string>
+    <string name="temperature_and_humidity_data">temperature and humidity data</string>
 
 </resources>
