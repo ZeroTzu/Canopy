@@ -38,6 +38,7 @@ import com.generationai.polaris.utils.Constants
 import com.generationai.polaris.utils.UserClass
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -63,19 +64,28 @@ class MainActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var userClass: UserClass
     private val viewModel = viewModels<MainActivityViewModel>()
+    private lateinit var firebaseAuth: FirebaseAuth
 
     private val dataStore: DataStore<Preferences> by lazy {DataStoreManager.getInstance(this)}
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        firebaseAuth=FirebaseAuth.getInstance()
+
+
+        //check if user is logged in under firebase
+        val currentUser = firebaseAuth.currentUser
+        if (currentUser != null) {
+            reload()
+        }
         //check if the user is logged in
         lifecycleScope.launch{
             val email=getEmailFromDataStore()
             val password=getPasswordFromDataStore()
             Log.i("PolarisMainActivity", "onCreate: email: $email, password: $password")
             if (email==null || password==null){
-                val intent = Intent(this@MainActivity, LoginActivity::class.java)
-                startActivity(intent)
-                finish()
+                reload()
             }
             else{
                 userClass= UserClass(email,password)
@@ -198,7 +208,11 @@ class MainActivity : AppCompatActivity() {
         }
         registerReceiver(serviceStatusReceiver,intentFilter, RECEIVER_EXPORTED)
     }
-
+    private fun reload(){
+        val intent = Intent(this@MainActivity, LoginActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
     private fun pingService() {
         // Send a broadcast to the service to check if it's running
         val intent = Intent(PolarisBackgroundService.Actions.CHECK_SERVICE_STATUS.toString())

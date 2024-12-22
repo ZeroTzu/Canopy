@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
+
 }
 
 android {
@@ -65,6 +66,7 @@ dependencies {
     implementation(libs.tensorflow.lite.gpu)
     implementation(libs.material)
     implementation(libs.play.services.cronet)
+    implementation(libs.play.services.auth)
     implementation(libs.retrofit2.retrofit)
     implementation(libs.retrofit2.converter.gson)
     implementation(libs.camera.core)
@@ -84,6 +86,9 @@ dependencies {
     implementation(libs.androidx.ui.test.junit4.android)
     implementation(libs.lottie)
     implementation(libs.firebase.auth)
+    implementation(libs.googleid)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
     implementation(platform(libs.firebase.bom))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

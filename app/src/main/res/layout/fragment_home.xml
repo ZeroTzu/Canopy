@@ -50,8 +50,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:gravity="center"
-            android:orientation="vertical"
-            android:back="?attr/colorTertiary">
+            android:orientation="vertical">
             <com.google.android.material.button.MaterialButton
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
@@ -120,7 +119,7 @@
                 android:orientation="horizontal"
                 android:gravity="center_horizontal"
                 android:padding="10dp"
-                app:layout_constraintStart_toBot="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/fragment_home_mapView_frameLayout">
                 <FrameLayout
                     android:layout_width="wrap_content"
