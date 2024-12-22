@@ -12,13 +12,14 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.fragment.app.Fragment
 import com.generationai.polaris.databinding.ActivityLoginBinding
 import com.generationai.polaris.utils.Constants
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private val dataStore: DataStore<Preferences> by lazy {DataStoreManager.getInstance(this)}
-    private lateinit var firebaseAuth:FirebaseAuth
+    private lateinit var firebaseAuth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

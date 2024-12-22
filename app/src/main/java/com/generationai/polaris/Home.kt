@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.compose.runtime.currentCompositionErrors
 import androidx.core.content.res.ResourcesCompat
@@ -74,54 +75,75 @@ class Home : Fragment(),ResponseCallback {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         val rootView = binding.root
 
-        binding.startServiceButton.setOnClickListener {
-            val context = this.context as? Context
-            if (context!=null){
-                Log.i("PolarisHome", "button Pressed ")
-                val intent = Intent(PolarisBackgroundService.Actions.CHECK_SERVICE_STATUS.toString())
-                requireActivity().sendBroadcast(intent)
-                try {
-                    // Wait for the response, blocking the thread
-                    // After the latch is counted down, decide to start or stop the service
-                    if (!mainViewModel.isSertviceRunning.value) {
-                        Log.i("PolarisHome", "starting Background Service ")
-                        Intent(context, PolarisBackgroundService::class.java).also {
-                            it.action = PolarisBackgroundService.Actions.START.toString()
-                            context.startService(it)
-                            mainViewModel.setIsBackgroundServiceRunning(true)
-                        }
-                    } else {
-                        Log.i("PolarisHome", "stopping Background Service ")
-                        Intent(context, PolarisBackgroundService::class.java).also {
-                            it.action = PolarisBackgroundService.Actions.STOP.toString()
-                            context.startService(it)
-                            mainViewModel.setIsBackgroundServiceRunning(false)
-                        }
+        // Find the FrameLayout in the parent view
+        val facilityMapContainer = rootView.findViewById<FrameLayout>(R.id.facility_map_container)
 
-                    }
-                } catch (e: InterruptedException) {
-                    e.printStackTrace()
-                }
-            }
+        // Inflate the data point view without attaching it to the container yet
+        val datapointView = inflater.inflate(R.layout.data_point_view, null)
+
+        // prepare layout parameters of the data point view
+        val params = FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.WRAP_CONTENT,
+            FrameLayout.LayoutParams.WRAP_CONTENT
+        ).apply {
+            setMargins(100, 200, 0, 0)  // adjust the left and top margins
         }
-        binding.debugButton1.setOnClickListener{ view ->
-            val requestBuilder = cronetEngine.newUrlRequestBuilder(
-                "https://catfact.ninja/fact",
-                MLServiceRequest(this),
-                executor
-            )
-            val request: org.chromium.net.UrlRequest = requestBuilder.build()
-            request.start()  // Start the request
-            performHaptic(view)
-        }
-//        binding.debugButton2.setOnClickListener{
+
+        // Apply the layout parameters to the inflated datapoint view
+        datapointView.layoutParams = params
+
+        // Add the data point view to the FrameLayout
+        facilityMapContainer.addView(datapointView)
+
+        //
+//        binding.startServiceButton.setOnClickListener {
+//            val context = this.context as? Context
+//            if (context!=null){
+//                Log.i("PolarisHome", "button Pressed ")
+//                val intent = Intent(PolarisBackgroundService.Actions.CHECK_SERVICE_STATUS.toString())
+//                requireActivity().sendBroadcast(intent)
+//                try {
+//                    // Wait for the response, blocking the thread
+//                    // After the latch is counted down, decide to start or stop the service
+//                    if (!mainViewModel.isSertviceRunning.value) {
+//                        Log.i("PolarisHome", "starting Background Service ")
+//                        Intent(context, PolarisBackgroundService::class.java).also {
+//                            it.action = PolarisBackgroundService.Actions.START.toString()
+//                            context.startService(it)
+//                            mainViewModel.setIsBackgroundServiceRunning(true)
+//                        }
+//                    } else {
+//                        Log.i("PolarisHome", "stopping Background Service ")
+//                        Intent(context, PolarisBackgroundService::class.java).also {
+//                            it.action = PolarisBackgroundService.Actions.STOP.toString()
+//                            context.startService(it)
+//                            mainViewModel.setIsBackgroundServiceRunning(false)
+//                        }
 //
+//                    }
+//                } catch (e: InterruptedException) {
+//                    e.printStackTrace()
+//                }
+//            }
 //        }
-        binding.homeFragmentLogoutButton.setOnClickListener{
-            lifecycleScope.launch {
-                (activity as? MainActivity)?.logoutUser()
-            }
-        }
+//        binding.debugButton1.setOnClickListener{ view ->
+//            val requestBuilder = cronetEngine.newUrlRequestBuilder(
+//                "https://catfact.ninja/fact",
+//                MLServiceRequest(this),
+//                executor
+//            )
+//            val request: org.chromium.net.UrlRequest = requestBuilder.build()
+//            request.start()  // Start the request
+//            performHaptic(view)
+//        }
+////        binding.debugButton2.setOnClickListener{
+////
+////        }
+//        binding.homeFragmentLogoutButton.setOnClickListener{
+//            lifecycleScope.launch {
+//                (activity as? MainActivity)?.logoutUser()
+//            }
+//        }
         // Inflate the layout for this fragment
         return binding.root
     }
@@ -180,34 +202,34 @@ class Home : Fragment(),ResponseCallback {
         var currentlyShownState=false
         // Count down the latch to unblock the waiting thread
 //        latch.countDown()
-        when (binding.startServiceButton.text){
-            resources.getString(R.string.start_service)->currentlyShownState=true
-            resources.getString(R.string.stop_service)->currentlyShownState=false
-        }
-        if (isRunning) {
-            // Change button text to "Stop Service"
-            Log.i("PolarisHome", "updateServiceStatus: Changing button to show Stop Service ")
-            binding.startServiceButton.text=resources.getString(R.string.stop_service)
-            binding.startServiceButton.icon=ResourcesCompat.getDrawable(resources,R.drawable.baseline_stop_24,requireContext().theme)
-        } else {
-            // Change button text to "Start Service"
-            Log.i("PolarisHome", "updateServiceStatus: Changing button to show Start Service ")
-            binding.startServiceButton.text=resources.getString(R.string.start_service)
-            binding.startServiceButton.icon=ResourcesCompat.getDrawable(resources,R.drawable.baseline_play_arrow_24,requireContext().theme)
-        }
+//        when (binding.startServiceButton.text){
+//            resources.getString(R.string.start_service)->currentlyShownState=true
+//            resources.getString(R.string.stop_service)->currentlyShownState=false
+//        }
+//        if (isRunning) {
+//            // Change button text to "Stop Service"
+//            Log.i("PolarisHome", "updateServiceStatus: Changing button to show Stop Service ")
+//            binding.startServiceButton.text=resources.getString(R.string.stop_service)
+//            binding.startServiceButton.icon=ResourcesCompat.getDrawable(resources,R.drawable.baseline_stop_24,requireContext().theme)
+//        } else {
+//            // Change button text to "Start Service"
+//            Log.i("PolarisHome", "updateServiceStatus: Changing button to show Start Service ")
+//            binding.startServiceButton.text=resources.getString(R.string.start_service)
+//            binding.startServiceButton.icon=ResourcesCompat.getDrawable(resources,R.drawable.baseline_play_arrow_24,requireContext().theme)
+//        }
 
     }
-    fun updateImage(imagePath: String?){
-        try{
-            if (imagePath!=null){
-//                binding.homeFragmentTopBarTextView.text=imagePath
-                binding.debugHomeFragmentImageView.setImageURI(android.net.Uri.parse(imagePath))
-                Log.i("PolarisHome", "updateImage success: $imagePath")
-            }else{
-                Log.i("PolarisHome", "updateImage failed due to no path: $imagePath")
-            }
-        }catch (e:Exception){
-            Log.e("PolarisHome", "updateImage failed: ${e.message}")
-        }
-    }
+//    fun updateImage(imagePath: String?){
+//        try{
+//            if (imagePath!=null){
+////                binding.homeFragmentTopBarTextView.text=imagePath
+//                binding.debugHomeFragmentImageView.setImageURI(android.net.Uri.parse(imagePath))
+//                Log.i("PolarisHome", "updateImage success: $imagePath")
+//            }else{
+//                Log.i("PolarisHome", "updateImage failed due to no path: $imagePath")
+//            }
+//        }catch (e:Exception){
+//            Log.e("PolarisHome", "updateImage failed: ${e.message}")
+//        }
+//    }
 }
