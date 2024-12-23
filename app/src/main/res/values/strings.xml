@@ -40,5 +40,7 @@
     <string name="help">Help</string>
     <string name="temperature_24_c">Temperature: 24°C</string>
     <string name="temperature_and_humidity_data">temperature and humidity data</string>
+    <string name="profile">Profile</string>
+    <string name="your_activity">Your Activity</string>
 
 </resources>
