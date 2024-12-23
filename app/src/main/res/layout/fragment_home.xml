@@ -20,14 +20,16 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/fragment_home_bottom_frameLayout">
 
-            <com.google.android.gms.maps.MapView
-                android:id="@+id/fragment_home_mapView"
+            <fragment
+                android:id="@+id/fragment_home_map_fragment"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/fragment_home_search_bar_textInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/InputLayout_Curved"
@@ -51,15 +53,16 @@
             app:layout_constraintStart_toStartOf="parent"
             android:gravity="center"
             android:orientation="vertical">
-            <com.google.android.material.button.MaterialButton
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:backgroundTint="?attr/colorSurfaceVariant"
-                android:elevation="8dp"
-                app:iconSize="8sp"
-                />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/fragment_home_toggle_indoor_map_materialButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:backgroundTint="?attr/colorSurfaceVariant"
+                    android:elevation="8dp"
+                    app:iconSize="8sp"
+                    />
                 <FrameLayout
-                    android:id="@+id/facility_map_container"
+                    android:id="@+id/fragment_home_facility_map_container"
                     android:layout_width="wrap_content"
                     android:layout_height="200dp"
                     android:layout_gravity="center"
@@ -68,7 +71,7 @@
 
                     <!-- Map Image -->
                     <ImageView
-                        android:id="@+id/facility_map"
+                        android:id="@+id/fragment_home_facility_map"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:scaleType="fitCenter"

@@ -108,6 +108,7 @@ class PolarisBackgroundService : LifecycleService(){
 
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
+            ProcessCameraProvider.getInstance(this)
         cameraProviderFuture.addListener(Runnable {
             // CameraProvider
             cameraProvider = cameraProviderFuture.get()

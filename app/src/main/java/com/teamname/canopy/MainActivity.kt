@@ -74,21 +74,21 @@ class MainActivity : AppCompatActivity() {
 
         //check if user is logged in under firebase
         val currentUser = firebaseAuth.currentUser
-        if (currentUser != null) {
+        if (currentUser == null) {
             reload()
         }
         //check if the user is logged in
-        lifecycleScope.launch{
-            val email=getEmailFromDataStore()
-            val password=getPasswordFromDataStore()
-            Log.i("PolarisMainActivity", "onCreate: email: $email, password: $password")
-            if (email==null || password==null){
-                reload()
-            }
-            else{
-                userClass= UserClass(email,password)
-            }
-        }
+//        lifecycleScope.launch{
+//            val email=getEmailFromDataStore()
+//            val password=getPasswordFromDataStore()
+//            Log.i("PolarisMainActivity", "onCreate: email: $email, password: $password")
+//            if (email==null || password==null){
+//                reload()
+//            }
+//            else{
+//                userClass= UserClass(email,password)
+//            }
+//        }
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         //Request permissions (e.g. Camera, Audio etc.)
