@@ -10,11 +10,18 @@ import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.datastore.preferences.core.edit
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.teamname.canopy.databinding.FragmentHomeBinding
 import com.teamname.canopy.utils.Constants
 import com.teamname.canopy.utils.MLServiceRequest.ResponseCallback
@@ -33,7 +40,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [Home.newInstance] factory method to
  * create an instance of this fragment.
  */
-class Home : Fragment(),ResponseCallback {
+class Home : Fragment(),ResponseCallback, OnMapReadyCallback{
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -43,6 +50,7 @@ class Home : Fragment(),ResponseCallback {
     private lateinit var notificationManager: NotificationManager
     private lateinit var activityManager: ActivityManager
     private lateinit var mainViewModel: MainActivityViewModel
+    private lateinit var mMap: GoogleMap
     private val latch = CountDownLatch(1)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,15 +67,25 @@ class Home : Fragment(),ResponseCallback {
             param2 = it.getString(ARG_PARAM2)
         }
 
+
+
+
     }
 
+    override fun onMapReady(googleMap: GoogleMap) {
+        googleMap.addMarker(
+            MarkerOptions()
+                .position(LatLng(0.0, 0.0))
+                .title("Marker")
+        )
+    }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
     {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         val rootView = binding.root
 
         // Find the FrameLayout in the parent view
-        val facilityMapContainer = rootView.findViewById<FrameLayout>(R.id.facility_map_container)
+        val facilityMapContainer = rootView.findViewById<FrameLayout>(R.id.fragment_home_facility_map_container)
 
         // Inflate the data point view without attaching it to the container yet
         val datapointView = inflater.inflate(R.layout.data_point_view, null)
@@ -80,6 +98,23 @@ class Home : Fragment(),ResponseCallback {
             setMargins(100, 200, 0, 0)  // adjust the left and top margins
         }
 
+
+        var countries = arrayOf(
+            "India", "Australia", "West indies", "indonesia", "Indiana",
+            "South Africa", "England", "Bangladesh", "Srilanka", "singapore"
+        )
+        var adapter: ArrayAdapter<String>? = ArrayAdapter<String>(requireContext(), android.R.layout.simple_dropdown_item_1line, countries)
+        val autoCompleteTextView = binding.fragmentHomeSearchBarTextInputLayout.editText as? AutoCompleteTextView
+        autoCompleteTextView?.setAdapter(adapter)
+        binding.fragmentHomeToggleIndoorMapMaterialButton.setOnClickListener {
+            if (binding.fragmentHomeFacilityMapContainer.visibility==View.GONE) {
+                Log.i("PolarisHome", "button Pressed ")
+                binding.fragmentHomeFacilityMapContainer.visibility = View.VISIBLE
+            }
+            else{
+                binding.fragmentHomeFacilityMapContainer.visibility = View.GONE
+            }
+        }
         // Apply the layout parameters to the inflated datapoint view
         datapointView.layoutParams = params
 
@@ -137,6 +172,14 @@ class Home : Fragment(),ResponseCallback {
 //        }
         // Inflate the layout for this fragment
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val mapFragment = childFragmentManager
+            .findFragmentById(R.id.fragment_home_map_fragment) as SupportMapFragment
+
+        mapFragment.getMapAsync(this)
     }
     override fun onResponseReceived(response: String) {
         Log.i("MLServiceRequest", "onResponseReceived method called: $response")

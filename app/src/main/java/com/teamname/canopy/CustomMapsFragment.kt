@@ -53,7 +53,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-class CustomMapsFragment : Fragment(), OnMapReadyCallback {
+class   CustomMapsFragment : Fragment(), OnMapReadyCallback {
 
     private var handler: Handler = Handler(Looper.getMainLooper())
     private lateinit var locations:ArrayList<LocationItem>

@@ -69,6 +69,7 @@ class LoginFormFragment : Fragment() {
                 .addOnCompleteListener{
                     if (it.isSuccessful){
                         redirectToHome()
+                        Toast.makeText(requireContext(), "Login Successful", Toast.LENGTH_SHORT).show()
                     }
                     else{
                         Toast.makeText(requireContext(), it.exception.toString(), Toast.LENGTH_SHORT).show()
@@ -77,7 +78,7 @@ class LoginFormFragment : Fragment() {
         }
         binding.fragmentLoginFormGoogleCustomButtonLayout.apply {
             customButtonMaterialButton.setIconResource(R.drawable.google)
-            customButtonMaterialButton.text=R.string.google_sign_in.toString()
+            customButtonTextView.text=R.string.google_sign_in.toString()
             customButtonMaterialButton.setOnClickListener{
                 var googleIdOption = GetGoogleIdOption.Builder()
                     .setFilterByAuthorizedAccounts(false)
