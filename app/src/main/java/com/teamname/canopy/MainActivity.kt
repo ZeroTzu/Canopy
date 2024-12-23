@@ -30,12 +30,17 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
 import com.teamname.canopy.databinding.ActivityMainBinding
 import com.teamname.canopy.ui.theme.PolarisTheme
 import com.teamname.canopy.utils.Constants
 import com.teamname.canopy.utils.UserClass
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.GeoPoint
+import com.google.firebase.firestore.firestore
+import com.teamname.canopy.utils.Canopy
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -44,7 +49,6 @@ val Context.dataStore by preferencesDataStore(name = "user_prefs")
 
 object DataStoreManager {
     private lateinit var dataStoreInstance: DataStore<Preferences>
-
     fun getInstance(context: Context): DataStore<Preferences> {
         if (!::dataStoreInstance.isInitialized) {
             dataStoreInstance = context.dataStore // Initialize it once
@@ -62,15 +66,44 @@ class MainActivity : AppCompatActivity() {
     private lateinit var userClass: UserClass
     private val viewModel = viewModels<MainActivityViewModel>()
     private lateinit var firebaseAuth: FirebaseAuth
-
+    private lateinit var firestore: FirebaseFirestore
     private val dataStore: DataStore<Preferences> by lazy {DataStoreManager.getInstance(this)}
+    private lateinit var canopies: List<Canopy>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(baseContext)
         firebaseAuth=FirebaseAuth.getInstance()
+        firestore=FirebaseFirestore.getInstance()
+        var db = Firebase.firestore
 
+        Log.i("CanopyMainActivity" , "Goon")
+
+        db.collection("canopies")
+            .get()
+            .addOnSuccessListener {
+                result ->
+                var tempCanopyList = ArrayList<Canopy>()
+                for (canopy in result) {
+                    val name = canopy.data["canopyName"]
+                    val coords = canopy.data["canopyCoords"] as GeoPoint
+                    val owner = canopy.data["canopyOwner"]
+                    val address = canopy.data["canopyAddress"]
+
+                    val latitude = coords.latitude
+                    val longitude = coords.longitude
+
+                    val canopy = Canopy(name.toString(), GeoPoint(latitude, longitude), owner.toString(), address.toString())
+                    tempCanopyList.add(canopy)
+                    Log.i("CanopyMainActivity" , latitude.toString() + " "+ longitude.toString() + " " + name.toString() + " " +owner.toString() + " " + address.toString())
+                }
+                canopies = tempCanopyList
+            }
+            .addOnFailureListener {
+                exception ->
+                Log.i("CanopyMainActivity" , exception.toString())
+            }
 
         //check if user is logged in under firebase
         val currentUser = firebaseAuth.currentUser
@@ -131,7 +164,7 @@ class MainActivity : AppCompatActivity() {
                     drawerLayout.close()
                 }
 
-                R.id.side_panel_command -> {
+                R.id.side_panel_profile -> {
                     for (i in 0 until binding.mainActivitySidePanel.menu.size()) {
                         binding.mainActivitySidePanel.menu.getItem(i).isChecked = false
                     }
@@ -272,11 +305,12 @@ class MainActivity : AppCompatActivity() {
                 this@MainActivity.startService(it)
             }
         }
-        lifecycleScope.launch {
-            baseContext.dataStore.edit {
-                it.clear()
-            }
-        }
+//        lifecycleScope.launch {
+//            baseContext.dataStore.edit {
+//                it.clear()
+//            }
+//        }
+        firebaseAuth.signOut()
         //start login activity and stop the MainActivity so that user cant navigate back
         startActivity(intent)
         this@MainActivity.finish()

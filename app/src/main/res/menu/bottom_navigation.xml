@@ -7,14 +7,15 @@
                 android:id="@+id/side_panel_home"
                 android:icon="@drawable/baseline_home_24"
                 android:checked="true"/>
-            <item android:title="@string/command"
-                android:id="@+id/side_panel_command"
-                android:icon="@drawable/baseline_monitor_24"/>
+            <item android:title="@string/profile"
+                android:id="@+id/side_panel_profile"
+                android:icon="@drawable/baseline_person_24"/>
 
             <item android:title="@string/settings"
                 android:id="@+id/side_panel_settings"
                 android:icon="@drawable/baseline_settings_24"/>
-            <item android:title="@string/history"
+            <item
+                android:title="@string/your_activity"
                 android:id="@+id/side_panel_history"
                 android:icon="@drawable/baseline_history_24"/>
         </menu>

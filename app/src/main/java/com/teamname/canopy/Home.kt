@@ -70,6 +70,7 @@ class Home : Fragment(),ResponseCallback, OnMapReadyCallback{
 
 
 
+
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -104,8 +105,9 @@ class Home : Fragment(),ResponseCallback, OnMapReadyCallback{
             "South Africa", "England", "Bangladesh", "Srilanka", "singapore"
         )
         var adapter: ArrayAdapter<String>? = ArrayAdapter<String>(requireContext(), android.R.layout.simple_dropdown_item_1line, countries)
-        val autoCompleteTextView = binding.fragmentHomeSearchBarTextInputLayout.editText as? AutoCompleteTextView
-        autoCompleteTextView?.setAdapter(adapter)
+        val autoCompleteTextView:AutoCompleteTextView = binding.fragmentHomeSearchBarTextInputLayout.editText as AutoCompleteTextView
+        autoCompleteTextView.threshold = 1
+        autoCompleteTextView.setAdapter(adapter)
         binding.fragmentHomeToggleIndoorMapMaterialButton.setOnClickListener {
             if (binding.fragmentHomeFacilityMapContainer.visibility==View.GONE) {
                 Log.i("PolarisHome", "button Pressed ")
@@ -178,7 +180,6 @@ class Home : Fragment(),ResponseCallback, OnMapReadyCallback{
         super.onViewCreated(view, savedInstanceState)
         val mapFragment = childFragmentManager
             .findFragmentById(R.id.fragment_home_map_fragment) as SupportMapFragment
-
         mapFragment.getMapAsync(this)
     }
     override fun onResponseReceived(response: String) {
