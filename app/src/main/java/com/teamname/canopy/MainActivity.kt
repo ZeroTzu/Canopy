@@ -12,7 +12,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.widget.LinearLayout
 import android.widget.Toast
+import android.widget.TwoLineListItem
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -27,6 +29,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -41,6 +44,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.firestore
 import com.teamname.canopy.utils.Canopy
+import com.teamname.canopy.utils.CanopyCustomAdapter
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -68,7 +72,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
     private val dataStore: DataStore<Preferences> by lazy {DataStoreManager.getInstance(this)}
-    private lateinit var canopies: List<Canopy>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,15 +93,46 @@ class MainActivity : AppCompatActivity() {
                     val coords = canopy.data["canopyCoords"] as GeoPoint
                     val owner = canopy.data["canopyOwner"]
                     val address = canopy.data["canopyAddress"]
+                    val indoorMapPoints = canopy.data["indoorMapPoints"] as ArrayList<HashMap<String, *>>
 
                     val latitude = coords.latitude
                     val longitude = coords.longitude
 
-                    val canopy = Canopy(name.toString(), GeoPoint(latitude, longitude), owner.toString(), address.toString())
-                    tempCanopyList.add(canopy)
-                    Log.i("CanopyMainActivity" , latitude.toString() + " "+ longitude.toString() + " " + name.toString() + " " +owner.toString() + " " + address.toString())
+                    val canopyIndoorMapPoints = ArrayList<Canopy.CanopyIndoorPoint>()
+                    for (point in indoorMapPoints) {
+                        val topMarginString = point["marginTop"].toString()
+                        val marginStartString = point["marginStart"].toString()
+
+                        Log.i("CanopyMainActivity" , topMarginString + " "+ marginStartString)
+                        val topMargin = topMarginString!!.toLong()
+                        val marginStart = marginStartString!!.toLong()
+
+
+                        marginStart?.toLong()
+                        Log.i("CanopyMainActivity" , latitude.toString() + " "+ longitude.toString() + " " + name.toString() + " " +owner.toString() + " " + address.toString() + " " + topMargin.toString() + " " + marginStart.toString())
+
+                        val indoorMapPoint = Canopy.CanopyIndoorPoint(topMargin!!, marginStart!!)
+                        canopyIndoorMapPoints.add(indoorMapPoint)
+                    }
+                    val canopies = Canopy(name.toString(), GeoPoint(latitude, longitude), owner.toString(), address.toString(), canopyIndoorMapPoints)
+                    tempCanopyList.add(canopies)
+                    Log.i("CanopyMainActivity" , latitude.toString() + " "+ longitude.toString() + " " + name.toString() + " " +owner.toString() + " " + address.toString() + " " + indoorMapPoints.toString())
+
                 }
-                canopies = tempCanopyList
+                viewModel.value.setCanopiesList(tempCanopyList)
+                val canopyList = viewModel.value.getCanopiesList().value
+
+                if (canopyList != null) {
+                    for (canopy in canopyList) {
+                        Log.i("CanopyMainActivity", "Name: ${canopy.canopyName}, " +
+                                "Coords: (${canopy.canopyCoords.latitude}, ${canopy.canopyCoords.longitude}), " +
+                                "Owner: ${canopy.canopyOwner}, " +
+                                "Address: ${canopy.canopyAddress}")
+                    }
+                } else {
+                    Log.i("CanopyMainActivity", "No data found in canopiesList.")
+                }
+
             }
             .addOnFailureListener {
                 exception ->
@@ -222,7 +256,6 @@ class MainActivity : AppCompatActivity() {
                     val currentFragment=supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
                     if (currentFragment is Home){
                         currentFragment.updateServiceStatus(isServiceRunning)
-
                     }
                 }
                 else{
@@ -384,6 +417,15 @@ class MainActivityViewModel : ViewModel() {
         private set
     fun setIsBackgroundServiceRunning(isRunning: Boolean) {
         isSertviceRunning.value = isRunning
+    }
+
+    private var canopiesList = MutableLiveData<List<Canopy>>()
+
+    fun setCanopiesList(canopyList: List<Canopy>) {
+        canopiesList.value = canopyList
+    }
+    fun getCanopiesList(): MutableLiveData<List<Canopy>> {
+        return canopiesList
     }
 }
 
