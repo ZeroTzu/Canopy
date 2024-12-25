@@ -42,5 +42,6 @@
     <string name="temperature_and_humidity_data">temperature and humidity data</string>
     <string name="profile">Profile</string>
     <string name="your_activity">Your Activity</string>
+    <string name="searchbar_hint">Search Canopies</string>
 
 </resources>
