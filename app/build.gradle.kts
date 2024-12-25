@@ -91,6 +91,8 @@ dependencies {
     implementation(libs.googleid)
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.androidx.fragment.ktx)
+    implementation(libs.androidx.activity.ktx)
     implementation(libs.firebase.firestore)
     implementation(platform(libs.firebase.bom))
     implementation(libs.google.guava)
