@@ -15,8 +15,8 @@
                 android:id="@+id/side_panel_settings"
                 android:icon="@drawable/baseline_settings_24"/>
             <item
-                android:title="@string/your_activity"
-                android:id="@+id/side_panel_history"
+                android:title="@string/volunteer_history"
+                android:id="@+id/side_panel_volunteer_history"
                 android:icon="@drawable/baseline_history_24"/>
         </menu>
     </item>

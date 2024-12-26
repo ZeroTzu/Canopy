@@ -17,6 +17,7 @@ import com.teamname.canopy.databinding.FragmentLoginRegisterFormBinding
 import com.teamname.canopy.utils.BackendInterface
 import com.teamname.canopy.utils.Constants
 import com.teamname.canopy.utils.RetrofitClient
+
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -74,7 +75,7 @@ class LoginRegisterFormFragment : Fragment() {
                         user["userEmail"]=emailEditText.text.toString()
                         user["userId"] = it.result.user!!.uid
                         user["createdTimestamp"] = Timestamp.now()
-                        user["volunteerHistory"] = ArrayList<HashMap<String,Timestamp>>()
+                        user["volunteerHistory"] = ArrayList<HashMap<String,Any?>>()
                         (activity as LoginActivity).firestore.collection("users").document(firebaseAuth.uid!!).set(user).addOnCompleteListener{
                             var task2 = it
                             if (task2.isSuccessful){

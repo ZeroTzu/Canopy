@@ -173,12 +173,12 @@ class MainActivity : AppCompatActivity() {
                     drawerLayout.close()
                 }
 
-                R.id.side_panel_home -> {
+                R.id.side_panel_volunteer_history -> {
                     for (i in 0 until binding.mainActivitySidePanel.menu.size()) {
                         binding.mainActivitySidePanel.menu.getItem(i).isChecked = false
                     }
                     it.isChecked = true
-                    replaceFragment(History())
+                    replaceFragment(VolunteerHistoryFragment())
                     drawerLayout.close()
                 }
 
@@ -190,6 +190,7 @@ class MainActivity : AppCompatActivity() {
                     replaceFragment(Command())
                     drawerLayout.close()
                 }
+
 
                 R.id.side_panel_manage_family -> {}
                 R.id.side_panel_logout -> {

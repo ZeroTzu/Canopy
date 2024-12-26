@@ -51,19 +51,19 @@ class TapInFragment : Fragment() {
 
         }
     }
-    fun addVolunteerHistory(timestamp: Timestamp) {
+    fun addVolunteerHistory(currentTimestamp: Timestamp) {
         val activity = (requireActivity() as MainActivity)
+
+
         activity.firestore.collection("users").document(activity.firebaseAuth.currentUser!!.uid).get().addOnSuccessListener { result ->
 
             var latestNoneCheckOut: Triple<Int, Timestamp, String>? = null
-
-            Log.i("CanopyTapInFragment", "volunteerHistory: ${result["volunteerHistory"]}")
             val volunteerHistory = result.get("volunteerHistory") as ArrayList<HashMap<String, *>>
 
 
             for ((index, session) in volunteerHistory.withIndex()) {
 
-                val sessionSession = session as HashMap<String, *>
+                val sessionSession = session
                 val tapInTimestamp = sessionSession["tapInTimestamp"] as? Timestamp ?: continue
                 val tapInCanopyId = sessionSession["tapInCanopyId"] as? String ?: continue
                 val tapOutCanopyId = sessionSession["tapOutCanopyId"] as? String
@@ -78,7 +78,6 @@ class TapInFragment : Fragment() {
                     latestNoneCheckOut = Triple(index, tapInTimestamp, tapInCanopyId)
                 }
             }
-            val currentTimestamp = Timestamp.now()
             val newCanopyId = "123"
 
             if (latestNoneCheckOut != null) {

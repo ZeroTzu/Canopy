@@ -1,6 +1,7 @@
 package com.teamname.canopy.utils
 
 import android.R
+import android.R.layout
 import android.R.attr.data
 import android.R.attr.resource
 import android.app.Activity
@@ -16,7 +17,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.GeoPoint
-
+import com.google.type.DateTime
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+import kotlin.math.roundToInt
+import com.teamname.canopy.R as canopyR
 // Define the Canopy class
 class Canopy(
     val canopyName: String,
@@ -109,3 +116,80 @@ class CanopyRecyclerViewAdapter(
         notifyDataSetChanged()
     }
 }
+
+
+
+
+class VolunteerSession(
+    val tappedInTimestamp: Instant,
+    val tappedOutTimestamp: Instant?,
+    val tappedInCanopy: String,
+    val tappedOutCanopy: String?,
+)  {
+    fun calculateHours(): Double? {
+
+        if (tappedOutTimestamp == null) {
+        return null
+        }
+        val duration = tappedOutTimestamp.toEpochMilli() - tappedInTimestamp.toEpochMilli()
+        val hours = duration / (1000 * 60 * 60)
+        return hours.toDouble()
+    }
+    fun getPoints():Int?{
+        var points = null as Double?
+        var hours = calculateHours()
+        if (hours!=null){
+            points=hours.times(10)
+        }
+        return points?.roundToInt()
+    }
+}
+
+
+class VolunteerSessionRecyclerViewAdapter(
+    private var items: List<VolunteerSession>,
+    private val onItemClick: (VolunteerSession) -> Unit
+) : RecyclerView.Adapter<VolunteerSessionRecyclerViewAdapter.VolunteerSessionViewHolder>() {
+
+    // ViewHolder to bind the item views
+    inner class VolunteerSessionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        private val title = view.findViewById<TextView>(canopyR.id.text1)
+        private val subtitle1 = view.findViewById<TextView>(canopyR.id.text2)
+        private val subtitle2 = view.findViewById<TextView>(canopyR.id.text3)
+        private val pointsTitle = view.findViewById<TextView>(canopyR.id.text4)
+        fun bind(item: VolunteerSession) {
+            title.text = item.tappedInCanopy
+            subtitle1.text = LocalDateTime.ofInstant(item.tappedInTimestamp, ZoneOffset.ofHours(8)).format(DateTimeFormatter.ofPattern("uuuu MMM dd")).toString()
+            if(item.tappedOutTimestamp==null){
+                pointsTitle.text="Pending"
+                subtitle2.text="In Progress"
+            }else{
+                pointsTitle.text = "+${item.getPoints()} pts"
+                subtitle2.text = "${item.calculateHours().toString()} hours"
+            }
+            itemView.setOnClickListener { onItemClick(item) }
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VolunteerSessionViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(
+            canopyR.layout.canopy_recyclerview_item4line,
+            parent,
+            false
+        )
+        return VolunteerSessionViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: VolunteerSessionViewHolder, position: Int) {
+        holder.bind(items[position])
+    }
+
+    override fun getItemCount(): Int = items.size
+
+    // Update the data when search results change
+    fun updateList(newItems: List<VolunteerSession>) {
+        items = newItems
+        notifyDataSetChanged()
+    }
+}
+
