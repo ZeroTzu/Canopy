@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Home"
     android:theme="@style/AppTheme"
-    android:fitsSystemWindows="false"
     >
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -116,6 +115,7 @@
                 android:padding="10dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/fragment_home_mapView_frameLayout">
+
                 <FrameLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
@@ -129,7 +129,8 @@
                             android:elevation="8dp"
                             app:icon="@drawable/baseline_tap_and_play_24"
                             app:iconGravity="textTop"
-                            app:iconSize="20dp" />
+                            app:iconSize="20dp"
+                            android:id="@+id/fragment_home_tap_in_materialButton"/>
 
                         <TextView
                             android:layout_width="match_parent"
@@ -138,7 +139,29 @@
                             android:text="@string/tap_in" />
                     </LinearLayout>
                 </FrameLayout>
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
+                        <com.google.android.material.button.MaterialButton
+                            style="@style/Theme.Polaris.CustomButtonCircle"
+                            android:elevation="8dp"
+                            app:icon="@drawable/baseline_live_help_24"
+                            app:iconGravity="textTop"
+                            app:iconSize="20dp"
+                            android:id="@+id/fragment_home_help_materialButton"/>
+
+                        <TextView
+                            android:layout_width="50dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:text="@string/help" />
+                    </LinearLayout>
+                </FrameLayout>
                 <FrameLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
@@ -153,40 +176,20 @@
                             android:elevation="8dp"
                             app:icon="@drawable/baseline_warning_amber_24"
                             app:iconGravity="textTop"
-                            app:iconSize="20dp" />
+                            app:iconSize="20dp"
+                            android:id="@+id/fragment_home_report_materialButton"/>
 
                         <TextView
-                            android:layout_width="50dp"
+                            android:layout_width="70dp"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
                             android:text="@string/report_issue" />
                     </LinearLayout>
                 </FrameLayout>
 
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
 
-                        <com.google.android.material.button.MaterialButton
-                            style="@style/Theme.Polaris.CustomButtonCircle"
-                            android:elevation="8dp"
-                            app:icon="@drawable/baseline_live_help_24"
-                            app:iconGravity="textTop"
-                            app:iconSize="20dp" />
-
-                        <TextView
-                            android:layout_width="50dp"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_horizontal"
-                            android:text="@string/help" />
-                    </LinearLayout>
-                </FrameLayout>
             </LinearLayout>
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</FrameLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
