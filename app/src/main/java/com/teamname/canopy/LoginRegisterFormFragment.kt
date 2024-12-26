@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.lifecycleScope
+import com.google.firebase.Timestamp
 import com.teamname.canopy.api.RegisterRequest
 import com.teamname.canopy.api.RegisterResponse
 import com.teamname.canopy.databinding.FragmentLoginRegisterFormBinding
@@ -63,9 +64,27 @@ class LoginRegisterFormFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            (activity as LoginActivity).firebaseAuth.createUserWithEmailAndPassword(emailEditText.text.toString(),passwordEditText.text.toString())
+            val firebaseAuth = (activity as LoginActivity).firebaseAuth
+            firebaseAuth.createUserWithEmailAndPassword(emailEditText.text.toString(),passwordEditText.text.toString())
                 .addOnCompleteListener{
-                    if(it.isSuccessful){
+                    var task = it
+                    if(task.isSuccessful){
+
+                        val user = HashMap<String,Any>()
+                        user["userEmail"]=emailEditText.text.toString()
+                        user["userId"] = it.result.user!!.uid
+                        user["createdTimestamp"] = Timestamp.now()
+                        user["volunteerHistory"] = ArrayList<HashMap<String,Timestamp>>()
+                        (activity as LoginActivity).firestore.collection("users").document(firebaseAuth.uid!!).set(user).addOnCompleteListener{
+                            var task2 = it
+                            if (task2.isSuccessful){
+                                Log.i("PolarisLoginActivity","user added to firestore")
+                            }
+                            else{
+                                Log.i("PolarisLoginActivity","user not added to firestore")
+                            }
+                        }
+
                         redirectToLogin()
                     }
                     else {

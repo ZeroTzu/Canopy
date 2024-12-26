@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import com.teamname.canopy.databinding.ActivityLoginBinding
 import com.teamname.canopy.utils.Constants
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 
@@ -18,8 +19,10 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private val dataStore: DataStore<Preferences> by lazy {DataStoreManager.getInstance(this)}
     lateinit var firebaseAuth: FirebaseAuth
+    lateinit var firestore: FirebaseFirestore
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        firestore= FirebaseFirestore.getInstance()
         enableEdgeToEdge()
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)

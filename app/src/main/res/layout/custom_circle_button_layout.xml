@@ -7,7 +7,8 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
 
         <com.google.android.material.button.MaterialButton
             style="@style/Theme.Polaris.CustomButtonCircle"
@@ -19,8 +20,9 @@
             />
         <TextView
             android:id="@+id/customButton_textView"
-            android:layout_width="match_parent"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
+            android:maxWidth="40dp"
             android:gravity="center_horizontal"
             android:text="@string/example" />
     </LinearLayout>

@@ -25,9 +25,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.maps.CameraUpdate
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.GoogleMapOptions
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.teamname.canopy.databinding.FragmentHomeBinding
@@ -65,6 +69,7 @@ class Home : Fragment(),ResponseCallback, OnMapReadyCallback{
     private lateinit var mainViewModel: MainActivityViewModel
     private lateinit var selectedCanopy : MutableLiveData<Canopy?>
     private lateinit var dataPointViews: ArrayList<RelativeLayout>
+    private var mMap: GoogleMap? = null
 
     private val getTemperatureDataRunnable =  object :Runnable {
         override fun run() {
@@ -76,12 +81,9 @@ class Home : Fragment(),ResponseCallback, OnMapReadyCallback{
         }
     }
     private val handler = Handler (Looper.getMainLooper())
-
     private fun updateDataPointView(thl: THLDataPoint,relativeLayout: RelativeLayout) {
         relativeLayout.findViewById<TextView>(R.id.data_point_text).text = "${thl.temperature}°C, ${thl.humidity}%, ${thl.lightIntensity}µmol/m²/s"
     }
-
-
     private fun generateTHLData(): THLDataPoint {
         val random = java.util.Random()
 
@@ -150,14 +152,15 @@ class Home : Fragment(),ResponseCallback, OnMapReadyCallback{
                 }
                 dataPointViews=tempDataPointViews
 
+                mMap?.clear()
+                mMap?.addMarker(MarkerOptions().position(LatLng(it.canopyCoords.latitude, it.canopyCoords.longitude)).title(it.canopyName))
+                mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(it.canopyCoords.latitude, it.canopyCoords.longitude), 18f))
             }
         }
 
         mainViewModel.getCanopiesList().observe(this) { canopiesList ->
             val mutableCanopiesList = canopiesList.toMutableList()
             Log.i("CanopyHomeFragment", "mutableCanopiesList: $mutableCanopiesList")
-
-
 
             if (mutableCanopiesList != null) {
                 Log.i("CanopyHomeFragment", "mutableCanopiesList is not null")
@@ -171,83 +174,70 @@ class Home : Fragment(),ResponseCallback, OnMapReadyCallback{
                 Log.i("CanopyHomeFragment", "No data found in canopiesList.")
             }
 
-
-
-
-
             var searchBar = binding.searchBar
             var searchView = binding.fragmentHomeSearchView
             var recyclerView = binding.fragmentHomeSearchViewRecyclerView
-
             val canopyAdapter = CanopyRecyclerViewAdapter(mutableCanopiesList) { tempSelectedCanopy ->
                 // Handle item click
                 selectedCanopy.value=tempSelectedCanopy
                 searchBar.setText(tempSelectedCanopy.canopyName)
                 searchView.hide() // Hide SearchView when an item is selected
+                binding.fragmentHomeFacilityMapContainer.visibility = View.VISIBLE
             }
-
             recyclerView.layoutManager=LinearLayoutManager(requireContext())
             recyclerView.adapter=canopyAdapter
-
             searchView.editText.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                     // No action needed here
                 }
-
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     val query = s.toString()
                     val filteredList = mutableCanopiesList.filter {
-                        it.canopyName.contains(query, ignoreCase = true)
+                        it.canopyName.contains(query, ignoreCase = true) ||
+                        it.canopyAddress.contains(query, ignoreCase = true)
                     }
                     canopyAdapter.updateList(filteredList)
                 }
-
                 override fun afterTextChanged(s: Editable?) {
                     // No action needed here
                 }
             })
-
-
-
+            binding.fragmentHomeTapInMaterialButton.setOnClickListener {
+                var fragmentTransaction = parentFragmentManager.beginTransaction()
+                fragmentTransaction.replace(R.id.nav_host_fragment, TapInFragment())
+                fragmentTransaction.commit()
+                performHaptic(it)
+            }
         }
-
-        // Update UI with the list
-
-
-
-
-
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
-        googleMap.addMarker(
-            MarkerOptions()
-                .position(LatLng(0.0, 0.0))
-                .title("Marker")
-        )
+        mMap = googleMap
+        googleMap.apply {
+            mapType = GoogleMap.MAP_TYPE_NORMAL
+            uiSettings.isCompassEnabled = true
+            uiSettings.isRotateGesturesEnabled = true
+            uiSettings.isTiltGesturesEnabled = true
+            uiSettings.isScrollGesturesEnabled = true
+            uiSettings.isZoomControlsEnabled = true
+            uiSettings.isZoomGesturesEnabled = true
+            isBuildingsEnabled = true
+        }
+        val marker = MarkerOptions().position(LatLng(1.335295037891502, 103.77556193766127))
+        googleMap.addMarker(marker)
+
+        val cameraPosition = CameraPosition.Builder()
+            .target(LatLng(1.335295037891502, 103.77556193766127))
+            .zoom(18f)
+            .tilt(45f)
+            .build()
+        val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
+        googleMap.moveCamera(cameraUpdate)
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
     {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         val rootView = binding.root
-
-        // Find the FrameLayout in the parent view
-        val facilityMapContainer = rootView.findViewById<FrameLayout>(R.id.fragment_home_facility_map_container)
-        var countries = arrayOf(
-            "India", "Australia", "West indies", "indonesia", "Indiana",
-            "South Africa", "England", "Bangladesh", "Srilanka", "singapore"
-        )
-
-//        var adapter: ArrayAdapter<String>? = ArrayAdapter<String>(requireContext(), android.R.layout.simple_dropdown_item_1line, countries)
-//        val autoCompleteTextView:AutoCompleteTextView = binding.fragmentHomeSearchBarTextInputLayout.editText as AutoCompleteTextView
-//        autoCompleteTextView.threshold = 1
-//        autoCompleteTextView.setAdapter(adapter)
-
-
-
-
-
-
 
         binding.fragmentHomeToggleIndoorMapMaterialButton.setOnClickListener {
             if (binding.fragmentHomeFacilityMapContainer.visibility==View.GONE) {
@@ -258,56 +248,9 @@ class Home : Fragment(),ResponseCallback, OnMapReadyCallback{
                 binding.fragmentHomeFacilityMapContainer.visibility = View.GONE
             }
         }
-        //
-//        binding.startServiceButton.setOnClickListener {
-//            val context = this.context as? Context
-//            if (context!=null){
-//                Log.i("PolarisHome", "button Pressed ")
-//                val intent = Intent(PolarisBackgroundService.Actions.CHECK_SERVICE_STATUS.toString())
-//                requireActivity().sendBroadcast(intent)
-//                try {
-//                    // Wait for the response, blocking the thread
-//                    // After the latch is counted down, decide to start or stop the service
-//                    if (!mainViewModel.isSertviceRunning.value) {
-//                        Log.i("PolarisHome", "starting Background Service ")
-//                        Intent(context, PolarisBackgroundService::class.java).also {
-//                            it.action = PolarisBackgroundService.Actions.START.toString()
-//                            context.startService(it)
-//                            mainViewModel.setIsBackgroundServiceRunning(true)
-//                        }
-//                    } else {
-//                        Log.i("PolarisHome", "stopping Background Service ")
-//                        Intent(context, PolarisBackgroundService::class.java).also {
-//                            it.action = PolarisBackgroundService.Actions.STOP.toString()
-//                            context.startService(it)
-//                            mainViewModel.setIsBackgroundServiceRunning(false)
-//                        }
-//
-//                    }
-//                } catch (e: InterruptedException) {
-//                    e.printStackTrace()
-//                }
-//            }
-//        }
-//        binding.debugButton1.setOnClickListener{ view ->
-//            val requestBuilder = cronetEngine.newUrlRequestBuilder(
-//                "https://catfact.ninja/fact",
-//                MLServiceRequest(this),
-//                executor
-//            )
-//            val request: org.chromium.net.UrlRequest = requestBuilder.build()
-//            request.start()  // Start the request
-//            performHaptic(view)
-//        }
-////        binding.debugButton2.setOnClickListener{
-////
-////        }
-//        binding.homeFragmentLogoutButton.setOnClickListener{
-//            lifecycleScope.launch {
-//                (activity as? MainActivity)?.logoutUser()
-//            }
-//        }
-        // Inflate the layout for this fragment
+        binding.fragmentHomeTapInMaterialButton.setOnClickListener {
+
+        }
         return binding.root
     }
 
@@ -316,9 +259,6 @@ class Home : Fragment(),ResponseCallback, OnMapReadyCallback{
         val mapFragment = childFragmentManager
             .findFragmentById(R.id.fragment_home_map_fragment) as SupportMapFragment
         mapFragment.getMapAsync(this)
-
-
-
     }
     override fun onResponseReceived(response: String) {
         Log.i("MLServiceRequest", "onResponseReceived method called: $response")
@@ -373,36 +313,7 @@ class Home : Fragment(),ResponseCallback, OnMapReadyCallback{
     fun updateServiceStatus(isRunning: Boolean) {
         Log.i("PolarisHome", "updateServiceStatus method called")
         var currentlyShownState=false
-        // Count down the latch to unblock the waiting thread
-//        latch.countDown()
-//        when (binding.startServiceButton.text){
-//            resources.getString(R.string.start_service)->currentlyShownState=true
-//            resources.getString(R.string.stop_service)->currentlyShownState=false
-//        }
-//        if (isRunning) {
-//            // Change button text to "Stop Service"
-//            Log.i("PolarisHome", "updateServiceStatus: Changing button to show Stop Service ")
-//            binding.startServiceButton.text=resources.getString(R.string.stop_service)
-//            binding.startServiceButton.icon=ResourcesCompat.getDrawable(resources,R.drawable.baseline_stop_24,requireContext().theme)
-//        } else {
-//            // Change button text to "Start Service"
-//            Log.i("PolarisHome", "updateServiceStatus: Changing button to show Start Service ")
-//            binding.startServiceButton.text=resources.getString(R.string.start_service)
-//            binding.startServiceButton.icon=ResourcesCompat.getDrawable(resources,R.drawable.baseline_play_arrow_24,requireContext().theme)
-//        }
+
 
     }
-//    fun updateImage(imagePath: String?){
-//        try{
-//            if (imagePath!=null){
-////                binding.homeFragmentTopBarTextView.text=imagePath
-//                binding.debugHomeFragmentImageView.setImageURI(android.net.Uri.parse(imagePath))
-//                Log.i("PolarisHome", "updateImage success: $imagePath")
-//            }else{
-//                Log.i("PolarisHome", "updateImage failed due to no path: $imagePath")
-//            }
-//        }catch (e:Exception){
-//            Log.e("PolarisHome", "updateImage failed: ${e.message}")
-//        }
-//    }
 }

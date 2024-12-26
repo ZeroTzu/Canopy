@@ -40,6 +40,7 @@ import com.teamname.canopy.ui.theme.PolarisTheme
 import com.teamname.canopy.utils.Constants
 import com.teamname.canopy.utils.UserClass
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.firestore
@@ -69,9 +70,10 @@ class MainActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var userClass: UserClass
     private val viewModel = viewModels<MainActivityViewModel>()
-    private lateinit var firebaseAuth: FirebaseAuth
-    private lateinit var firestore: FirebaseFirestore
+    lateinit var firebaseAuth: FirebaseAuth
+    lateinit var firestore: FirebaseFirestore
     private val dataStore: DataStore<Preferences> by lazy {DataStoreManager.getInstance(this)}
+    private lateinit var userDocumentId:String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,9 +82,6 @@ class MainActivity : AppCompatActivity() {
         firebaseAuth=FirebaseAuth.getInstance()
         firestore=FirebaseFirestore.getInstance()
         var db = Firebase.firestore
-
-        Log.i("CanopyMainActivity" , "Goon")
-
         db.collection("canopies")
             .get()
             .addOnSuccessListener {
@@ -106,9 +105,6 @@ class MainActivity : AppCompatActivity() {
                         Log.i("CanopyMainActivity" , topMarginString + " "+ marginStartString)
                         val topMargin = topMarginString!!.toLong()
                         val marginStart = marginStartString!!.toLong()
-
-
-                        marginStart?.toLong()
                         Log.i("CanopyMainActivity" , latitude.toString() + " "+ longitude.toString() + " " + name.toString() + " " +owner.toString() + " " + address.toString() + " " + topMargin.toString() + " " + marginStart.toString())
 
                         val indoorMapPoint = Canopy.CanopyIndoorPoint(topMargin!!, marginStart!!)
@@ -144,18 +140,6 @@ class MainActivity : AppCompatActivity() {
         if (currentUser == null) {
             reload()
         }
-        //check if the user is logged in
-//        lifecycleScope.launch{
-//            val email=getEmailFromDataStore()
-//            val password=getPasswordFromDataStore()
-//            Log.i("PolarisMainActivity", "onCreate: email: $email, password: $password")
-//            if (email==null || password==null){
-//                reload()
-//            }
-//            else{
-//                userClass= UserClass(email,password)
-//            }
-//        }
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         //Request permissions (e.g. Camera, Audio etc.)
@@ -338,16 +322,10 @@ class MainActivity : AppCompatActivity() {
                 this@MainActivity.startService(it)
             }
         }
-//        lifecycleScope.launch {
-//            baseContext.dataStore.edit {
-//                it.clear()
-//            }
-//        }
         firebaseAuth.signOut()
         //start login activity and stop the MainActivity so that user cant navigate back
         startActivity(intent)
         this@MainActivity.finish()
-
         dataStore.edit { preferences ->
             preferences.clear()
         }
@@ -371,6 +349,7 @@ class MainActivity : AppCompatActivity() {
             baseContext, it
         ) == PackageManager.PERMISSION_GRANTED
     }
+
 
     companion object {
         private const val TAG = "Polaris"
