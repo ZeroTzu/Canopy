@@ -110,7 +110,7 @@ class MainActivity : AppCompatActivity() {
                         val indoorMapPoint = Canopy.CanopyIndoorPoint(topMargin!!, marginStart!!)
                         canopyIndoorMapPoints.add(indoorMapPoint)
                     }
-                    val canopies = Canopy(name.toString(), GeoPoint(latitude, longitude), owner.toString(), address.toString(), canopyIndoorMapPoints)
+                    val canopies = Canopy(canopy.id,name.toString(), GeoPoint(latitude, longitude), owner.toString(), address.toString(), canopyIndoorMapPoints)
                     tempCanopyList.add(canopies)
                     Log.i("CanopyMainActivity" , latitude.toString() + " "+ longitude.toString() + " " + name.toString() + " " +owner.toString() + " " + address.toString() + " " + indoorMapPoints.toString())
 
@@ -406,6 +406,10 @@ class MainActivityViewModel : ViewModel() {
     }
     fun getCanopiesList(): MutableLiveData<List<Canopy>> {
         return canopiesList
+    }
+    fun getCanopyById(canopyId: String): Canopy? {
+        Log.i("CanopyMainActivity", "getCanopyById: $canopyId")
+        return canopiesList.value?.find { it.canopyId == canopyId }
     }
 }
 

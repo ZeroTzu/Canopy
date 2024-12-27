@@ -26,6 +26,7 @@ import kotlin.math.roundToInt
 import com.teamname.canopy.R as canopyR
 // Define the Canopy class
 class Canopy(
+    val canopyId: String,
     val canopyName: String,
     val canopyCoords: GeoPoint,
     val canopyOwner: String,
@@ -125,6 +126,8 @@ class VolunteerSession(
     val tappedOutTimestamp: Instant?,
     val tappedInCanopy: String,
     val tappedOutCanopy: String?,
+    val tappedInCanopyName: String?,
+    val tappedOutCanopyName: String?,
 )  {
     fun calculateHours(): Double? {
 
@@ -158,7 +161,11 @@ class VolunteerSessionRecyclerViewAdapter(
         private val subtitle2 = view.findViewById<TextView>(canopyR.id.text3)
         private val pointsTitle = view.findViewById<TextView>(canopyR.id.text4)
         fun bind(item: VolunteerSession) {
-            title.text = item.tappedInCanopy
+            if(item.tappedInCanopyName==null){
+                title.text = "Unknown"
+            }else{
+                title.text = item.tappedInCanopyName
+            }
             subtitle1.text = LocalDateTime.ofInstant(item.tappedInTimestamp, ZoneOffset.ofHours(8)).format(DateTimeFormatter.ofPattern("uuuu MMM dd")).toString()
             if(item.tappedOutTimestamp==null){
                 pointsTitle.text="Pending"

@@ -4,6 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:backgroundTint="?attr/colorBackgroundFloating"
     style="?attr/materialCardViewOutlinedStyle"
     >
     <LinearLayout
@@ -25,6 +26,8 @@
                 style="?android:attr/dropDownItemStyle"
                 android:textAppearance="?android:attr/textAppearanceLargePopupMenu"
                 android:singleLine="true"
+                android:textStyle="bold"
+                android:textColor="?attr/colorPrimary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 />
@@ -34,6 +37,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmallPopupMenu"
                 android:textColor="#323232"
                 android:singleLine="true"
+                android:textStyle="italic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 />
