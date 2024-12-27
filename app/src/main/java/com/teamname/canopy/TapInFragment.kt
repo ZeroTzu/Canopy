@@ -9,10 +9,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.SetOptions
 import com.teamname.canopy.databinding.FragmentTapInBinding
+import kotlin.random.Random
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -29,6 +31,7 @@ class TapInFragment : Fragment() {
     private var param2: String? = null
     private var handler = Handler(Looper.getMainLooper())
     private var isNFCActive = false
+    private lateinit var viewModel: MainActivityViewModel
     //binding
     private lateinit var binding: FragmentTapInBinding
     private var buttonAnimationRunnable = object : Runnable {
@@ -78,7 +81,13 @@ class TapInFragment : Fragment() {
                     latestNoneCheckOut = Triple(index, tapInTimestamp, tapInCanopyId)
                 }
             }
-            val newCanopyId = "123"
+            var newCanopyId = "123"
+
+            if (viewModel.getCanopiesList().value!=null) {
+                val canopiesCount = viewModel.getCanopiesList().value!!.size
+                var random = Random.nextInt(canopiesCount)
+                newCanopyId = viewModel.getCanopiesList().value!![random].canopyId
+            }
 
             if (latestNoneCheckOut != null) {
                 //check out this person
@@ -132,6 +141,7 @@ class TapInFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+        viewModel = ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
     }
 
     override fun onCreateView(
