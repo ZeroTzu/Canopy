@@ -22,9 +22,9 @@
     </item>
     <item android:title="Others">
         <menu>
-            <item android:title="@string/manage_family"
-                android:id="@+id/side_panel_manage_family"
-                android:icon="@drawable/baseline_group_24"/>
+            <item android:title="Pointsdddddd"
+                android:id="@+id/side_panel_points"
+                android:icon="@drawable/baseline_stars_24"/>
             <item android:title="@string/log_out"
                 android:id="@+id/side_panel_logout"
                 android:icon="@drawable/baseline_logout_24"

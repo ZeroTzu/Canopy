@@ -215,12 +215,10 @@ class Home : Fragment(),ResponseCallback, OnMapReadyCallback{
         mMap = googleMap
         googleMap.apply {
             mapType = GoogleMap.MAP_TYPE_NORMAL
-            uiSettings.isCompassEnabled = true
             uiSettings.isRotateGesturesEnabled = true
             uiSettings.isTiltGesturesEnabled = true
             uiSettings.isScrollGesturesEnabled = true
-            uiSettings.isZoomControlsEnabled = true
-            uiSettings.isZoomGesturesEnabled = true
+
             isBuildingsEnabled = true
         }
         val marker = MarkerOptions().position(LatLng(1.335295037891502, 103.77556193766127))

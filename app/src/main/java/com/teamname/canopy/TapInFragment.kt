@@ -15,6 +15,7 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.SetOptions
 import com.teamname.canopy.databinding.FragmentTapInBinding
 import kotlin.random.Random
+import kotlin.time.Duration.Companion.hours
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -56,8 +57,6 @@ class TapInFragment : Fragment() {
     }
     fun addVolunteerHistory(currentTimestamp: Timestamp) {
         val activity = (requireActivity() as MainActivity)
-
-
         activity.firestore.collection("users").document(activity.firebaseAuth.currentUser!!.uid).get().addOnSuccessListener { result ->
 
             var latestNoneCheckOut: Triple<Int, Timestamp, String>? = null
@@ -82,16 +81,18 @@ class TapInFragment : Fragment() {
                 }
             }
             var newCanopyId = "123"
-
             if (viewModel.getCanopiesList().value!=null) {
                 val canopiesCount = viewModel.getCanopiesList().value!!.size
                 var random = Random.nextInt(canopiesCount)
                 newCanopyId = viewModel.getCanopiesList().value!![random].canopyId
             }
-
             if (latestNoneCheckOut != null) {
                 //check out this person
                 val (index, _, _) = latestNoneCheckOut
+
+                val timeStampDifference =  currentTimestamp.toInstant().toEpochMilli() - latestNoneCheckOut.second.toInstant().toEpochMilli()
+                val timeStampDifferenceHours = timeStampDifference / (1000 * 60 * 60)
+                val pointsEarned = timeStampDifferenceHours.toDouble().times(10)
 
 
                 volunteerHistory[index] = HashMap<String,Any?>().apply {
@@ -102,7 +103,11 @@ class TapInFragment : Fragment() {
                 }
                 activity.firestore.collection("users")
                     .document(activity.firebaseAuth.currentUser!!.uid)
-                    .update("volunteerHistory", volunteerHistory)
+                    .update("volunteerHistory", volunteerHistory).also {
+                        activity.firestore.collection("users")
+                            .document(activity.firebaseAuth.currentUser!!.uid)
+                            .update("pointsEarned", FieldValue.increment(pointsEarned.toLong()))
+                    }
                     .addOnSuccessListener {
                         Log.i("CanopyTapInFragment", "Successfully updated tap-out details for session $index")
                     }
