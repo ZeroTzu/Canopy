@@ -30,6 +30,7 @@ class VolunteerHistoryFragment : Fragment() {
         activity.firestore.collection("users").document(activity.firebaseAuth.currentUser!!.uid).get().addOnSuccessListener { result ->
             var latestNoneCheckOut: Triple<Int, Timestamp, String>? = null
             val volunteerHistoryRaw = result.get("volunteerHistory") as ArrayList<HashMap<String, *>>
+            val points = result.get("pointsEarned") as Long
             val volunteerHistory = ArrayList<VolunteerSession>()
 
             for ((index, session) in volunteerHistoryRaw.withIndex()) {
@@ -78,7 +79,7 @@ class VolunteerHistoryFragment : Fragment() {
                 .distinct().size
 
 
-            binding.fragmentVolunteerHistoryPointsTextView.text =totalPoints.toString()
+            binding.fragmentVolunteerHistoryPointsTextView.text =points.toString()
             binding.fragmentVolunteerHistoryHoursTextView.text = "Over ${totalHours} HOURS"
             binding.fragmentVolunteerHistoryCanopiesTextView.text = "Across ${visitedCanopiesCount} CANOPIES"
             binding.fragmentVolunteerHistorySessionsTextView.text = "In ${sessionCount} SESSIONS"

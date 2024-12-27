@@ -190,9 +190,9 @@ class MainActivity : AppCompatActivity() {
                     replaceFragment(Command())
                     drawerLayout.close()
                 }
+                R.id.side_panel_points -> {
 
-
-                R.id.side_panel_manage_family -> {}
+                }
                 R.id.side_panel_logout -> {
                     drawerLayout.close()
                     lifecycleScope.launch {

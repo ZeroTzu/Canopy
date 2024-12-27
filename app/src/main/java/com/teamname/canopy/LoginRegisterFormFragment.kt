@@ -76,6 +76,7 @@ class LoginRegisterFormFragment : Fragment() {
                         user["userId"] = it.result.user!!.uid
                         user["createdTimestamp"] = Timestamp.now()
                         user["volunteerHistory"] = ArrayList<HashMap<String,Any?>>()
+                        user["pointsEarned"] = 0
                         (activity as LoginActivity).firestore.collection("users").document(firebaseAuth.uid!!).set(user).addOnCompleteListener{
                             var task2 = it
                             if (task2.isSuccessful){
