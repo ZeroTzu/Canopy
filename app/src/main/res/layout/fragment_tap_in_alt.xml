@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/gradient_list"
+    android:theme="@style/AppTheme">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/fragment_tap_in_alt_close_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style = "?attr/materialIconButtonStyle"
+            app:icon="@drawable/baseline_close_24"
+            android:layout_gravity="end"
+            app:iconTint="?attr/colorOnSurface"/>
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:gravity="center">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                >
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/baseline_nfc_24"
+                    android:tint="?attr/colorPrimary"
+                    android:paddingEnd="4dp"/>
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hold_near_reader"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/large_text_size"
+                    />
+
+            </LinearLayout>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/fragment_tap_in_alt_animation_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Welcome to Canopy@Example"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="@dimen/mediumLarge_text_size"
+                android:textStyle="bold"
+                android:visibility="gone"/>
+        </LinearLayout>
+        <com.teamname.canopy.ui.MovableFloatingActionButton
+            android:id="@+id/fragment_tap_in_alt_debug_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            android:text="Debug"
+            />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

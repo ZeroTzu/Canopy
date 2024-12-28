@@ -133,5 +133,7 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="volunteer_history">Volunteer History</string>
+    <string name="points">Points</string>
+    <string name="hold_near_reader">Hold Near Reader</string>
 
 </resources>

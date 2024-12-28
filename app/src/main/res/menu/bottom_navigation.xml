@@ -22,7 +22,7 @@
     </item>
     <item android:title="Others">
         <menu>
-            <item android:title="Pointsdddddd"
+            <item android:title="@string/points"
                 android:id="@+id/side_panel_points"
                 android:icon="@drawable/baseline_stars_24"/>
             <item android:title="@string/log_out"

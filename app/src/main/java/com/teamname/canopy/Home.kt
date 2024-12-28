@@ -204,7 +204,7 @@ class Home : Fragment(),ResponseCallback, OnMapReadyCallback{
             })
             binding.fragmentHomeTapInMaterialButton.setOnClickListener {
                 var fragmentTransaction = parentFragmentManager.beginTransaction()
-                fragmentTransaction.replace(R.id.nav_host_fragment, TapInFragment())
+                fragmentTransaction.replace(R.id.nav_host_fragment, FragmentTapInAlt())
                 fragmentTransaction.commit()
                 performHaptic(it)
             }
@@ -245,9 +245,6 @@ class Home : Fragment(),ResponseCallback, OnMapReadyCallback{
             else{
                 binding.fragmentHomeFacilityMapContainer.visibility = View.GONE
             }
-        }
-        binding.fragmentHomeTapInMaterialButton.setOnClickListener {
-
         }
         return binding.root
     }
