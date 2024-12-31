@@ -166,7 +166,9 @@
 
     </style>
 
-
+    <style name = "CircularImageView">
+        <item name="cornerSize">50%</item>
+    </style>
 
     <style name="Theme.Polaris.MapFrame" parent="Theme.Polaris.Secondary">
         <item name="android:layout_width">90dp</item>

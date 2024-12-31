@@ -87,7 +87,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:backgroundTint="?attr/colorSurface">
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/fragment_home_toggle_indoor_map_materialButton"
                     android:layout_width="match_parent"
