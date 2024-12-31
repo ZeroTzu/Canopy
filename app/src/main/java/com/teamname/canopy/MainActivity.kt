@@ -35,6 +35,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
+import com.google.firebase.Timestamp
 import com.teamname.canopy.databinding.ActivityMainBinding
 import com.teamname.canopy.ui.theme.PolarisTheme
 import com.teamname.canopy.utils.Constants
@@ -49,6 +50,9 @@ import com.teamname.canopy.utils.CanopyCustomAdapter
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
 val Context.dataStore by preferencesDataStore(name = "user_prefs")
 
@@ -134,6 +138,29 @@ class MainActivity : AppCompatActivity() {
                 exception ->
                 Log.i("CanopyMainActivity" , exception.toString())
             }
+        db.collection("users").document(firebaseAuth.uid.toString()).get().addOnSuccessListener { result ->
+
+            val name = result["name"] as String?
+            val email = firebaseAuth.currentUser?.email
+            val phoneNumber = result["phoneNumber"] as String?
+            val joinedDate = result["createdTimestamp"] as Timestamp?
+            val points = result["pointsEarned"] as Long?
+            val uid = firebaseAuth.uid
+
+            if (uid != null && email != null) {
+                userClass = UserClass(email,uid)
+                userClass.name = name
+                userClass.phoneNumber = phoneNumber
+                userClass.joinedDate = joinedDate?.toInstant()
+                userClass.points = points?.toInt()
+                userDocumentId = result.id
+            }
+            viewModel.value.userClass.value = userClass
+
+
+
+
+        }
 
         //check if user is logged in under firebase
         val currentUser = firebaseAuth.currentUser
@@ -187,7 +214,7 @@ class MainActivity : AppCompatActivity() {
                         binding.mainActivitySidePanel.menu.getItem(i).isChecked = false
                     }
                     it.isChecked = true
-                    replaceFragment(Command())
+                    replaceFragment(ProfileFragment())
                     drawerLayout.close()
                 }
                 R.id.side_panel_points -> {
@@ -395,9 +422,11 @@ fun GreetingPreview() {
 class MainActivityViewModel : ViewModel() {
     var isSertviceRunning = mutableStateOf(false)
         private set
+    var userClass = MutableLiveData<UserClass>()
     fun setIsBackgroundServiceRunning(isRunning: Boolean) {
         isSertviceRunning.value = isRunning
     }
+
 
     private var canopiesList = MutableLiveData<List<Canopy>>()
 

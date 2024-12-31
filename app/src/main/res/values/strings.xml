@@ -135,5 +135,14 @@
     <string name="volunteer_history">Volunteer History</string>
     <string name="points">Points</string>
     <string name="hold_near_reader">Hold Near Reader</string>
+    <string name="example_tan">Example Tan</string>
+    <string name="name">Name</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="example_phone_number">91234567</string>
+    <string name="user_id">User Id</string>
+    <string name="example_user_id">X893210nsa22</string>
+    <string name="joined_date">Joined Date</string>
+    <string name="example_date">10 Dec 2024</string>
+    <string name="example_email_address">example@test.com</string>
 
 </resources>
