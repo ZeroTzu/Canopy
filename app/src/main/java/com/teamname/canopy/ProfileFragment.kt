@@ -1,11 +1,15 @@
 package com.teamname.canopy
 
+import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.teamname.canopy.databinding.FragmentProfileBinding
@@ -13,6 +17,7 @@ import com.teamname.canopy.utils.UserClass
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
+import com.teamname.canopy.R
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -48,6 +53,7 @@ class ProfileFragment : Fragment() {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
 
         mainViewModel= ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
+        firestore = FirebaseFirestore.getInstance()
         firebaseAuth = (activity as MainActivity).firebaseAuth
         binding.fragmentProfileCloseButton.setOnClickListener {
             var fragmentTransaction = parentFragmentManager.beginTransaction()
@@ -83,16 +89,59 @@ class ProfileFragment : Fragment() {
             binding.fragmentProfileJoinedDateTextView.text="Unknown Joined Date"
         }
 
-
-
-
-            binding.fragmentProfileNameTextView.text=mainViewModel.userClass.value?.name.toString()
+        binding.fragmentProfileNameTextView.text=mainViewModel.userClass.value?.name.toString()
         binding.fragmentProfilePhoneNumberTextView.text=mainViewModel.userClass.value?.phoneNumber.toString()
 
+
+        binding.fragmentProfileNameTextView.setOnClickListener {
+            //open dialogue view
+            val dialogView = layoutInflater.inflate(R.layout.dialog_layout_text_input, null)
+            val textInputLayout = dialogView.findViewById<TextInputLayout>(R.id.dialog_layout_text_input_name_textInputLayout)
+            textInputLayout.hint="Name"
+            textInputLayout.editText?.setText(mainViewModel.userClass.value?.name.toString())
+            val materialAlertDialogBuilder = MaterialAlertDialogBuilder(requireContext())
+            materialAlertDialogBuilder.setTitle("Name")
+            materialAlertDialogBuilder.setPositiveButton("OK") { dialog, which ->
+                updateFireStoreUserProfile("name",textInputLayout.editText?.text.toString(),dialog,materialAlertDialogBuilder)
+            }
+            materialAlertDialogBuilder.setNegativeButton("Cancel") { dialog, which ->
+                dialog.dismiss()
+            }
+            materialAlertDialogBuilder.setView(dialogView)
+            materialAlertDialogBuilder.show()
+        }
+
+        binding.fragmentProfilePhoneNumberTextView.setOnClickListener {
+            //open dialogue view
+            val dialogView = layoutInflater.inflate(R.layout.dialog_layout_text_input, null)
+            val textInputLayout = dialogView.findViewById<TextInputLayout>(R.id.dialog_layout_text_input_name_textInputLayout)
+            textInputLayout.hint="Phone Number"
+            textInputLayout.editText?.setText(mainViewModel.userClass.value?.phoneNumber.toString())
+            val materialAlertDialogBuilder = MaterialAlertDialogBuilder(requireContext())
+            materialAlertDialogBuilder.setTitle("Phone Number")
+            materialAlertDialogBuilder.setPositiveButton("OK") { dialog, which ->
+                updateFireStoreUserProfile("phoneNumber",textInputLayout.editText?.text.toString(),dialog,materialAlertDialogBuilder)
+            }
+            materialAlertDialogBuilder.setNegativeButton("Cancel") { dialog, which ->
+                dialog.dismiss()
+            }
+            materialAlertDialogBuilder.setView(dialogView)
+            materialAlertDialogBuilder.show()
+        }
 
         // Inflate the layout for this fragment
 
         return binding.root
+    }
+    fun updateFireStoreUserProfile(field:String,value:Any,dialogInterface: DialogInterface,materialAlertDialogBuilder: MaterialAlertDialogBuilder){
+
+        firestore.collection("users").document(firebaseAuth.currentUser?.uid.toString()).update(field,value)
+            .addOnSuccessListener {
+                materialAlertDialogBuilder.setMessage("Done")
+            }.addOnFailureListener {
+                materialAlertDialogBuilder.setMessage("Failed to update name")
+            }
+        dialogInterface.dismiss()
     }
 
     companion object {
