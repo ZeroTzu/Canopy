@@ -1,6 +1,11 @@
 package com.teamname.canopy.utils
 
-data class UserClass(val email:String, val password:String) {
-    private var uid:String?=null
-    private var username:String?=null
+import java.time.Instant
+
+data class UserClass(val email:String, val uid:String) {
+     var name:String?=null
+     var phoneNumber:String?=null
+     var joinedDate:Instant?=null
+     var points:Int?=null
+
 }
