@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".VolunteerHistoryFragment"
-    android:theme="@style/AppTheme">
+    android:theme="@style/AppTheme"
+    android:padding="@dimen/small_margin">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -17,7 +18,7 @@
             android:orientation="vertical">
 
             <com.google.android.material.card.MaterialCardView
-                android:layout_marginTop="5dp"
+                android:layout_marginBottom="@dimen/small_margin"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 style="?attr/materialCardViewFilledStyle"
@@ -71,7 +72,7 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
             <com.google.android.material.card.MaterialCardView
-                android:layout_marginTop="5dp"
+                android:layout_marginBottom="@dimen/big_margin"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 style="?attr/materialCardViewFilledStyle"
@@ -152,11 +153,16 @@
                             android:text="KEEP IT UP!"
                             android:padding="8dp"/>
                     </LinearLayout>
-
                 </FrameLayout>
             </com.google.android.material.card.MaterialCardView>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/previous_sessions"
+                android:textColor="?attr/colorOnSurface"
+                android:textStyle="bold"
+                android:layout_marginBottom="@dimen/small_margin"/>
             <androidx.recyclerview.widget.RecyclerView
-                android:layout_marginTop="5dp"
                 android:id="@+id/fragment_volunteer_history_recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">

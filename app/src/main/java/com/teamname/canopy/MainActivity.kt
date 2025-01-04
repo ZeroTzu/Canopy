@@ -12,6 +12,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.HapticFeedbackConstants
+import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
 import android.widget.TwoLineListItem
@@ -85,7 +87,14 @@ class MainActivity : AppCompatActivity() {
         FirebaseApp.initializeApp(baseContext)
         firebaseAuth=FirebaseAuth.getInstance()
         firestore=FirebaseFirestore.getInstance()
-        var db = Firebase.firestore
+        binding = ActivityMainBinding.inflate(layoutInflater)
+
+        val currentUser = firebaseAuth.currentUser
+        if (currentUser == null) {
+            reload()
+        }
+        var db = firestore
+
         db.collection("canopies")
             .get()
             .addOnSuccessListener {
@@ -120,54 +129,22 @@ class MainActivity : AppCompatActivity() {
 
                 }
                 viewModel.value.setCanopiesList(tempCanopyList)
-                val canopyList = viewModel.value.getCanopiesList().value
-
-                if (canopyList != null) {
-                    for (canopy in canopyList) {
-                        Log.i("CanopyMainActivity", "Name: ${canopy.canopyName}, " +
-                                "Coords: (${canopy.canopyCoords.latitude}, ${canopy.canopyCoords.longitude}), " +
-                                "Owner: ${canopy.canopyOwner}, " +
-                                "Address: ${canopy.canopyAddress}")
-                    }
-                } else {
-                    Log.i("CanopyMainActivity", "No data found in canopiesList.")
-                }
-
             }
             .addOnFailureListener {
                 exception ->
                 Log.i("CanopyMainActivity" , exception.toString())
             }
-        db.collection("users").document(firebaseAuth.uid.toString()).get().addOnSuccessListener { result ->
+        refreshUserClass()
 
-            val name = result["name"] as String?
-            val email = firebaseAuth.currentUser?.email
-            val phoneNumber = result["phoneNumber"] as String?
-            val joinedDate = result["createdTimestamp"] as Timestamp?
-            val points = result["pointsEarned"] as Long?
-            val uid = firebaseAuth.uid
-
-            if (uid != null && email != null) {
-                userClass = UserClass(email,uid)
-                userClass.name = name
-                userClass.phoneNumber = phoneNumber
-                userClass.joinedDate = joinedDate?.toInstant()
-                userClass.points = points?.toInt()
-                userDocumentId = result.id
-            }
-            viewModel.value.userClass.value = userClass
-
-
-
-
+        binding.mainActivityTapInMaterialButton.setOnClickListener {
+            var fragmentTransaction = supportFragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.nav_host_fragment, FragmentTapInAlt())
+            fragmentTransaction.commit()
+            performHaptic(it)
         }
 
         //check if user is logged in under firebase
-        val currentUser = firebaseAuth.currentUser
-        if (currentUser == null) {
-            reload()
-        }
-        binding = ActivityMainBinding.inflate(layoutInflater)
+
         setContentView(binding.root)
         //Request permissions (e.g. Camera, Audio etc.)
         if (allPermissionsGranted()) {
@@ -283,6 +260,37 @@ class MainActivity : AppCompatActivity() {
 
         }
         registerReceiver(serviceStatusReceiver,intentFilter, RECEIVER_EXPORTED)
+    }
+    fun refreshUserClass(){
+        firestore.collection("users").document(firebaseAuth.uid.toString()).get().addOnSuccessListener { result ->
+
+            val name = result["name"] as String?
+            val email = firebaseAuth.currentUser?.email
+            val phoneNumber = result["phoneNumber"] as String?
+            val joinedDate = result["createdTimestamp"] as Timestamp?
+            val points = result["pointsEarned"] as Long?
+            val uid = firebaseAuth.uid
+
+            if (uid != null && email != null) {
+                var tempUserClass = UserClass(email,uid)
+                tempUserClass.name = name
+                tempUserClass.phoneNumber = phoneNumber
+                tempUserClass.joinedDate = joinedDate?.toInstant()
+                tempUserClass.points = points?.toInt()
+                userDocumentId = result.id
+                viewModel.value.userClass.value = tempUserClass
+            }
+            else{
+                viewModel.value.userClass.value = null
+            }
+        }
+    }
+    fun performHaptic(view: View){
+        val successful = view.isActivated
+        when (successful){
+            true -> view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
+            false -> view.performHapticFeedback(HapticFeedbackConstants.REJECT)
+        }
     }
     private fun reload(){
         val intent = Intent(this@MainActivity, LoginActivity::class.java)
@@ -422,7 +430,7 @@ fun GreetingPreview() {
 class MainActivityViewModel : ViewModel() {
     var isSertviceRunning = mutableStateOf(false)
         private set
-    var userClass = MutableLiveData<UserClass>()
+    var userClass = MutableLiveData<UserClass?>()
     fun setIsBackgroundServiceRunning(isRunning: Boolean) {
         isSertviceRunning.value = isRunning
     }

@@ -60,39 +60,12 @@ class ProfileFragment : Fragment() {
             fragmentTransaction.replace(R.id.nav_host_fragment, Home())
             fragmentTransaction.commit()
         }
-
-        binding.fragmentProfileUidTextView.text=firebaseAuth.currentUser?.uid.toString()
-        binding.fragmentProfileEmailAddressTextView.text=firebaseAuth.currentUser?.email.toString()
-
-        if(mainViewModel.userClass.value?.name!=null){
-            binding.fragmentProfileNameTextView.text=mainViewModel.userClass.value?.name.toString()
-            binding.fragmentProfileNameMainTextView.text=mainViewModel.userClass.value?.name.toString()
-
+        val mainActivity = activity as MainActivity
+        mainActivity.refreshUserClass()
+        refreshProfileData(mainViewModel.userClass.value)
+        mainViewModel.userClass.observe(viewLifecycleOwner){
+            refreshProfileData(it)
         }
-        else{
-            binding.fragmentProfileNameTextView.text="Unknown Name"
-            binding.fragmentProfileNameMainTextView.text="Unknown Name"
-
-        }
-        if(mainViewModel.userClass.value?.phoneNumber!=null){
-            binding.fragmentProfilePhoneNumberTextView.text=mainViewModel.userClass.value?.phoneNumber.toString()
-        }
-        else{
-            binding.fragmentProfilePhoneNumberTextView.text="Unknown Phone Number"
-        }
-        if(mainViewModel.userClass.value?.joinedDate!=null){
-            val joinedDateDateTime = LocalDateTime.ofInstant(mainViewModel.userClass.value?.joinedDate, ZoneOffset.UTC).format(
-                DateTimeFormatter.ofPattern("dd MMM uuuu").withZone(ZoneOffset.ofHours(8)))
-            binding.fragmentProfileJoinedDateTextView.text=joinedDateDateTime
-        }
-        else{
-            binding.fragmentProfileJoinedDateTextView.text="Unknown Joined Date"
-        }
-
-        binding.fragmentProfileNameTextView.text=mainViewModel.userClass.value?.name.toString()
-        binding.fragmentProfilePhoneNumberTextView.text=mainViewModel.userClass.value?.phoneNumber.toString()
-
-
         binding.fragmentProfileNameTextView.setOnClickListener {
             //open dialogue view
             val dialogView = layoutInflater.inflate(R.layout.dialog_layout_text_input, null)
@@ -103,6 +76,7 @@ class ProfileFragment : Fragment() {
             materialAlertDialogBuilder.setTitle("Name")
             materialAlertDialogBuilder.setPositiveButton("OK") { dialog, which ->
                 updateFireStoreUserProfile("name",textInputLayout.editText?.text.toString(),dialog,materialAlertDialogBuilder)
+                mainActivity.refreshUserClass()
             }
             materialAlertDialogBuilder.setNegativeButton("Cancel") { dialog, which ->
                 dialog.dismiss()
@@ -121,6 +95,7 @@ class ProfileFragment : Fragment() {
             materialAlertDialogBuilder.setTitle("Phone Number")
             materialAlertDialogBuilder.setPositiveButton("OK") { dialog, which ->
                 updateFireStoreUserProfile("phoneNumber",textInputLayout.editText?.text.toString(),dialog,materialAlertDialogBuilder)
+                mainActivity.refreshUserClass()
             }
             materialAlertDialogBuilder.setNegativeButton("Cancel") { dialog, which ->
                 dialog.dismiss()
@@ -132,6 +107,39 @@ class ProfileFragment : Fragment() {
         // Inflate the layout for this fragment
 
         return binding.root
+    }
+    fun refreshProfileData(userClass: UserClass?){
+
+        binding.fragmentProfileUidTextView.text=firebaseAuth.currentUser?.uid.toString()
+        binding.fragmentProfileEmailAddressTextView.text=firebaseAuth.currentUser?.email.toString()
+
+        if(mainViewModel.userClass.value?.name!=null){
+            binding.fragmentProfileNameTextView.text=userClass?.name.toString()
+            binding.fragmentProfileNameMainTextView.text=userClass?.name.toString()
+
+        }
+        else{
+            binding.fragmentProfileNameTextView.text="Unknown Name"
+            binding.fragmentProfileNameMainTextView.text="Unknown Name"
+
+        }
+        if(mainViewModel.userClass.value?.phoneNumber!=null){
+            binding.fragmentProfilePhoneNumberTextView.text=userClass?.phoneNumber.toString()
+        }
+        else{
+            binding.fragmentProfilePhoneNumberTextView.text="Unknown Phone Number"
+        }
+        if(mainViewModel.userClass.value?.joinedDate!=null){
+            val joinedDateDateTime = LocalDateTime.ofInstant(userClass?.joinedDate, ZoneOffset.UTC).format(
+                DateTimeFormatter.ofPattern("dd MMM uuuu").withZone(ZoneOffset.ofHours(8)))
+            binding.fragmentProfileJoinedDateTextView.text=joinedDateDateTime
+        }
+        else{
+            binding.fragmentProfileJoinedDateTextView.text="Unknown Joined Date"
+        }
+
+        binding.fragmentProfileNameTextView.text=userClass?.name.toString()
+        binding.fragmentProfilePhoneNumberTextView.text=userClass?.phoneNumber.toString()
     }
     fun updateFireStoreUserProfile(field:String,value:Any,dialogInterface: DialogInterface,materialAlertDialogBuilder: MaterialAlertDialogBuilder){
 

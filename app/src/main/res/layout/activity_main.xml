@@ -12,7 +12,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
-
+        <com.teamname.canopy.ui.MovableFloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/baseline_tap_and_play_24"
+            app:iconTint="?attr/colorOnPrimary"
+            android:text="@string/tap_in"
+            android:textColor="?attr/colorOnPrimary"
+            android:textStyle="bold"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            android:id="@+id/main_activity_tap_in_materialButton"
+            android:backgroundTint="?attr/colorPrimary" />
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/main_activity_top_appBarLayout"
             android:layout_width="match_parent"
