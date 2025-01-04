@@ -4,6 +4,9 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.os.Build.VERSION_CODES.S
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -124,6 +127,7 @@ class Home : Fragment(),ResponseCallback, OnMapReadyCallback{
         dataPointViews = ArrayList()
         selectedCanopy = MutableLiveData<Canopy?>()
 
+
         selectedCanopy.observe(this){
             if (it!=null) {
 
@@ -202,12 +206,6 @@ class Home : Fragment(),ResponseCallback, OnMapReadyCallback{
                     // No action needed here
                 }
             })
-            binding.fragmentHomeTapInMaterialButton.setOnClickListener {
-                var fragmentTransaction = parentFragmentManager.beginTransaction()
-                fragmentTransaction.replace(R.id.nav_host_fragment, FragmentTapInAlt())
-                fragmentTransaction.commit()
-                performHaptic(it)
-            }
         }
     }
 
@@ -246,6 +244,14 @@ class Home : Fragment(),ResponseCallback, OnMapReadyCallback{
                 binding.fragmentHomeFacilityMapContainer.visibility = View.GONE
             }
         }
+        binding.fragmentHomeFacilityMap.setOnClickListener {
+            var intent = Intent(Intent.ACTION_VIEW)
+            intent.setData(Uri.parse("https://arvr.google.com/scene-viewer/1.0?file=https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF/Avocado.gltf"))
+            intent.setPackage("com.google.android.googlequicksearchbox")
+            intent.putExtra("mode","3d_only")
+            startActivity(intent)
+
+        }
         return binding.root
     }
 
@@ -261,13 +267,7 @@ class Home : Fragment(),ResponseCallback, OnMapReadyCallback{
             Toast.makeText(context, response, Toast.LENGTH_LONG).show()
         }
     }
-    fun performHaptic(view: View){
-        val successful = view.isActivated
-        when (successful){
-            true -> view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
-            false -> view.performHapticFeedback(HapticFeedbackConstants.REJECT)
-        }
-    }
+
     private suspend fun logoutUser(){
         requireActivity().dataStore.edit { preferences ->
             preferences.clear()

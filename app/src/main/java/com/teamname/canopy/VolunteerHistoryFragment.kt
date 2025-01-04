@@ -1,6 +1,7 @@
 package com.teamname.canopy
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -50,6 +51,7 @@ class VolunteerHistoryFragment : Fragment() {
             var totalHours = 0.0 as Double
             var totalPoints = 0
             var visitedCanopiesCount = 0
+            var uniqueCanopyIds = mutableSetOf<String>()
             var sessionCount = 0
 
             val instant: Instant = Instant.now()
@@ -66,6 +68,13 @@ class VolunteerHistoryFragment : Fragment() {
                     if (session.tappedOutCanopy!=null){
                         sessionCount++
                     }
+                    Log.d("CanopyVolunteerHistory",volunteerHistory.filter { it.tappedOutTimestamp != null }.map { it.tappedInCanopy}.toString())
+
+                    if (session.tappedInCanopy !in uniqueCanopyIds){
+                        visitedCanopiesCount++
+                        uniqueCanopyIds.add(session.tappedInCanopy)
+                    }
+
                 }
                 val points = session.getPoints()
                 if (points != null) {
@@ -73,10 +82,9 @@ class VolunteerHistoryFragment : Fragment() {
                 }
             }
 
-            visitedCanopiesCount = volunteerHistory
-                .filter { it.tappedOutTimestamp != null }
-                .map { it.tappedInCanopy }
-                .distinct().size
+
+
+            volunteerHistory.reverse()
 
 
             binding.fragmentVolunteerHistoryPointsTextView.text =points.toString()
