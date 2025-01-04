@@ -26,7 +26,8 @@
                     android:layout_width="0dp"
                     android:layout_weight="2"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/baseline_account_box_24"/>
+                    android:src="@drawable/baseline_account_box_24"
+                    app:tint="?attr/colorOnSurface" />
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -59,7 +60,8 @@
                     android:layout_width="0dp"
                     android:layout_weight="2"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/baseline_phone_android_24"/>
+                    android:src="@drawable/baseline_phone_android_24"
+                    app:tint="?attr/colorOnSurface"/>
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -90,7 +92,8 @@
                     android:layout_width="0dp"
                     android:layout_weight="2"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/baseline_phone_android_24"/>
+                    android:src="@drawable/baseline_phone_android_24"
+                    app:tint="?attr/colorOnSurface"/>
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -121,7 +124,8 @@
                     android:layout_width="0dp"
                     android:layout_weight="2"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/baseline_account_box_24"/>
+                    android:src="@drawable/baseline_account_box_24"
+                    app:tint="?attr/colorOnSurface"/>
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -153,7 +157,8 @@
                     android:layout_width="0dp"
                     android:layout_weight="2"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/baseline_calendar_month_24"/>
+                    android:src="@drawable/baseline_calendar_month_24"
+                    app:tint="?attr/colorOnSurface"/>
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
