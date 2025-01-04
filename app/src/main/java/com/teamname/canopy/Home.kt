@@ -202,12 +202,6 @@ class Home : Fragment(),ResponseCallback, OnMapReadyCallback{
                     // No action needed here
                 }
             })
-            binding.fragmentHomeTapInMaterialButton.setOnClickListener {
-                var fragmentTransaction = parentFragmentManager.beginTransaction()
-                fragmentTransaction.replace(R.id.nav_host_fragment, FragmentTapInAlt())
-                fragmentTransaction.commit()
-                performHaptic(it)
-            }
         }
     }
 
@@ -261,13 +255,7 @@ class Home : Fragment(),ResponseCallback, OnMapReadyCallback{
             Toast.makeText(context, response, Toast.LENGTH_LONG).show()
         }
     }
-    fun performHaptic(view: View){
-        val successful = view.isActivated
-        when (successful){
-            true -> view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
-            false -> view.performHapticFeedback(HapticFeedbackConstants.REJECT)
-        }
-    }
+
     private suspend fun logoutUser(){
         requireActivity().dataStore.edit { preferences ->
             preferences.clear()

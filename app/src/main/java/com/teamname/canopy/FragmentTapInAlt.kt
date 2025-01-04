@@ -19,8 +19,9 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.teamname.canopy.databinding.FragmentTapInAltBinding
 import com.teamname.canopy.databinding.FragmentTapInBinding
+import com.teamname.canopy.ui.MovableFloatingActionButton
 import kotlin.random.Random
-
+import com.teamname.canopy.R
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
@@ -210,6 +211,8 @@ class FragmentTapInAlt : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val movableButton = (activity as MainActivity).findViewById<MovableFloatingActionButton>(R.id.main_activity_tap_in_materialButton)
+        movableButton.visibility = View.GONE
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
@@ -223,6 +226,11 @@ class FragmentTapInAlt : Fragment() {
         animationDrawable.start()
     }
 
+    override fun onStop() {
+        super.onStop()
+        val movableButton = (activity as MainActivity).findViewById<MovableFloatingActionButton>(R.id.main_activity_tap_in_materialButton)
+        movableButton.visibility = View.VISIBLE
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
