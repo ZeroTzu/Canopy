@@ -25,6 +25,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.datastore.preferences.core.edit
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.replace
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -37,6 +38,10 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.ar.core.ArCoreApk
+import com.google.ar.core.Config
+import com.google.ar.core.Session
+import com.google.ar.core.exceptions.UnavailableException
 import com.teamname.canopy.databinding.FragmentHomeBinding
 import com.teamname.canopy.utils.Canopy
 import com.teamname.canopy.utils.CanopyCustomAdapter
@@ -44,6 +49,7 @@ import com.teamname.canopy.utils.CanopyRecyclerViewAdapter
 import com.teamname.canopy.utils.Constants
 import com.teamname.canopy.utils.MLServiceRequest.ResponseCallback
 import com.teamname.canopy.utils.THLDataPoint
+import io.github.sceneview.rememberEngine
 import kotlinx.coroutines.selects.select
 import org.chromium.net.CronetEngine
 import java.util.concurrent.CountDownLatch
@@ -245,12 +251,13 @@ class Home : Fragment(),ResponseCallback, OnMapReadyCallback{
             }
         }
         binding.fragmentHomeFacilityMap.setOnClickListener {
-            var intent = Intent(Intent.ACTION_VIEW)
-            intent.setData(Uri.parse("https://arvr.google.com/scene-viewer/1.0?file=https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF/Avocado.gltf"))
-            intent.setPackage("com.google.android.googlequicksearchbox")
-            intent.putExtra("mode","3d_only")
-            startActivity(intent)
-
+            if (selectedCanopy.value==null)
+            {
+                return@setOnClickListener
+            }
+            var fragmentTransaction= parentFragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.nav_host_fragment, SpatialViewFragment.newInstance(selectedCanopy.value!!.canopyName,"temp"))
+            fragmentTransaction.commit()
         }
         return binding.root
     }
@@ -308,7 +315,54 @@ class Home : Fragment(),ResponseCallback, OnMapReadyCallback{
     fun updateServiceStatus(isRunning: Boolean) {
         Log.i("PolarisHome", "updateServiceStatus method called")
         var currentlyShownState=false
+    }
+    fun isARCoreSupportedAndUpToDate(): Boolean {
+        val availability = ArCoreApk.getInstance().checkAvailability(requireContext())
 
+        return when (availability) {
+            ArCoreApk.Availability.SUPPORTED_INSTALLED -> true
 
+            ArCoreApk.Availability.SUPPORTED_APK_TOO_OLD, ArCoreApk.Availability.SUPPORTED_NOT_INSTALLED -> {
+                try {
+                    val installStatus = ArCoreApk.getInstance().requestInstall(requireActivity(), true)
+                    when (installStatus) {
+                        ArCoreApk.InstallStatus.INSTALL_REQUESTED -> {
+                            Log.i("CanopyHomeFragment", "ARCore installation requested.")
+                            false // Installation requested; return false for now
+                        }
+                        ArCoreApk.InstallStatus.INSTALLED -> true
+                    }
+                } catch (e: UnavailableException) {
+                    Log.e("CanopyHomeFragment", "ARCore not installed", e)
+                    false
+                }
+            }
+
+            ArCoreApk.Availability.UNSUPPORTED_DEVICE_NOT_CAPABLE -> {
+                Log.w("CanopyHomeFragment", "This device is not capable of ARCore.")
+                false
+            }
+
+            ArCoreApk.Availability.UNKNOWN_CHECKING -> {
+                Log.d("CanopyHomeFragment", "ARCore availability checking; scheduling recheck.")
+                handler.postDelayed({
+                    isARCoreSupportedAndUpToDate() // Asynchronous call; no immediate return value
+                }, 200)
+                false // Return false immediately
+            }
+
+            ArCoreApk.Availability.UNKNOWN_ERROR, ArCoreApk.Availability.UNKNOWN_TIMED_OUT -> {
+                Log.e("CanopyHomeFragment", "Error checking ARCore availability. Retrying...")
+                handler.postDelayed({
+                    isARCoreSupportedAndUpToDate() // Asynchronous call; no immediate return value
+                }, 200)
+                false // Return false immediately
+            }
+
+            else -> {
+                Log.e("CanopyHomeFragment", "Unhandled ARCore availability state: $availability")
+                false
+            }
+        }
     }
 }
