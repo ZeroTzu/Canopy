@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.GeoPoint
 import com.google.type.DateTime
+import io.github.sceneview.math.Position
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -199,4 +200,8 @@ class VolunteerSessionRecyclerViewAdapter(
         notifyDataSetChanged()
     }
 }
+
+
+data class SceneAnnotation(val position: Position,
+                      val text: String )
 

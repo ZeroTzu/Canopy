@@ -96,6 +96,8 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(platform(libs.firebase.bom))
     implementation(libs.google.guava)
+    implementation(libs.google.ar.core)
+    implementation(libs.github.sceneview)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
