@@ -59,7 +59,8 @@ class SpatialViewFragment : Fragment() {
             sceneView.cameraNode.apply {
                 position = Position(z = 20.0f)
             }
-            val modelFile = "environments/super_jofo.glb"
+            var modelFile = "environments/avocado1.glb"
+            modelFile = "environments/MaterialSuite.glb"
             val modelInstance = sceneView.modelLoader.createModelInstance(Uri.parse(modelFile).toString())
             val modelNode = ModelNode(
                 modelInstance = modelInstance,
