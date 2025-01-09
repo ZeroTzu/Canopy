@@ -34,13 +34,14 @@
         </FrameLayout>
 
         <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/fragment_login_landing_animation"
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:layout_gravity="center_vertical"
-            app:lottie_rawRes="@raw/spaceman_animation"
+            app:lottie_rawRes="@raw/city_lottie"
             app:lottie_loop="true"
             app:lottie_autoPlay="true"
-            app:lottie_progress='1'
+
 
             />
         <LinearLayout
