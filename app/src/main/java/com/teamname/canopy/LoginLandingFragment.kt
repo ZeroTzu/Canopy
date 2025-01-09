@@ -1,11 +1,13 @@
 package com.teamname.canopy
 
+import android.animation.ValueAnimator
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.airbnb.lottie.LottieAnimationView
 import com.teamname.canopy.databinding.FragmentLoginLandingBinding
 
 // TODO: Rename parameter arguments, choose names that match
@@ -41,6 +43,9 @@ class LoginLandingFragment : Fragment() {
             Log.i("PolarisLoginActivity", "onCreateView: Register button clicked")
             requireActivity().supportFragmentManager.beginTransaction().replace(R.id.login_activity_fragmentContainerView,LoginRegisterFormFragment()).commit()
         }
+        var animationLottie = binding.fragmentLoginLandingAnimation
+        animationLottie.animate()
+        animationLottie.repeatCount=ValueAnimator.INFINITE
         return binding.root
     }
 

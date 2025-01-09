@@ -60,7 +60,7 @@ class SpatialViewFragment : Fragment() {
                 position = Position(z = 20.0f)
             }
             var modelFile = "environments/avocado1.glb"
-            modelFile = "environments/MaterialSuite.glb"
+            modelFile = "environments/proid_model_2.glb"
             val modelInstance = sceneView.modelLoader.createModelInstance(Uri.parse(modelFile).toString())
             val modelNode = ModelNode(
                 modelInstance = modelInstance,
