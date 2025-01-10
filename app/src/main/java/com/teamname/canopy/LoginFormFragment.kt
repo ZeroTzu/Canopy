@@ -2,12 +2,14 @@ package com.teamname.canopy
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Matrix
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.lifecycleScope
@@ -76,6 +78,35 @@ class LoginFormFragment : Fragment() {
                     }
                 }
         }
+//        val matrix = Matrix()
+//        val imageView = binding.fragmentLoginFormAppIconImageView
+//        val drawable = imageView.drawable
+//
+//// Dimensions of the drawable
+//        val drawableWidth = drawable.intrinsicWidth.toFloat()
+//        val drawableHeight = drawable.intrinsicHeight.toFloat()
+//
+//// Dimensions of the ImageView
+//        val viewWidth = imageView.width.toFloat()
+//        val viewHeight = imageView.height.toFloat()
+//
+//// Scale factor
+//        val scale = 2.5f
+//
+//// Calculate translation offsets for centering
+//        val dx = (viewWidth - drawableWidth * scale) / 2
+//        val dy = (viewHeight - drawableHeight * scale) / 2
+//
+//// Apply the scale and translation
+//        matrix.setScale(scale, scale)
+//        matrix.postTranslate(dx, dy)
+//
+//// Set the matrix and redraw
+//        imageView.imageMatrix = matrix
+//        imageView.invalidate()
+
+
+
         binding.fragmentLoginFormGoogleCustomButtonLayout.apply {
             customButtonMaterialButton.setIconResource(R.drawable.google)
             customButtonTextView.text=R.string.google_sign_in.toString()
