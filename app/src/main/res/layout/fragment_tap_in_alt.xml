@@ -12,14 +12,14 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/fragment_tap_in_alt_close_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style = "?attr/materialIconButtonStyle"
-            app:icon="@drawable/baseline_close_24"
-            android:layout_gravity="end"
-            app:iconTint="?attr/colorOnSurface"/>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/fragment_tap_in_alt_close_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style = "?attr/materialIconButtonStyle"
+                app:icon="@drawable/baseline_close_24"
+                android:layout_gravity="end"
+                app:iconTint="?attr/colorOnSurface"/>
         </FrameLayout>
 
         <LinearLayout

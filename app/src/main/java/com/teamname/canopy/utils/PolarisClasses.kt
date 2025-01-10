@@ -4,8 +4,10 @@ import android.R
 import android.R.layout
 import android.R.attr.data
 import android.R.attr.resource
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.text.format.Formatter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +23,7 @@ import com.google.type.DateTime
 import io.github.sceneview.math.Position
 import java.time.Instant
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
@@ -204,4 +207,73 @@ class VolunteerSessionRecyclerViewAdapter(
 
 data class SceneAnnotation(val position: Position,
                       val text: String )
+
+
+
+class Event(
+    val eventStartDateTime: Instant,
+    val eventEndDateTime:Instant,
+    val eventVenue: String,
+    val eventName: String
+) {
+    fun generateEventPeriod(): String {
+        val duration = eventStartDateTime.toEpochMilli() - eventEndDateTime.toEpochMilli()
+        val hours = duration / (1000 * 60 * 60)
+        val formatter = DateTimeFormatter.ofPattern("ha").withZone(ZoneId.systemDefault())
+        val startTime = formatter.format(eventStartDateTime).lowercase()
+        val endTime = formatter.format(eventEndDateTime).lowercase()
+        return "$startTime - $endTime"
+    }
+
+    fun generateEventStart(): String {
+        val formatter = DateTimeFormatter.ofPattern("dd MMMM, uuuu").withZone(ZoneId.systemDefault())
+        return formatter.format(eventStartDateTime).uppercase()
+    }
+}
+
+
+class EventRecyclerViewAdapter(
+    private var items: List<Event>,
+    private val onItemClick: (Event) -> Unit
+) : RecyclerView.Adapter<EventRecyclerViewAdapter.EventViewHolder>() {
+
+    // ViewHolder to bind the item views
+    inner class EventViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        private val titleTextView = view.findViewById<TextView>(canopyR.id.event_item_title)
+        private val dateTextView = view.findViewById<TextView>(canopyR.id.event_item_date)
+        private val timeTextView = view.findViewById<TextView>(canopyR.id.event_item_time)
+        private val venueTextView = view.findViewById<TextView>(canopyR.id.event_item_venue)
+        @SuppressLint("SetTextI18n")
+        fun bind(item: Event) {
+            titleTextView.text = item.eventName
+            dateTextView.text = item.generateEventStart()
+            timeTextView.text="Time: ${item.generateEventPeriod()}"
+            venueTextView.text="Venue: ${item.eventVenue}"
+
+            itemView.setOnClickListener { onItemClick(item) }
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(
+            canopyR.layout.event_item,
+            parent,
+            false
+        )
+        return EventViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
+        holder.bind(items[position])
+    }
+
+    override fun getItemCount(): Int = items.size
+
+    // Update the data when search results change
+    fun updateList(newItems: List<Event>) {
+        items = newItems
+        notifyDataSetChanged()
+    }
+}
+
 

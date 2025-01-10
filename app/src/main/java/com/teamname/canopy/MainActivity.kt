@@ -194,6 +194,15 @@ class MainActivity : AppCompatActivity() {
                     replaceFragment(ProfileFragment())
                     drawerLayout.close()
                 }
+
+                R.id.side_panel_upcoming_events -> {
+                    for (i in 0 until binding.mainActivitySidePanel.menu.size()) {
+                        binding.mainActivitySidePanel.menu.getItem(i).isChecked = false
+                    }
+                    it.isChecked = true
+                    replaceFragment(EventsFragment())
+                    drawerLayout.close()
+                }
                 R.id.side_panel_points -> {
 
                 }

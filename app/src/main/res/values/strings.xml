@@ -145,5 +145,6 @@
     <string name="example_date">10 Dec 2024</string>
     <string name="example_email_address">example@test.com</string>
     <string name="previous_sessions">Previous Sessions</string>
+    <string name="upcoming_events">Upcoming Events</string>
 
 </resources>
