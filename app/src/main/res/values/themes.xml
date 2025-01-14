@@ -33,6 +33,11 @@
         <item name="colorOnSurface">@color/polaris_violet_90</item>
     </style>
 
+    <style name ="RoundedCorners">
+
+        <item name= "cornerFamilyTopLeft">rounded</item>
+    </style>
+
     <style name="Theme.Polaris.CustomButtonFloatingWithIcon" parent="Widget.Material3.Button.ElevatedButton">
         <item name="android:layout_width">100dp</item>
         <item name="android:layout_height">100dp</item>

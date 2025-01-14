@@ -28,6 +28,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.replace
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -167,6 +168,7 @@ class Home : Fragment(),ResponseCallback, OnMapReadyCallback{
                 mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(it.canopyCoords.latitude, it.canopyCoords.longitude), 18f))
             }
         }
+
 
         mainViewModel.getCanopiesList().observe(this) { canopiesList ->
             val mutableCanopiesList = canopiesList.toMutableList()
