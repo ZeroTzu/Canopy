@@ -10,7 +10,8 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,7 +25,7 @@
                 style="?attr/materialCardViewFilledStyle"
                 android:elevation="8dp"
                 app:cardBackgroundColor="?attr/colorPrimary"
-                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.MediumComponent">
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.LargeComponent">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -56,8 +57,11 @@
                     <FrameLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="6">
-                        <com.google.android.material.imageview.ShapeableImageView
+                        android:layout_weight="6"
+                        android:background="@drawable/rounded_corner_background"
+                        android:clipToOutline="true"
+                        >
+                        <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:src="@drawable/farm"
@@ -90,7 +94,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/lighthouse"
+                        android:src="@drawable/gradient_radial"
                         app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.MediumComponent" />
 
                     <View
@@ -107,7 +111,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="This Month's Volunteering..."
-                            android:textColor="?attr/colorOnPrimary"
+                            android:textColor="?attr/colorOnSurfaceInverse"
                             android:textStyle="bold"
                             android:textSize="18sp"
                             android:padding="4dp"/>
@@ -116,7 +120,7 @@
                             android:id="@+id/fragment_volunteer_history_hours_textView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="?attr/colorOnPrimary"
+                            android:textColor="?attr/colorOnSurfaceInverse"
                             android:textStyle="bold"
                             android:textSize="18sp"
                             android:text="Over 18 HOURS"
@@ -126,7 +130,7 @@
                             android:id="@+id/fragment_volunteer_history_canopies_textView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="?attr/colorOnPrimary"
+                            android:textColor="?attr/colorOnSurfaceInverse"
                             android:textStyle="bold"
                             android:textSize="18sp"
                             android:text="Across 5 CANOPIES"
@@ -135,7 +139,7 @@
                             android:id="@+id/fragment_volunteer_history_sessions_textView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="?attr/colorOnPrimary"
+                            android:textColor="?attr/colorOnSurfaceInverse"
                             android:textStyle="bold"
                             android:textSize="18sp"
                             android:text="In 23 SESSIONS"
@@ -146,7 +150,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1"
-                            android:textColor="?attr/colorOnPrimary"
+                            android:textColor="?attr/colorOnSurfaceInverse"
                             android:textStyle="bold"
                             android:textSize="24sp"
                             android:gravity="center"

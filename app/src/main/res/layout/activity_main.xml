@@ -29,7 +29,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
-            app:liftOnScroll="true">
+            app:liftOnScroll="true"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
 
             <com.google.android.material.appbar.MaterialToolbar
@@ -43,6 +44,7 @@
                 app:navigationIconTint="?attr/colorPrimary"
                 app:navigationIcon="@drawable/baseline_menu_24"
                 app:layout_collapseMode="pin"
+                app:layout_scrollFlags="scroll|enterAlways"
                 app:elevation="10dp"
                 android:backgroundTint="?attr/colorOnPrimary"/>
         </com.google.android.material.appbar.AppBarLayout>
