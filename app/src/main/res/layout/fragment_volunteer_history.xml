@@ -14,6 +14,7 @@
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <LinearLayout
+            android:layout_marginTop="@dimen/fab_margin"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -22,9 +23,9 @@
                 android:layout_marginBottom="@dimen/small_margin"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                style="?attr/materialCardViewFilledStyle"
+                style="?attr/materialCardViewElevatedStyle"
                 android:elevation="8dp"
-                app:cardBackgroundColor="?attr/colorPrimary"
+                app:cardBackgroundColor="?attr/colorPrimarySurface"
                 app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.LargeComponent">
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -40,7 +41,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Total Points: "
-                            android:textColor="?attr/colorOnPrimary"
+                            android:textColor="?attr/colorOnPrimarySurface"
                             android:textStyle="bold"
                             android:textSize="16sp"
                             />
@@ -49,7 +50,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="1254"
-                            android:textColor="?attr/colorOnPrimary"
+                            android:textColor="?attr/colorOnPrimarySurface"
                             android:textStyle="bold"
                             android:textSize="16sp"
                             />
@@ -78,7 +79,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_marginBottom="@dimen/big_margin"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="wrap_content"
                 style="?attr/materialCardViewFilledStyle"
                 android:elevation="8dp"
                 app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.MediumComponent">
@@ -110,41 +111,88 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="This Month's Volunteering..."
+                            android:text="@string/this_months_contributions"
                             android:textColor="?attr/colorOnSurfaceInverse"
                             android:textStyle="bold"
-                            android:textSize="18sp"
+                            android:textSize="@dimen/mediumLarge_text_size"
                             android:padding="4dp"/>
+                        <androidx.core.widget.ContentLoadingProgressBar
+                            android:id="@+id/fragment_volunteer_history_hours_progressBar"
+                            android:layout_width="match_parent"
+                            android:theme="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                            android:layout_height="2dp"
+                            android:backgroundTint="?attr/colorOnSurface"/>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Duration:"
+                                android:textColor="?attr/colorOnSurfaceInverse"
+                                android:textStyle="bold"
+                                android:textSize="18sp"
+                                android:padding="4dp"
+                                />
+                            <LinearLayout
+                                android:gravity="end"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:id="@+id/fragment_volunteer_history_hours_textView"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="?attr/colorOnSurfaceInverse"
+                                    android:textStyle="bold"
+                                    android:textSize="@dimen/medium_text_size"
+                                    android:text="Over 18 HOURS"
+                                    android:padding="4dp"
+                                    />
+
+                                <TextView
+                                    android:id="@+id/fragment_volunteer_history_sessions_textView"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="?attr/colorOnSurfaceInverse"
+                                    android:textStyle="bold"
+                                    android:textSize="@dimen/medium_text_size"
+                                    android:text="In 23 SESSIONS"
+                                    android:padding="4dp"
+                                    />
+                            </LinearLayout>
+                        </LinearLayout>
 
                         <TextView
-                            android:id="@+id/fragment_volunteer_history_hours_textView"
+                            android:layout_marginTop="@dimen/fab_margin"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:text="@string/most_visited"
                             android:textColor="?attr/colorOnSurfaceInverse"
                             android:textStyle="bold"
-                            android:textSize="18sp"
-                            android:text="Over 18 HOURS"
-                            android:padding="4dp"
-                            />
-                        <TextView
-                            android:id="@+id/fragment_volunteer_history_canopies_textView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="?attr/colorOnSurfaceInverse"
-                            android:textStyle="bold"
-                            android:textSize="18sp"
-                            android:text="Across 5 CANOPIES"
+                            android:textSize="@dimen/mediumLarge_text_size"
                             android:padding="4dp"/>
-                        <TextView
-                            android:id="@+id/fragment_volunteer_history_sessions_textView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="?attr/colorOnSurfaceInverse"
-                            android:textStyle="bold"
-                            android:textSize="18sp"
-                            android:text="In 23 SESSIONS"
-                            android:padding="4dp"
-                            />
+
+                            <TextView
+                                android:id="@+id/fragment_volunteer_history_most_textView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/canopyone_ngeeann"
+                                android:textColor="?attr/colorOnSurfaceInverse"
+                                android:textStyle="bold"
+                                android:textSize="@dimen/medium_text_size"
+                                android:padding="4dp"
+                                />
+                            <TextView
+                                android:id="@+id/fragment_volunteer_history_secondMost_textView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="?attr/colorOnSurfaceInverse"
+                                android:textStyle="bold"
+                                android:textSize="@dimen/medium_text_size"
+                                android:text="@string/canopytwo_ngeeann"
+                                android:padding="4dp"/>
                         <TextView
                             android:id="@+id/fragment_volunteer_history_encourage_textView"
                             android:layout_width="match_parent"
@@ -155,7 +203,8 @@
                             android:textSize="24sp"
                             android:gravity="center"
                             android:text="KEEP IT UP!"
-                            android:padding="8dp"/>
+                            android:padding="8dp"
+                            android:visibility="gone"/>
                     </LinearLayout>
                 </FrameLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -165,7 +214,9 @@
                 android:text="@string/previous_sessions"
                 android:textColor="?attr/colorOnSurface"
                 android:textStyle="bold"
-                android:layout_marginBottom="@dimen/small_margin"/>
+                android:layout_marginTop="@dimen/big_margin"
+                android:layout_marginBottom="@dimen/small_margin"
+                />
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/fragment_volunteer_history_recyclerView"
                 android:layout_width="match_parent"

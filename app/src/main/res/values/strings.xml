@@ -146,5 +146,10 @@
     <string name="example_email_address">example@test.com</string>
     <string name="previous_sessions">Previous Sessions</string>
     <string name="upcoming_events">Upcoming Events</string>
+    <string name="this_months_contributions">This Month\'s Contributions</string>
+    <string name="locations">Locations</string>
+    <string name="most_visited">Most Visited</string>
+    <string name="canopytwo_ngeeann">CanopyTwo@NgeeAnn</string>
+    <string name="canopyone_ngeeann">CanopyOne@NgeeAnn</string>
 
 </resources>
