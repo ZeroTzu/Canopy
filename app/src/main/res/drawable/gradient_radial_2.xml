@@ -9,30 +9,10 @@
         <gradient
             android:type="radial"
             android:gradientRadius="80%"
-            android:startColor="?attr/colorPrimary"
+            android:startColor="?attr/colorSurface"
             android:centerX="0.1"
             android:centerY="0.1"
-            android:endColor="@android:color/transparent" />
-    </shape></item>
-
-    <item><shape>
-        <gradient
-            android:type="radial"
-            android:gradientRadius="80%"
-            android:startColor="?attr/colorPrimary"
-            android:centerX="0.9"
-            android:centerY="0.1"
-            android:endColor="?attr/colorSurfaceDim" />
-    </shape></item>
-
-    <item><shape>
-        <gradient
-            android:type="radial"
-            android:gradientRadius="80%"
-            android:startColor="?attr/colorPrimarySurface"
-            android:centerX="0.1"
-            android:centerY="0.5"
-            android:endColor="?attr/colorSurfaceVariant" />
+            android:endColor="?attr/colorPrimarySurface" />
     </shape></item>
 
     <item><shape>
@@ -41,8 +21,28 @@
             android:gradientRadius="80%"
             android:startColor="?attr/colorSurface"
             android:centerX="0.9"
+            android:centerY="0.1"
+            android:endColor="?attr/colorPrimarySurface" />
+    </shape></item>
+
+    <item><shape>
+        <gradient
+            android:type="radial"
+            android:gradientRadius="80%"
+            android:startColor="?attr/colorSurface"
+            android:centerX="0.1"
             android:centerY="0.5"
-            android:endColor="@android:color/transparent" />
+            android:endColor="?attr/colorPrimarySurface" />
+    </shape></item>
+
+    <item><shape>
+        <gradient
+            android:type="radial"
+            android:gradientRadius="80%"
+            android:startColor="?attr/colorPrimarySurface"
+            android:centerX="0.9"
+            android:centerY="0.5"
+            android:endColor="?attr/colorPrimarySurface" />
     </shape></item>
 
 </layer-list>
