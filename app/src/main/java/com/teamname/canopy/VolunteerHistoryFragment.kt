@@ -5,6 +5,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
+import androidx.core.widget.ContentLoadingProgressBar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,10 +32,13 @@ class VolunteerHistoryFragment : Fragment() {
 
         activity.firestore.collection("users").document(activity.firebaseAuth.currentUser!!.uid).get().addOnSuccessListener { result ->
             var latestNoneCheckOut: Triple<Int, Timestamp, String>? = null
-            val volunteerHistoryRaw = result.get("volunteerHistory") as ArrayList<HashMap<String, *>>
-            val points = result.get("pointsEarned") as Long
+            val volunteerHistoryRaw = result.get("volunteerHistory") as? ArrayList<HashMap<String, *>>
+            val points = result.get("pointsEarned") as? Long
             val volunteerHistory = ArrayList<VolunteerSession>()
 
+            if (volunteerHistoryRaw == null) {
+                return@addOnSuccessListener
+            }
             for ((index, session) in volunteerHistoryRaw.withIndex()) {
 
                 val sessionSession = session
@@ -52,6 +57,7 @@ class VolunteerHistoryFragment : Fragment() {
             var totalPoints = 0
             var visitedCanopiesCount = 0
             var uniqueCanopyIds = mutableSetOf<String>()
+            var visitedCanopyNames = mutableSetOf<String>()
             var sessionCount = 0
 
             val instant: Instant = Instant.now()
@@ -67,6 +73,8 @@ class VolunteerHistoryFragment : Fragment() {
 
                     if (session.tappedOutCanopy!=null){
                         sessionCount++
+                        visitedCanopyNames.add(session.tappedInCanopyName!!)
+                        Log.d("CanopyVolunteerHistory",session.tappedInCanopyName)
                     }
                     Log.d("CanopyVolunteerHistory",volunteerHistory.filter { it.tappedOutTimestamp != null }.map { it.tappedInCanopy}.toString())
 
@@ -88,21 +96,32 @@ class VolunteerHistoryFragment : Fragment() {
 
 
             binding.fragmentVolunteerHistoryPointsTextView.text =points.toString()
-            binding.fragmentVolunteerHistoryHoursTextView.text = "Over ${totalHours} HOURS"
-            binding.fragmentVolunteerHistoryCanopiesTextView.text = "Across ${visitedCanopiesCount} CANOPIES"
-            binding.fragmentVolunteerHistorySessionsTextView.text = "In ${sessionCount} SESSIONS"
+            binding.fragmentVolunteerHistoryHoursTextView.text = "${totalHours} Hours"
+            binding.fragmentVolunteerHistorySessionsTextView.text = "${sessionCount} Sessions"
+            val mostVisitedCanopy = visitedCanopyNames.groupingBy { it }
+                .eachCount()
+                .maxByOrNull { it.value }
 
-            var encourageStatement = ""
-            if (totalHours>10){
-                encourageStatement = "KEEP IT UP!"
-            }
-            else if (totalHours>5){
-                encourageStatement = "KEEP GOING!"
-            }
-            else{
-                encourageStatement = "YOU CAN DO IT!"
+            val tempVisitedCanopyNames = visitedCanopyNames.toMutableList()
+
+            for (canopyName in tempVisitedCanopyNames) {
+                if (canopyName == mostVisitedCanopy?.key) {
+                    visitedCanopyNames.remove(canopyName)
+                }
             }
 
+            val secondMostVisitedCanopy = visitedCanopyNames.groupingBy { it }
+                .eachCount()
+                .maxByOrNull { it.value }
+
+            binding.fragmentVolunteerHistoryMostTextView.text = mostVisitedCanopy?.key ?: ""
+            binding.fragmentVolunteerHistorySecondMostTextView.text = secondMostVisitedCanopy?.key ?: ""
+
+
+            var progressBar = binding.fragmentVolunteerHistoryHoursProgressBar
+            progressBar.min = 0
+            progressBar.max = 30
+            progressBar.progress = totalHours.toInt()
             val adapter = VolunteerSessionRecyclerViewAdapter(volunteerHistory, onItemClick = {})
             binding.fragmentVolunteerHistoryRecyclerView.adapter = adapter
             binding.fragmentVolunteerHistoryRecyclerView.layoutManager = LinearLayoutManager(requireContext())
