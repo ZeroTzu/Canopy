@@ -1,5 +1,6 @@
 package com.teamname.canopy
 
+import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -125,6 +126,12 @@ class VolunteerHistoryFragment : Fragment() {
             val adapter = VolunteerSessionRecyclerViewAdapter(volunteerHistory, onItemClick = {})
             binding.fragmentVolunteerHistoryRecyclerView.adapter = adapter
             binding.fragmentVolunteerHistoryRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+
+            val animationDrawable = binding.fragmentVolunteerHistoryImageView.background as AnimationDrawable
+            animationDrawable.setEnterFadeDuration(2500)
+            animationDrawable.setExitFadeDuration(5000)
+            animationDrawable.start()
         }
 
         return binding.root

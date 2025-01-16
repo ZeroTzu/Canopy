@@ -92,10 +92,11 @@
 
                     <!-- ShapeableImageView to fill the card -->
                     <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/fragment_volunteer_history_imageView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/gradient_radial"
+                        android:background="@drawable/gradient_list_radial"
                         app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.MediumComponent" />
 
                     <View
@@ -112,7 +113,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/this_months_contributions"
-                            android:textColor="?attr/colorOnSurfaceInverse"
+                            android:textColor="?attr/colorOnPrimary"
                             android:textStyle="bold"
                             android:textSize="@dimen/mediumLarge_text_size"
                             android:padding="4dp"/>
@@ -121,6 +122,8 @@
                             android:layout_width="match_parent"
                             android:theme="@style/Widget.AppCompat.ProgressBar.Horizontal"
                             android:layout_height="2dp"
+                            android:progressBackgroundTint="?attr/colorOnPrimary"
+                            android:progressTint="?attr/colorTertiary"
                             android:backgroundTint="?attr/colorOnSurface"/>
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -130,7 +133,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Duration:"
-                                android:textColor="?attr/colorOnSurfaceInverse"
+                                android:textColor="?attr/colorOnPrimary"
                                 android:textStyle="bold"
                                 android:textSize="18sp"
                                 android:padding="4dp"
@@ -144,7 +147,7 @@
                                     android:id="@+id/fragment_volunteer_history_hours_textView"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:textColor="?attr/colorOnSurfaceInverse"
+                                    android:textColor="?attr/colorOnPrimary"
                                     android:textStyle="bold"
                                     android:textSize="@dimen/medium_text_size"
                                     android:text="Over 18 HOURS"
@@ -155,7 +158,7 @@
                                     android:id="@+id/fragment_volunteer_history_sessions_textView"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:textColor="?attr/colorOnSurfaceInverse"
+                                    android:textColor="?attr/colorOnPrimary"
                                     android:textStyle="bold"
                                     android:textSize="@dimen/medium_text_size"
                                     android:text="In 23 SESSIONS"
@@ -169,7 +172,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/most_visited"
-                            android:textColor="?attr/colorOnSurfaceInverse"
+                            android:textColor="?attr/colorOnPrimary"
                             android:textStyle="bold"
                             android:textSize="@dimen/mediumLarge_text_size"
                             android:padding="4dp"/>
@@ -179,7 +182,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/canopyone_ngeeann"
-                                android:textColor="?attr/colorOnSurfaceInverse"
+                                android:textColor="?attr/colorOnPrimary"
                                 android:textStyle="bold"
                                 android:textSize="@dimen/medium_text_size"
                                 android:padding="4dp"
@@ -188,7 +191,7 @@
                                 android:id="@+id/fragment_volunteer_history_secondMost_textView"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="?attr/colorOnSurfaceInverse"
+                                android:textColor="?attr/colorOnPrimary"
                                 android:textStyle="bold"
                                 android:textSize="@dimen/medium_text_size"
                                 android:text="@string/canopytwo_ngeeann"
