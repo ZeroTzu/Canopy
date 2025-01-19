@@ -224,7 +224,9 @@ class Home : Fragment(),ResponseCallback, OnMapReadyCallback{
             uiSettings.isRotateGesturesEnabled = true
             uiSettings.isTiltGesturesEnabled = true
             uiSettings.isScrollGesturesEnabled = true
-
+            uiSettings.isMyLocationButtonEnabled = true
+            uiSettings.isCompassEnabled =false
+            uiSettings.isMapToolbarEnabled =true
             isBuildingsEnabled = true
         }
         val marker = MarkerOptions().position(LatLng(1.335295037891502, 103.77556193766127))

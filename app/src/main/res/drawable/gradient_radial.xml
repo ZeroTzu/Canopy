@@ -2,14 +2,14 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:layout_height="wrap_content">
-            <solid android:color="?attr/colorSurface" />
+            <solid android:color="@android:color/transparent" />
         </shape></item>
 
     <item><shape>
         <gradient
             android:type="radial"
             android:gradientRadius="80%"
-            android:startColor="?attr/colorPrimary"
+            android:startColor="?attr/colorSurfaceInverse"
             android:centerX="0.1"
             android:centerY="0.1"
             android:endColor="@android:color/transparent" />
@@ -19,27 +19,27 @@
         <gradient
             android:type="radial"
             android:gradientRadius="80%"
-            android:startColor="?attr/colorPrimary"
+            android:startColor="?attr/colorSurfaceInverse"
             android:centerX="0.9"
             android:centerY="0.1"
-            android:endColor="?attr/colorSurfaceDim" />
+            android:endColor="@android:color/transparent" />
     </shape></item>
 
     <item><shape>
         <gradient
             android:type="radial"
             android:gradientRadius="80%"
-            android:startColor="?attr/colorPrimarySurface"
+            android:startColor="?attr/colorTertiaryContainer"
             android:centerX="0.1"
             android:centerY="0.5"
-            android:endColor="?attr/colorSurfaceVariant" />
+            android:endColor="@android:color/transparent" />
     </shape></item>
 
     <item><shape>
         <gradient
             android:type="radial"
             android:gradientRadius="80%"
-            android:startColor="?attr/colorSurface"
+            android:startColor="?attr/colorSurfaceInverse"
             android:centerX="0.9"
             android:centerY="0.5"
             android:endColor="@android:color/transparent" />

@@ -1,12 +1,14 @@
 package com.teamname.canopy
 
 import android.content.Intent
+import android.graphics.Matrix
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.lifecycleScope
@@ -100,6 +102,38 @@ class LoginRegisterFormFragment : Fragment() {
         }
         binding.fragmentLoginRegisterFormCancelButton.setOnClickListener{
             requireActivity().supportFragmentManager.beginTransaction().replace(R.id.login_activity_fragmentContainerView,LoginLandingFragment()).commit()
+        }
+
+
+
+        val imageView = binding.fragmentLoginRegisterFormAppIconImageView
+        imageView.post {
+            val matrix = Matrix()
+            val drawable = imageView.drawable ?: return@post // Ensure drawable is not null
+            val drawableWidth = drawable.intrinsicWidth.toFloat()
+            val drawableHeight = drawable.intrinsicHeight.toFloat()
+
+            val viewWidth = imageView.width.toFloat()
+            val viewHeight = imageView.height.toFloat()
+
+            // Desired scaling factor
+            val scaleFactor = 3f
+
+            // Calculate scaled dimensions of the drawable
+            val scaledDrawableWidth = drawableWidth * scaleFactor
+            val scaledDrawableHeight = drawableHeight * scaleFactor
+
+            // Center the scaled drawable within the ImageView
+            val dx = (viewWidth - scaledDrawableWidth) / 2
+            val dy = (viewHeight - scaledDrawableHeight) / 2
+
+            // Apply scaling and translation to the matrix
+            matrix.setScale(scaleFactor, scaleFactor)
+            matrix.postTranslate(dx, dy)
+
+            // Set the matrix to the ImageView
+            imageView.imageMatrix = matrix
+            imageView.scaleType = ImageView.ScaleType.MATRIX
         }
         // Inflate the layout for this fragment
         return binding.root
