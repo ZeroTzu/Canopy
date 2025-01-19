@@ -1,12 +1,14 @@
 package com.teamname.canopy
 
 import android.animation.ValueAnimator
+import android.graphics.Matrix
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import com.airbnb.lottie.LottieAnimationView
 import com.teamname.canopy.databinding.FragmentLoginLandingBinding
 
@@ -46,7 +48,48 @@ class LoginLandingFragment : Fragment() {
         var animationLottie = binding.fragmentLoginLandingAnimation
         animationLottie.animate()
         animationLottie.repeatCount=ValueAnimator.INFINITE
+
+
+
+
+
+        val imageView = binding.fragmentLoginLandingAppIconImageView
+        imageView.post {
+            val matrix = Matrix()
+            val drawable = imageView.drawable ?: return@post // Ensure drawable is not null
+            val drawableWidth = drawable.intrinsicWidth.toFloat()
+            val drawableHeight = drawable.intrinsicHeight.toFloat()
+
+            val viewWidth = imageView.width.toFloat()
+            val viewHeight = imageView.height.toFloat()
+
+            // Desired scaling factor
+            val scaleFactor = 3f
+
+            // Calculate scaled dimensions of the drawable
+            val scaledDrawableWidth = drawableWidth * scaleFactor
+            val scaledDrawableHeight = drawableHeight * scaleFactor
+
+            // Center the scaled drawable within the ImageView
+            val dx = (viewWidth - scaledDrawableWidth) / 2
+            val dy = (viewHeight - scaledDrawableHeight) / 2
+
+            // Apply scaling and translation to the matrix
+            matrix.setScale(scaleFactor, scaleFactor)
+            matrix.postTranslate(dx, dy)
+
+            // Set the matrix to the ImageView
+            imageView.imageMatrix = matrix
+            imageView.scaleType = ImageView.ScaleType.MATRIX
+        }
+
+
+
+
+
+
         return binding.root
+
     }
 
     companion object {

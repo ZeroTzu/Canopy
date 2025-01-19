@@ -43,7 +43,7 @@ class EventsFragment : Fragment() {
         binding=FragmentEventsBinding.inflate(layoutInflater)
 
         upcomingEvents= listOf(
-            Event(Instant.now(),Instant.now().plusSeconds(10000),"My House", "Sex Party")
+            Event(Instant.now(),Instant.now().plusSeconds(10000),"Canopy@NgeeAnn", "Volunteering Training")
         )
 
 

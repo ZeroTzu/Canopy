@@ -3,6 +3,7 @@ package com.teamname.canopy
 import android.content.Context
 import android.content.Intent
 import android.graphics.Matrix
+import android.graphics.RectF
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -122,6 +123,37 @@ class LoginFormFragment : Fragment() {
 
         binding.fragmentLoginFormEmailTextInputLayout.editText!!.text
         binding.fragmentLoginFormPasswordTextInputLayout.editText!!.text
+
+        val imageView = binding.fragmentLoginFormAppIconImageView
+        imageView.post {
+            val matrix = Matrix()
+            val drawable = imageView.drawable ?: return@post // Ensure drawable is not null
+            val drawableWidth = drawable.intrinsicWidth.toFloat()
+            val drawableHeight = drawable.intrinsicHeight.toFloat()
+
+            val viewWidth = imageView.width.toFloat()
+            val viewHeight = imageView.height.toFloat()
+
+            // Desired scaling factor
+            val scaleFactor = 3f
+
+            // Calculate scaled dimensions of the drawable
+            val scaledDrawableWidth = drawableWidth * scaleFactor
+            val scaledDrawableHeight = drawableHeight * scaleFactor
+
+            // Center the scaled drawable within the ImageView
+            val dx = (viewWidth - scaledDrawableWidth) / 2
+            val dy = (viewHeight - scaledDrawableHeight) / 2
+
+            // Apply scaling and translation to the matrix
+            matrix.setScale(scaleFactor, scaleFactor)
+            matrix.postTranslate(dx, dy)
+
+            // Set the matrix to the ImageView
+            imageView.imageMatrix = matrix
+            imageView.scaleType = ImageView.ScaleType.MATRIX
+        }
+
 
         return binding.root
     }
